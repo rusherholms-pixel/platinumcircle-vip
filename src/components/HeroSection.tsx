@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import heroImage from "@/assets/hero-villa.webp";
 
 const HeroSection = () => {
