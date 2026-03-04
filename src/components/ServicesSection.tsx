@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Home, Car, Sparkles, Shield } from "lucide-react";
 import heroVilla from "@/assets/hero-villa.webp";
 import serviceDrivers from "@/assets/service-drivers.webp";
