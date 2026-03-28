@@ -53,10 +53,10 @@ const HeroSection = () => {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <a
-            href="#services"
+            href="/auth"
             className="px-10 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity"
           >
-            Explore Services
+            Explore Properties
           </a>
           <a
             href="#how-it-works"
