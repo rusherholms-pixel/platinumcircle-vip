@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { useNavigate } from "react-router-dom";
-import { Search, SlidersHorizontal, LogOut, X } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Search, SlidersHorizontal, LogOut, X, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
@@ -108,7 +108,12 @@ const Properties = () => {
           <a href="/" className="font-display text-2xl tracking-wider text-gradient-gold">
             Platinum Circle
           </a>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <Link to="/dashboard">
+              <Button variant="ghost" size="sm" className="text-muted-foreground gap-2 text-xs tracking-wider uppercase">
+                <LayoutDashboard size={16} /> Dashboard
+              </Button>
+            </Link>
             <span className="hidden sm:block text-sm text-muted-foreground">
               {user?.email}
             </span>
