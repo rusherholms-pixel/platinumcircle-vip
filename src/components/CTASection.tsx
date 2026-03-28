@@ -26,7 +26,7 @@ const CTASection = () => {
             Platinum Circle is invite-only. Request access and our team will review your application within 24 hours.
           </p>
           <a
-            href="#"
+            href="/auth"
             className="inline-block px-12 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity"
           >
             Request Invitation
