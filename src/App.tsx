@@ -7,6 +7,9 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Properties from "./pages/Properties";
+import Dashboard from "./pages/Dashboard";
+import PropertyNew from "./pages/PropertyNew";
+import PropertyEdit from "./pages/PropertyEdit";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +25,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/properties" element={<Properties />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/new" element={<PropertyNew />} />
+            <Route path="/dashboard/edit/:id" element={<PropertyEdit />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
