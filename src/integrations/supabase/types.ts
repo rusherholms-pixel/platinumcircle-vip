@@ -14,7 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      properties: {
+        Row: {
+          amenities: string[] | null
+          bathrooms: number
+          bedrooms: number
+          city: string
+          country: string
+          created_at: string
+          currency: string
+          description: string | null
+          host_id: string | null
+          id: string
+          images: string[] | null
+          is_featured: boolean | null
+          location: string
+          max_guests: number
+          price_per_night: number
+          property_type: string
+          rating: number | null
+          review_count: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          amenities?: string[] | null
+          bathrooms?: number
+          bedrooms?: number
+          city: string
+          country: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          host_id?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          location: string
+          max_guests?: number
+          price_per_night: number
+          property_type?: string
+          rating?: number | null
+          review_count?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          amenities?: string[] | null
+          bathrooms?: number
+          bedrooms?: number
+          city?: string
+          country?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          host_id?: string | null
+          id?: string
+          images?: string[] | null
+          is_featured?: boolean | null
+          location?: string
+          max_guests?: number
+          price_per_night?: number
+          property_type?: string
+          rating?: number | null
+          review_count?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
