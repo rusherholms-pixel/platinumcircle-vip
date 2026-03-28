@@ -23,7 +23,7 @@ const CTASection = () => {
             <span className="text-gradient-gold">Ultimate Experience?</span>
           </h2>
           <p className="font-sans text-muted-foreground mb-10 leading-relaxed">
-            ThePlugs is invite-only. Request access and our team will review your application within 24 hours.
+            Platinum Circle is invite-only. Request access and our team will review your application within 24 hours.
           </p>
           <a
             href="#"
