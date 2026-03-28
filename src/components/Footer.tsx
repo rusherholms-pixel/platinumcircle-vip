@@ -5,7 +5,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
             <span className="font-display text-2xl tracking-wider text-gradient-gold">
-              ThePlugs
+              Platinum Circle
             </span>
             <p className="font-sans text-xs text-muted-foreground mt-2 tracking-wide">
               World-Class VIP Concierge
@@ -25,7 +25,7 @@ const Footer = () => {
           </div>
 
           <p className="font-sans text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ThePlugs. All rights reserved.
+            © {new Date().getFullYear()} Platinum Circle. All rights reserved.
           </p>
         </div>
       </div>

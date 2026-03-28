@@ -16,7 +16,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
         <a href="/" className="font-display text-2xl tracking-wider text-gradient-gold">
-          ThePlugs
+          Platinum Circle
         </a>
 
         {/* Desktop */}
