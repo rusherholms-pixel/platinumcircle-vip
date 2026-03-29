@@ -127,7 +127,7 @@ const Apply = () => {
 
     const { data, error } = await supabase
       .from("applications")
-      .insert(payload)
+      .insert([payload])
       .select("reference_number")
       .single();
 
