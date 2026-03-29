@@ -31,10 +31,10 @@ const Navbar = () => {
             </a>
           ))}
           <a
-            href="#contact"
+            href="/apply?type=member"
             className="ml-4 px-6 py-2.5 text-xs tracking-widest uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity"
           >
-            Request Access
+            Apply Now
           </a>
         </div>
 
@@ -69,10 +69,10 @@ const Navbar = () => {
                 </a>
               ))}
               <a
-                href="#contact"
+                href="/apply?type=member"
                 className="mt-2 px-6 py-3 text-xs tracking-widest uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm text-center"
               >
-                Request Access
+                Apply Now
               </a>
             </div>
           </motion.div>
