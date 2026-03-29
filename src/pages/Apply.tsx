@@ -259,7 +259,7 @@ const Apply = () => {
               </div>
 
               <div className="space-y-3">
-                <Label className={labelCls}>Traveler Status</Label>
+                <Label className={labelCls}>{applicantType === "provider" ? "Preferred Traveler" : "Traveler Status"}</Label>
                 <div className="flex flex-wrap gap-3">
                   {TRAVELER_STATUSES.map((s) => (
                     <label key={s} className="flex items-center gap-2 cursor-pointer">
