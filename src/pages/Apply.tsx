@@ -98,8 +98,8 @@ const Apply = () => {
     e.preventDefault();
     setSubmitting(true);
 
-    const payload: Record<string, any> = {
-      applicant_type: applicantType,
+    const base = {
+      applicant_type: applicantType as "member" | "provider",
       full_name: fullName,
       email,
       phone,
@@ -108,26 +108,22 @@ const Apply = () => {
       traveler_status: travelerStatus,
       personal_statement: personalStatement || null,
       heard_about_us: heardAboutUs || null,
+      preferred_services: applicantType === "member" ? preferredServices : [],
+      travel_frequency: applicantType === "member" ? (travelFrequency || null) : null,
+      travel_party_size: applicantType === "member" ? (travelPartySize || null) : null,
+      service_categories: applicantType === "provider" ? serviceCategories : [],
+      years_experience: applicantType === "provider" && yearsExperience ? parseInt(yearsExperience) : null,
+      business_type: applicantType === "provider" ? (businessType || null) : null,
+      business_name: applicantType === "provider" ? (businessName || null) : null,
+      service_countries: applicantType === "provider" ? serviceCountries : [],
+      service_cities: applicantType === "provider" ? (serviceCities || null) : null,
+      service_description: applicantType === "provider" ? (serviceDescription || null) : null,
+      portfolio_url: applicantType === "provider" ? (portfolioUrl || null) : null,
     };
-
-    if (applicantType === "member") {
-      payload.preferred_services = preferredServices;
-      payload.travel_frequency = travelFrequency || null;
-      payload.travel_party_size = travelPartySize || null;
-    } else {
-      payload.service_categories = serviceCategories;
-      payload.years_experience = yearsExperience ? parseInt(yearsExperience) : null;
-      payload.business_type = businessType || null;
-      payload.business_name = businessName || null;
-      payload.service_countries = serviceCountries;
-      payload.service_cities = serviceCities || null;
-      payload.service_description = serviceDescription || null;
-      payload.portfolio_url = portfolioUrl || null;
-    }
 
     const { data, error } = await supabase
       .from("applications")
-      .insert([payload])
+      .insert(base)
       .select("reference_number")
       .single();
 
