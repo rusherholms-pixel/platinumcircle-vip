@@ -60,7 +60,7 @@ const PropertyForm = ({ propertyId }: PropertyFormProps) => {
 
     if (error || !data) {
       toast({ title: "Property not found", variant: "destructive" });
-      navigate("/dashboard");
+      navigate("/provider/listings");
       return;
     }
 
@@ -134,7 +134,7 @@ const PropertyForm = ({ propertyId }: PropertyFormProps) => {
       toast({ title: "Error saving property", description: error.message, variant: "destructive" });
     } else {
       toast({ title: isEditing ? "Property updated" : "Property created" });
-      navigate("/dashboard");
+      navigate("/provider/listings");
     }
   };
 
@@ -147,22 +147,12 @@ const PropertyForm = ({ propertyId }: PropertyFormProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="/" className="font-display text-2xl tracking-wider text-gradient-gold">
-            Platinum Circle
-          </a>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-6 py-10 max-w-3xl">
+    <div className="max-w-3xl">
         <button
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/provider/listings")}
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
-          <ArrowLeft size={16} /> Back to Dashboard
+          <ArrowLeft size={16} /> Back to Listings
         </button>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
@@ -332,14 +322,13 @@ const PropertyForm = ({ propertyId }: PropertyFormProps) => {
                 type="button"
                 variant="outline"
                 className="h-12 border-border"
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate("/provider/listings")}
               >
                 Cancel
               </Button>
             </div>
           </form>
         </motion.div>
-      </main>
     </div>
   );
 };
