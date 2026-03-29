@@ -14,6 +14,135 @@ export type Database = {
   }
   public: {
     Tables: {
+      applications: {
+        Row: {
+          applicant_type: string
+          business_name: string | null
+          business_type: string | null
+          city: string
+          country: string
+          created_at: string
+          email: string
+          full_name: string
+          heard_about_us: string | null
+          id: string
+          personal_statement: string | null
+          phone: string
+          portfolio_url: string | null
+          preferred_services: string[] | null
+          reference_number: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          service_categories: string[] | null
+          service_cities: string | null
+          service_countries: string[] | null
+          service_description: string | null
+          status: string
+          travel_frequency: string | null
+          travel_party_size: string | null
+          traveler_status: string[] | null
+          updated_at: string
+          user_id: string | null
+          years_experience: number | null
+        }
+        Insert: {
+          applicant_type: string
+          business_name?: string | null
+          business_type?: string | null
+          city: string
+          country: string
+          created_at?: string
+          email: string
+          full_name: string
+          heard_about_us?: string | null
+          id?: string
+          personal_statement?: string | null
+          phone: string
+          portfolio_url?: string | null
+          preferred_services?: string[] | null
+          reference_number?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          service_categories?: string[] | null
+          service_cities?: string | null
+          service_countries?: string[] | null
+          service_description?: string | null
+          status?: string
+          travel_frequency?: string | null
+          travel_party_size?: string | null
+          traveler_status?: string[] | null
+          updated_at?: string
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Update: {
+          applicant_type?: string
+          business_name?: string | null
+          business_type?: string | null
+          city?: string
+          country?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          heard_about_us?: string | null
+          id?: string
+          personal_statement?: string | null
+          phone?: string
+          portfolio_url?: string | null
+          preferred_services?: string[] | null
+          reference_number?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          service_categories?: string[] | null
+          service_cities?: string | null
+          service_countries?: string[] | null
+          service_description?: string | null
+          status?: string
+          travel_frequency?: string | null
+          travel_party_size?: string | null
+          traveler_status?: string[] | null
+          updated_at?: string
+          user_id?: string | null
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       properties: {
         Row: {
           amenities: string[] | null
@@ -83,15 +212,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "member" | "provider"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -218,6 +371,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "member", "provider"],
+    },
   },
 } as const
