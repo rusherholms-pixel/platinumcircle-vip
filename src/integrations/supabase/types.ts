@@ -107,6 +107,80 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_content: {
+        Row: {
+          cta_label: string | null
+          headline: string | null
+          hero_image_url: string | null
+          id: string
+          section_key: string
+          subheadline: string | null
+          updated_at: string
+          updated_by: string | null
+          use_video: boolean
+          video_url: string | null
+        }
+        Insert: {
+          cta_label?: string | null
+          headline?: string | null
+          hero_image_url?: string | null
+          id?: string
+          section_key: string
+          subheadline?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          use_video?: boolean
+          video_url?: string | null
+        }
+        Update: {
+          cta_label?: string | null
+          headline?: string | null
+          hero_image_url?: string | null
+          id?: string
+          section_key?: string
+          subheadline?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          use_video?: boolean
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      homepage_gallery_images: {
+        Row: {
+          caption: string | null
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string
+          section_key: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url: string
+          section_key: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          section_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homepage_gallery_images_section_key_fkey"
+            columns: ["section_key"]
+            isOneToOne: false
+            referencedRelation: "homepage_content"
+            referencedColumns: ["section_key"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
