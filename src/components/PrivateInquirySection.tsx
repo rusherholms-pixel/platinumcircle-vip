@@ -30,7 +30,12 @@ const PrivateInquirySection = () => {
     }
 
     setSubmitting(true);
-    const { error } = await supabase.from("private_inquiries").insert([parsed.data]);
+    const { error } = await supabase.from("private_inquiries").insert([{
+      first_name: form.first_name.trim(),
+      email: form.email.trim(),
+      looking_for: form.looking_for.trim() || null,
+      preferred_contact: form.preferred_contact,
+    }]);
     setSubmitting(false);
 
     if (error) {
