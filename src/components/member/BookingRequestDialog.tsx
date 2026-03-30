@@ -41,7 +41,9 @@ export default function BookingRequestDialog({ serviceType, serviceTitle, servic
     }
 
     setSubmitting(true);
+    const bookingId = crypto.randomUUID();
     const { error } = await supabase.from("booking_requests").insert({
+      id: bookingId,
       user_id: user.id,
       service_type: serviceType,
       service_title: serviceTitle.slice(0, 200),
@@ -60,6 +62,26 @@ export default function BookingRequestDialog({ serviceType, serviceTitle, servic
       toast({ title: "Request submitted!", description: "Our concierge team will reach out shortly." });
       setOpen(false);
       setForm({ checkIn: "", checkOut: "", numGuests: "1", specialRequests: "", preferredContact: "email" });
+
+      // Notify admin of new booking request
+      supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "new-booking-alert",
+          idempotencyKey: `new-booking-alert-${bookingId}`,
+          templateData: {
+            memberName: user.user_metadata?.full_name || user.email,
+            memberEmail: user.email,
+            serviceTitle: serviceTitle.slice(0, 200),
+            serviceType,
+            checkIn: form.checkIn,
+            checkOut: form.checkOut || undefined,
+            numGuests: parseInt(form.numGuests) || 1,
+            specialRequests: form.specialRequests || undefined,
+            preferredContact: form.preferredContact,
+          },
+        },
+      });
+    }
     }
   };
 
