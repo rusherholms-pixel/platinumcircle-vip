@@ -10,7 +10,7 @@ import PrivateInquirySection from "@/components/PrivateInquirySection";
 import DiscretionCommitment from "@/components/DiscretionCommitment";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
+import ChatWidget from "@/components/ChatWidget";
 
 const Index = () => {
   return (
