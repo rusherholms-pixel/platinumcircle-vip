@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, X, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
+import ImageUpload from "@/components/ImageUpload";
 
 interface PropertyFormProps {
   propertyId?: string;
@@ -278,34 +279,7 @@ const PropertyForm = ({ propertyId }: PropertyFormProps) => {
               <h2 className="text-xs tracking-[0.3em] uppercase text-primary font-sans border-b border-border pb-3">
                 Images
               </h2>
-              <div className="flex gap-2">
-                <Input
-                  value={imageInput}
-                  onChange={(e) => setImageInput(e.target.value)}
-                  placeholder="Paste image URL..."
-                  className="bg-card border-border h-12"
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addImage(); } }}
-                />
-                <Button type="button" variant="outline" className="h-12 border-border" onClick={addImage}>
-                  <Plus size={18} />
-                </Button>
-              </div>
-              {images.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {images.map((url, i) => (
-                    <div key={i} className="relative aspect-[4/3] rounded-lg overflow-hidden group">
-                      <img src={url} alt={`Property ${i + 1}`} className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => setImages(images.filter((_, j) => j !== i))}
-                        className="absolute top-2 right-2 p-1 bg-background/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-destructive"
-                      >
-                        <X size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <ImageUpload images={images} onImagesChange={setImages} maxImages={10} />
             </section>
 
             {/* Submit */}
