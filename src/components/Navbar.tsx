@@ -7,6 +7,7 @@ const navLinks = [
   { label: "Drivers", href: "#services" },
   { label: "Experiences", href: "#services" },
   { label: "Security", href: "#services" },
+  { label: "Member Login", href: "/auth" },
 ];
 
 const Navbar = () => {
