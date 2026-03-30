@@ -23,13 +23,13 @@ const CTASection = () => {
             <span className="text-gradient-gold">Ultimate Experience?</span>
           </h2>
           <p className="font-sans text-muted-foreground mb-10 leading-relaxed">
-            Platinum Circle is invite-only. Request access and our team will review your application within 24 hours.
+            Create your free account and unlock access to luxury homes, private drivers, curated experiences, and more.
           </p>
           <a
-            href="/apply?type=member"
+            href="/apply"
             className="inline-block px-12 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity"
           >
-            Apply for Membership
+            Join Now
           </a>
         </motion.div>
       </div>

@@ -228,7 +228,7 @@ const Auth = () => {
         <p className="text-xs text-muted-foreground text-center mt-8">
           Don't have an account?{" "}
           <a href="/apply" className="text-primary hover:underline">
-            Apply for membership
+            Create an account
           </a>
         </p>
       </motion.div>

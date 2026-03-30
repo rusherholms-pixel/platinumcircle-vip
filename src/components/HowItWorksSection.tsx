@@ -3,8 +3,8 @@ import { motion } from "motion/react";
 const steps = [
   {
     number: "01",
-    title: "Request Access",
-    description: "Apply for membership with a brief verification process. We ensure every guest meets our standards of discretion.",
+    title: "Create Your Account",
+    description: "Sign up in seconds and gain instant access to our curated network of luxury services.",
   },
   {
     number: "02",

@@ -32,10 +32,10 @@ const Navbar = () => {
             </a>
           ))}
           <a
-            href="/apply?type=member"
+            href="/apply"
             className="ml-4 px-6 py-2.5 text-xs tracking-widest uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity"
           >
-            Apply Now
+            Join Now
           </a>
         </div>
 
@@ -70,10 +70,10 @@ const Navbar = () => {
                 </a>
               ))}
               <a
-                href="/apply?type=member"
+                href="/apply"
                 className="mt-2 px-6 py-3 text-xs tracking-widest uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm text-center"
               >
-                Apply Now
+                Join Now
               </a>
             </div>
           </motion.div>
