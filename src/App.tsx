@@ -17,6 +17,18 @@ import BundleDetail from "./pages/BundleDetail";
 import CityExperiences from "./pages/CityExperiences";
 import NotFound from "./pages/NotFound";
 
+// Member dashboard
+import MemberLayout from "./components/member/MemberLayout";
+import MemberOverview from "./pages/member/MemberOverview";
+import MemberHousing from "./pages/member/MemberHousing";
+import MemberSecurity from "./pages/member/MemberSecurity";
+import MemberDrivers from "./pages/member/MemberDrivers";
+import MemberExperiences from "./pages/member/MemberExperiences";
+import MemberBookings from "./pages/member/MemberBookings";
+import MemberReferrals from "./pages/member/MemberReferrals";
+import MemberProfile from "./pages/member/MemberProfile";
+import MemberSettings from "./pages/member/MemberSettings";
+
 // Provider dashboard
 import ProviderLayout from "./components/provider/ProviderLayout";
 import ProviderOverview from "./pages/provider/ProviderOverview";
@@ -48,10 +60,22 @@ const App = () => (
             <Route path="/experiences/bundles/:slug" element={<BundleDetail />} />
             <Route path="/experiences/:city" element={<CityExperiences />} />
 
-            {/* Legacy dashboard redirect */}
-            <Route path="/dashboard" element={<Navigate to="/provider/dashboard" replace />} />
-            <Route path="/dashboard/new" element={<Navigate to="/provider/listings/new" replace />} />
-            <Route path="/dashboard/edit/:id" element={<Navigate to="/provider/listings/edit/:id" replace />} />
+            {/* Legacy redirects */}
+            <Route path="/dashboard" element={<Navigate to="/member/dashboard" replace />} />
+            <Route path="/properties" element={<Navigate to="/member/housing" replace />} />
+
+            {/* Member portal */}
+            <Route path="/member" element={<MemberLayout />}>
+              <Route path="dashboard" element={<MemberOverview />} />
+              <Route path="housing" element={<MemberHousing />} />
+              <Route path="security" element={<MemberSecurity />} />
+              <Route path="drivers" element={<MemberDrivers />} />
+              <Route path="experiences" element={<MemberExperiences />} />
+              <Route path="bookings" element={<MemberBookings />} />
+              <Route path="referrals" element={<MemberReferrals />} />
+              <Route path="profile" element={<MemberProfile />} />
+              <Route path="settings" element={<MemberSettings />} />
+            </Route>
 
             {/* Provider dashboard */}
             <Route path="/provider" element={<ProviderLayout />}>

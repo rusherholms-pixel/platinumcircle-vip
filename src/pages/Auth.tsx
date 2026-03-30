@@ -33,8 +33,7 @@ const Auth = () => {
       .eq("user_id", userId);
 
     if (!roles || roles.length === 0) {
-      // No role assigned yet — go to a default holding page
-      navigate("/properties");
+      navigate("/member/dashboard");
       return;
     }
 
@@ -44,10 +43,8 @@ const Auth = () => {
       navigate("/admin");
     } else if (roleSet.has("provider")) {
       navigate("/provider/dashboard");
-    } else if (roleSet.has("member")) {
-      navigate("/properties");
     } else {
-      navigate("/properties");
+      navigate("/member/dashboard");
     }
   };
 
