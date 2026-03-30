@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
 import HomepageContentManager from "@/components/admin/HomepageContentManager";
+import BookingRequestsManager from "@/components/admin/BookingRequestsManager";
 
 interface Application {
   id: string;
