@@ -137,10 +137,10 @@ export default function MemberHousing() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((p) => (
-            <PropertyCard key={p.id} title={p.title} location={p.location} city={p.city} country={p.country}
+            <PropertyCard key={p.id} id={p.id} title={p.title} location={p.location} city={p.city} country={p.country}
               pricePerNight={p.price_per_night} bedrooms={p.bedrooms} bathrooms={p.bathrooms}
               maxGuests={p.max_guests} amenities={p.amenities} images={p.images}
-              propertyType={p.property_type} rating={p.rating} reviewCount={p.review_count} isFeatured={p.is_featured} />
+              propertyType={p.property_type} rating={p.rating} reviewCount={p.review_count} isFeatured={p.is_featured} showBooking />
           ))}
         </div>
       )}
