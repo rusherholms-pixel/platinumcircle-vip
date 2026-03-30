@@ -94,6 +94,7 @@ export default function BookingRequestsManager() {
     const updateObj: Record<string, unknown> = { status: newStatus };
     if (notes !== undefined) updateObj.admin_notes = notes;
 
+    const booking = bookings.find((b) => b.id === id);
     const { error } = await supabase.from("booking_requests").update(updateObj).eq("id", id);
     setUpdatingId(null);
 
@@ -104,6 +105,31 @@ export default function BookingRequestsManager() {
       setBookings((prev) => prev.map((b) =>
         b.id === id ? { ...b, status: newStatus, admin_notes: notes ?? b.admin_notes } : b
       ));
+
+      // Send confirmation email when status changes to confirmed
+      if (newStatus === "confirmed" && booking) {
+        const profile = profilesMap[booking.user_id];
+        if (profile?.email) {
+          supabase.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "booking-confirmation",
+              recipientEmail: profile.email,
+              idempotencyKey: `booking-confirm-${id}`,
+              templateData: {
+                memberName: profile.full_name || undefined,
+                serviceTitle: booking.service_title,
+                serviceType: booking.service_type,
+                checkIn: booking.check_in || undefined,
+                checkOut: booking.check_out || undefined,
+                numGuests: booking.num_guests,
+                adminNotes: (notes ?? booking.admin_notes) || undefined,
+              },
+            },
+          }).then(({ error: emailError }) => {
+            if (emailError) console.error("Failed to send confirmation email", emailError);
+          });
+        }
+      }
     }
   };
 

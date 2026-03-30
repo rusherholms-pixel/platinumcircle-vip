@@ -16,6 +16,7 @@ import BundlesPage from "./pages/BundlesPage";
 import BundleDetail from "./pages/BundleDetail";
 import CityExperiences from "./pages/CityExperiences";
 import NotFound from "./pages/NotFound";
+import Unsubscribe from "./pages/Unsubscribe";
 
 // Member dashboard
 import MemberLayout from "./components/member/MemberLayout";
@@ -59,6 +60,7 @@ const App = () => (
             <Route path="/experiences/bundles" element={<BundlesPage />} />
             <Route path="/experiences/bundles/:slug" element={<BundleDetail />} />
             <Route path="/experiences/:city" element={<CityExperiences />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
 
             {/* Legacy redirects */}
             <Route path="/dashboard" element={<Navigate to="/member/dashboard" replace />} />
