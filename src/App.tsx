@@ -12,6 +12,8 @@ import Properties from "./pages/Properties";
 import PropertyNew from "./pages/PropertyNew";
 import PropertyEdit from "./pages/PropertyEdit";
 import AdminDashboard from "./pages/AdminDashboard";
+import BundlesPage from "./pages/BundlesPage";
+import BundleDetail from "./pages/BundleDetail";
 import NotFound from "./pages/NotFound";
 
 // Provider dashboard
