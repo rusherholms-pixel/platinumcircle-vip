@@ -223,6 +223,7 @@ const AdminDashboard = () => {
         {activeTab === "bookings" ? (
           <BookingRequestsManager />
         ) : activeTab === "homepage" ? (
+          <HomepageContentManager />
         ) : (
           <>
             {/* Stats */}
