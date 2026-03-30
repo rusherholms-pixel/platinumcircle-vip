@@ -107,6 +107,149 @@ export type Database = {
         }
         Relationships: []
       }
+      bundle_requests: {
+        Row: {
+          budget_range: string | null
+          bundle_id: string | null
+          bundle_name: string
+          created_at: string
+          destination_city: string | null
+          destination_country: string | null
+          email: string
+          full_name: string
+          id: string
+          num_guests: number | null
+          phone: string | null
+          preferred_contact: string | null
+          selected_addons: string[] | null
+          special_requests: string | null
+          status: string
+          travel_date_end: string | null
+          travel_date_start: string | null
+        }
+        Insert: {
+          budget_range?: string | null
+          bundle_id?: string | null
+          bundle_name: string
+          created_at?: string
+          destination_city?: string | null
+          destination_country?: string | null
+          email: string
+          full_name: string
+          id?: string
+          num_guests?: number | null
+          phone?: string | null
+          preferred_contact?: string | null
+          selected_addons?: string[] | null
+          special_requests?: string | null
+          status?: string
+          travel_date_end?: string | null
+          travel_date_start?: string | null
+        }
+        Update: {
+          budget_range?: string | null
+          bundle_id?: string | null
+          bundle_name?: string
+          created_at?: string
+          destination_city?: string | null
+          destination_country?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          num_guests?: number | null
+          phone?: string | null
+          preferred_contact?: string | null
+          selected_addons?: string[] | null
+          special_requests?: string | null
+          status?: string
+          travel_date_end?: string | null
+          travel_date_start?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bundle_requests_bundle_id_fkey"
+            columns: ["bundle_id"]
+            isOneToOne: false
+            referencedRelation: "bundles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bundles: {
+        Row: {
+          addon_options: Json
+          created_at: string
+          description: string | null
+          display_order: number | null
+          featured_card_image: string | null
+          featured_description: string | null
+          featured_order: number | null
+          gallery_images: string[] | null
+          hero_image_url: string | null
+          id: string
+          included_items: Json
+          is_active: boolean | null
+          is_featured: boolean | null
+          name: string
+          slug: string
+          starting_price: string | null
+          tagline: string | null
+          tags: string[]
+          testimonial_author: string | null
+          testimonial_quote: string | null
+          updated_at: string
+          who_its_for: string | null
+        }
+        Insert: {
+          addon_options?: Json
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          featured_card_image?: string | null
+          featured_description?: string | null
+          featured_order?: number | null
+          gallery_images?: string[] | null
+          hero_image_url?: string | null
+          id?: string
+          included_items?: Json
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          name: string
+          slug: string
+          starting_price?: string | null
+          tagline?: string | null
+          tags?: string[]
+          testimonial_author?: string | null
+          testimonial_quote?: string | null
+          updated_at?: string
+          who_its_for?: string | null
+        }
+        Update: {
+          addon_options?: Json
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          featured_card_image?: string | null
+          featured_description?: string | null
+          featured_order?: number | null
+          gallery_images?: string[] | null
+          hero_image_url?: string | null
+          id?: string
+          included_items?: Json
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          name?: string
+          slug?: string
+          starting_price?: string | null
+          tagline?: string | null
+          tags?: string[]
+          testimonial_author?: string | null
+          testimonial_quote?: string | null
+          updated_at?: string
+          who_its_for?: string | null
+        }
+        Relationships: []
+      }
       homepage_content: {
         Row: {
           cta_label: string | null
