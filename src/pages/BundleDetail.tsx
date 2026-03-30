@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowLeft, CheckCircle, Plus, Sparkles, Quote } from "lucide-react";
+import { ArrowLeft, CheckCircle, Plus, Sparkles, Quote, CalendarDays } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useBundle } from "@/hooks/useBundles";
+import { useAuth } from "@/contexts/AuthContext";
 import BundleRequestForm from "@/components/bundles/BundleRequestForm";
+import BookingRequestDialog from "@/components/member/BookingRequestDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const BundleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: bundle, isLoading } = useBundle(slug ?? "");
+  const { user } = useAuth();
   const [requestOpen, setRequestOpen] = useState(false);
 
   if (isLoading) {
@@ -106,6 +109,18 @@ const BundleDetail = () => {
             >
               Request This Package
             </Button>
+            {user && (
+              <BookingRequestDialog
+                serviceType="experiences"
+                serviceTitle={bundle.name}
+                serviceId={bundle.id}
+                trigger={
+                  <Button variant="outline" className="border-primary/30 text-primary px-8 py-6 text-xs tracking-[0.2em] uppercase gap-2">
+                    <CalendarDays size={14} /> Book Directly
+                  </Button>
+                }
+              />
+            )}
           </motion.div>
         </div>
       </section>
@@ -197,6 +212,18 @@ const BundleDetail = () => {
                   >
                     Request This Package
                   </Button>
+                  {user && (
+                    <BookingRequestDialog
+                      serviceType="experiences"
+                      serviceTitle={bundle.name}
+                      serviceId={bundle.id}
+                      trigger={
+                        <Button variant="outline" className="w-full border-primary/30 text-primary py-5 text-xs tracking-[0.2em] uppercase gap-2 mt-3">
+                          <CalendarDays size={14} /> Book Directly
+                        </Button>
+                      }
+                    />
+                  )}
                 </div>
 
                 {/* Quick facts */}
