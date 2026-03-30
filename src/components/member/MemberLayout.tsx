@@ -1,0 +1,38 @@
+import { useEffect } from "react";
+import { useNavigate, Outlet } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { MemberSidebar } from "./MemberSidebar";
+
+export default function MemberLayout() {
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) navigate("/auth");
+  }, [user, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-px h-12 bg-gradient-to-b from-primary/60 to-transparent animate-pulse" />
+      </div>
+    );
+  }
+
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <MemberSidebar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <header className="h-14 flex items-center border-b border-border/50 bg-background/80 backdrop-blur-xl sticky top-0 z-40 px-4">
+            <SidebarTrigger className="text-muted-foreground" />
+          </header>
+          <main className="flex-1 p-6 lg:p-10">
+            <Outlet />
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
+  );
+}
