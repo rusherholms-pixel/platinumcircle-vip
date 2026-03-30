@@ -18,7 +18,7 @@ const ChatWidget = () => {
       id: "welcome",
       role: "assistant",
       content:
-        "Hello, I'm Mia — your personal concierge at Platinum Circle. How can I assist you today?",
+        "Welcome to Platinum Circle. I am Mia, your personal concierge. What brings you to us today?",
       timestamp: new Date(),
     },
   ]);
