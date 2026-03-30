@@ -12,6 +12,8 @@ import Properties from "./pages/Properties";
 import PropertyNew from "./pages/PropertyNew";
 import PropertyEdit from "./pages/PropertyEdit";
 import AdminDashboard from "./pages/AdminDashboard";
+import BundlesPage from "./pages/BundlesPage";
+import BundleDetail from "./pages/BundleDetail";
 import NotFound from "./pages/NotFound";
 
 // Provider dashboard
@@ -41,6 +43,8 @@ const App = () => (
             <Route path="/apply" element={<Apply />} />
             <Route path="/properties" element={<Properties />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/experiences/bundles" element={<BundlesPage />} />
+            <Route path="/experiences/bundles/:slug" element={<BundleDetail />} />
 
             {/* Legacy dashboard redirect */}
             <Route path="/dashboard" element={<Navigate to="/provider/dashboard" replace />} />
