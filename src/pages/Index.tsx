@@ -27,7 +27,7 @@ const Index = () => {
       <DiscretionCommitment />
       <CTASection />
       <Footer />
-      <WhatsAppButton />
+      <ChatWidget />
     </div>
   );
 };
