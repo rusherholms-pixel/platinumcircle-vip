@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
-import { Shield, Lock } from "lucide-react";
+import { Shield } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import BookingRequestDialog from "@/components/member/BookingRequestDialog";
 
 export default function MemberSecurity() {
   return (
@@ -17,15 +18,19 @@ export default function MemberSecurity() {
           <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
             <Shield size={28} className="text-primary" />
           </div>
-          <h3 className="font-display text-xl text-foreground">Coming Soon</h3>
+          <h3 className="font-display text-xl text-foreground">Providers Being Onboarded</h3>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Our vetted security professionals are being onboarded. Browse available providers soon or contact our concierge for immediate arrangements.
+            Our vetted security professionals are being onboarded. Submit a request and our concierge will arrange protection services for you.
           </p>
-          <Button asChild className="bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase mt-2">
-            <a href="https://wa.me/15551234567" target="_blank" rel="noopener noreferrer">
-              <Lock size={14} className="mr-2" /> Contact Concierge
-            </a>
-          </Button>
+          <BookingRequestDialog
+            serviceType="security"
+            serviceTitle="Personal Security Detail"
+            trigger={
+              <Button className="bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase mt-2">
+                <Shield size={14} className="mr-2" /> Request Security
+              </Button>
+            }
+          />
         </CardContent>
       </Card>
     </div>

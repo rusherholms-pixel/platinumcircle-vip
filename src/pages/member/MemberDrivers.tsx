@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { Car } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import BookingRequestDialog from "@/components/member/BookingRequestDialog";
 
 export default function MemberDrivers() {
   return (
@@ -17,15 +18,19 @@ export default function MemberDrivers() {
           <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
             <Car size={28} className="text-primary" />
           </div>
-          <h3 className="font-display text-xl text-foreground">Coming Soon</h3>
+          <h3 className="font-display text-xl text-foreground">Fleet Being Curated</h3>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Our fleet of luxury vehicles and professional drivers is being curated. Contact our concierge for immediate transportation arrangements.
+            Our luxury vehicle fleet and professional drivers are being curated. Submit a request and our concierge will arrange your transportation.
           </p>
-          <Button asChild className="bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase mt-2">
-            <a href="https://wa.me/15551234567" target="_blank" rel="noopener noreferrer">
-              <Car size={14} className="mr-2" /> Contact Concierge
-            </a>
-          </Button>
+          <BookingRequestDialog
+            serviceType="drivers"
+            serviceTitle="Private Chauffeur Service"
+            trigger={
+              <Button className="bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase mt-2">
+                <Car size={14} className="mr-2" /> Request a Driver
+              </Button>
+            }
+          />
         </CardContent>
       </Card>
     </div>
