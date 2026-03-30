@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
 import HomepageContentManager from "@/components/admin/HomepageContentManager";
+import BookingRequestsManager from "@/components/admin/BookingRequestsManager";
 
 interface Application {
   id: string;
@@ -48,7 +49,7 @@ interface Application {
   created_at: string;
 }
 
-type AdminTab = "applications" | "homepage";
+type AdminTab = "applications" | "homepage" | "bookings";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -210,9 +211,18 @@ const AdminDashboard = () => {
           >
             <Image size={16} /> Homepage Content
           </Button>
+          <Button
+            variant={activeTab === "bookings" ? "default" : "ghost"}
+            className={activeTab === "bookings" ? "bg-gradient-gold text-primary-foreground gap-2" : "text-muted-foreground gap-2"}
+            onClick={() => setActiveTab("bookings")}
+          >
+            <FileText size={16} /> Booking Requests
+          </Button>
         </div>
 
-        {activeTab === "homepage" ? (
+        {activeTab === "bookings" ? (
+          <BookingRequestsManager />
+        ) : activeTab === "homepage" ? (
           <HomepageContentManager />
         ) : (
           <>
