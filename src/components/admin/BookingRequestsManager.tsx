@@ -26,7 +26,6 @@ interface BookingRequest {
   status: string;
   admin_notes: string | null;
   created_at: string;
-  profiles?: { full_name: string; email: string; phone: string | null } | null;
 }
 
 interface Profile {
