@@ -33,7 +33,7 @@ export const MagicLinkEmail = ({
         </Section>
         <Heading style={h1}>Your Login Link</Heading>
         <Text style={text}>
-          Click below to sign in to {siteName}. This link will expire shortly.
+          Click below to sign in to Platinum Circle. This link will expire shortly.
         </Text>
         <Button style={button} href={confirmationUrl}>
           Sign In

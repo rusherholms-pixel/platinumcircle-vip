@@ -33,7 +33,7 @@ export const RecoveryEmail = ({
         </Section>
         <Heading style={h1}>Reset Your Password</Heading>
         <Text style={text}>
-          We received a request to reset your password for {siteName}. Click
+          We received a request to reset your password for Platinum Circle. Click
           below to choose a new one.
         </Text>
         <Button style={button} href={confirmationUrl}>
