@@ -37,9 +37,7 @@ export const InviteEmail = ({
         <Heading style={h1}>You're Invited</Heading>
         <Text style={text}>
           You've been personally invited to join{' '}
-          <Link href={siteUrl} style={link}>
-            <strong>{siteName}</strong>
-          </Link>
+          <strong>Platinum Circle</strong>
           . Accept below to create your exclusive account.
         </Text>
         <Button style={button} href={confirmationUrl}>

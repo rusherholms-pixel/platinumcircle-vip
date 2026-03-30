@@ -39,9 +39,7 @@ export const SignupEmail = ({
         <Heading style={h1}>Welcome Aboard</Heading>
         <Text style={text}>
           Thank you for joining{' '}
-          <Link href={siteUrl} style={link}>
-            <strong>{siteName}</strong>
-          </Link>
+          <strong>Platinum Circle</strong>
           . Your exclusive membership awaits.
         </Text>
         <Text style={text}>
