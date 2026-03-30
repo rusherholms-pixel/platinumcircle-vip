@@ -198,6 +198,7 @@ export default function BookingRequestsManager() {
           {filtered.map((booking, i) => {
             const Icon = serviceIcons[booking.service_type] || ClipboardList;
             const isExpanded = expandedId === booking.id;
+            const profile = profilesMap[booking.user_id];
             return (
               <motion.div key={booking.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }} className="bg-card border border-border rounded-lg overflow-hidden">
                 <div className="flex items-center gap-4 p-4 cursor-pointer hover:bg-secondary/30 transition-colors" onClick={() => setExpandedId(isExpanded ? null : booking.id)}>
@@ -209,7 +210,7 @@ export default function BookingRequestsManager() {
                       <Badge variant="outline" className={`${statusColors[booking.status]} text-[10px] tracking-widest uppercase`}>{booking.status}</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground truncate">
-                      {booking.profiles?.full_name || "Unknown"} · {booking.profiles?.email || "—"}
+                      {profile?.full_name || "Unknown"} · {profile?.email || "—"}
                     </p>
                   </div>
                   <span className="text-xs text-muted-foreground hidden sm:block shrink-0">{new Date(booking.created_at).toLocaleDateString()}</span>
@@ -219,9 +220,9 @@ export default function BookingRequestsManager() {
                 {isExpanded && (
                   <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="border-t border-border p-4 space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                      <Detail label="Member" value={booking.profiles?.full_name || "Unknown"} />
-                      <Detail label="Email" value={booking.profiles?.email || "—"} />
-                      <Detail label="Phone" value={booking.profiles?.phone || "—"} />
+                      <Detail label="Member" value={profile?.full_name || "Unknown"} />
+                      <Detail label="Email" value={profile?.email || "—"} />
+                      <Detail label="Phone" value={profile?.phone || "—"} />
                       <Detail label="Dates" value={
                         booking.check_in
                           ? `${new Date(booking.check_in).toLocaleDateString()}${booking.check_out ? ` — ${new Date(booking.check_out).toLocaleDateString()}` : ""}`
