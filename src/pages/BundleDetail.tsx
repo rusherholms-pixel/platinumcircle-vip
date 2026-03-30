@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const BundleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data: bundle, isLoading } = useBundle(slug ?? "");
+  const { user } = useAuth();
   const [requestOpen, setRequestOpen] = useState(false);
 
   if (isLoading) {
