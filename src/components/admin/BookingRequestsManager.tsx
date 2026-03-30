@@ -58,6 +58,7 @@ export default function BookingRequestsManager() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [editNotes, setEditNotes] = useState<Record<string, string>>({});
+  const [profilesMap, setProfilesMap] = useState<Record<string, Profile>>({});
 
   useEffect(() => { fetchBookings(); }, []);
 
@@ -65,9 +66,26 @@ export default function BookingRequestsManager() {
     setLoading(true);
     const { data, error } = await supabase
       .from("booking_requests")
-      .select("*, profiles(full_name, email, phone)")
+      .select("*")
       .order("created_at", { ascending: false });
-    if (!error && data) setBookings(data as BookingRequest[]);
+    if (!error && data) {
+      const bookingsData = data as BookingRequest[];
+      setBookings(bookingsData);
+
+      // Fetch profiles for all unique user_ids
+      const userIds = [...new Set(bookingsData.map((b) => b.user_id))];
+      if (userIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("id, full_name, email, phone")
+          .in("id", userIds);
+        if (profiles) {
+          const map: Record<string, Profile> = {};
+          (profiles as Profile[]).forEach((p) => { map[p.id] = p; });
+          setProfilesMap(map);
+        }
+      }
+    }
     setLoading(false);
   };
 
