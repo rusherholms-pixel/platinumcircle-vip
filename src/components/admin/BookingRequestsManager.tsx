@@ -29,6 +29,13 @@ interface BookingRequest {
   profiles?: { full_name: string; email: string; phone: string | null } | null;
 }
 
+interface Profile {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string | null;
+}
+
 const serviceIcons: Record<string, React.ElementType> = {
   housing: Home, security: Shield, drivers: Car, experiences: Sparkles,
 };
