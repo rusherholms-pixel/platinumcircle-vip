@@ -26,9 +26,9 @@ const GroupCalloutSection = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="font-display text-4xl md:text-5xl font-medium text-foreground mb-6"
         >
-          Planning Something
+          Montreal This Summer?
           <br />
-          <span className="text-gradient-gold">Unforgettable?</span>
+          <span className="text-gradient-gold">We've Got You.</span>
         </motion.h2>
 
         <motion.p
@@ -38,8 +38,8 @@ const GroupCalloutSection = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="font-sans text-muted-foreground text-lg max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          Bachelor weekends, bachelorette escapes, executive retreats, milestone celebrations — 
-          we handle every detail.
+          Bachelor parties, VIP nightlife, private drivers, bachelorette getaways &
+          exclusive group packages — one concierge handles everything.
         </motion.p>
 
         <motion.div
