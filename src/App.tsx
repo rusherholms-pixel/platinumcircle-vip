@@ -16,6 +16,7 @@ import BundlesPage from "./pages/BundlesPage";
 import BundleDetail from "./pages/BundleDetail";
 import CityExperiences from "./pages/CityExperiences";
 import NotFound from "./pages/NotFound";
+import Unsubscribe from "./pages/Unsubscribe";
 
 // Member dashboard
 import MemberLayout from "./components/member/MemberLayout";
