@@ -107,6 +107,57 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_requests: {
+        Row: {
+          admin_notes: string | null
+          check_in: string | null
+          check_out: string | null
+          created_at: string
+          id: string
+          num_guests: number | null
+          preferred_contact: string | null
+          service_id: string | null
+          service_title: string
+          service_type: string
+          special_requests: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          check_in?: string | null
+          check_out?: string | null
+          created_at?: string
+          id?: string
+          num_guests?: number | null
+          preferred_contact?: string | null
+          service_id?: string | null
+          service_title: string
+          service_type: string
+          special_requests?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          check_in?: string | null
+          check_out?: string | null
+          created_at?: string
+          id?: string
+          num_guests?: number | null
+          preferred_contact?: string | null
+          service_id?: string | null
+          service_title?: string
+          service_type?: string
+          special_requests?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       bundle_requests: {
         Row: {
           budget_range: string | null
