@@ -109,6 +109,18 @@ const BundleDetail = () => {
             >
               Request This Package
             </Button>
+            {user && (
+              <BookingRequestDialog
+                serviceType="experiences"
+                serviceTitle={bundle.name}
+                serviceId={bundle.id}
+                trigger={
+                  <Button variant="outline" className="border-primary/30 text-primary px-8 py-6 text-xs tracking-[0.2em] uppercase gap-2">
+                    <CalendarDays size={14} /> Book Directly
+                  </Button>
+                }
+              />
+            )}
           </motion.div>
         </div>
       </section>
