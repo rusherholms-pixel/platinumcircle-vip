@@ -45,7 +45,7 @@ const PropertyForm = ({ propertyId }: PropertyFormProps) => {
   const [isFeatured, setIsFeatured] = useState(false);
   const [amenityInput, setAmenityInput] = useState("");
   const [amenities, setAmenities] = useState<string[]>([]);
-  const [imageInput, setImageInput] = useState("");
+  
   const [images, setImages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -89,13 +89,7 @@ const PropertyForm = ({ propertyId }: PropertyFormProps) => {
     }
   };
 
-  const addImage = () => {
-    const trimmed = imageInput.trim();
-    if (trimmed && !images.includes(trimmed)) {
-      setImages([...images, trimmed]);
-      setImageInput("");
-    }
-  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
