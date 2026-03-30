@@ -1,8 +1,11 @@
 import { motion } from "motion/react";
 import { MapPin, Users, Bed, Bath, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import BookingRequestDialog from "@/components/member/BookingRequestDialog";
 
 interface PropertyCardProps {
+  id?: string;
   title: string;
   location: string;
   city: string;
@@ -17,9 +20,11 @@ interface PropertyCardProps {
   rating: number;
   reviewCount: number;
   isFeatured: boolean;
+  showBooking?: boolean;
 }
 
 const PropertyCard = ({
+  id,
   title,
   city,
   country,
@@ -33,6 +38,7 @@ const PropertyCard = ({
   rating,
   reviewCount,
   isFeatured,
+  showBooking = false,
 }: PropertyCardProps) => {
   return (
     <motion.div
@@ -118,6 +124,20 @@ const PropertyCard = ({
             </span>
           )}
         </div>
+
+        {/* Booking button */}
+        {showBooking && (
+          <BookingRequestDialog
+            serviceType="housing"
+            serviceTitle={title}
+            serviceId={id}
+            trigger={
+              <Button className="w-full bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase">
+                Request Booking
+              </Button>
+            }
+          />
+        )}
       </div>
     </motion.div>
   );
