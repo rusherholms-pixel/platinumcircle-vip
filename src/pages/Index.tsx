@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import SocialProofBar from "@/components/SocialProofBar";
 import FeaturedExperiencesSection from "@/components/FeaturedExperiencesSection";
-import SignatureBundlesSection from "@/components/SignatureBundlesSection";
+
 import GroupCalloutSection from "@/components/GroupCalloutSection";
 import ServicesSection from "@/components/ServicesSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
