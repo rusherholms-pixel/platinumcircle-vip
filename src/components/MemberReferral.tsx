@@ -106,7 +106,7 @@ const MemberReferral = () => {
               {referralUrl}
             </div>
             <Button variant="outline" size="icon" onClick={copyLink} className="border-border shrink-0">
-              {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
+              {copied ? <Check size={16} className="text-primary" /> : <Copy size={16} />}
             </Button>
           </div>
 

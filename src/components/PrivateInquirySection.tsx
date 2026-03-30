@@ -30,7 +30,7 @@ const PrivateInquirySection = () => {
     }
 
     setSubmitting(true);
-    const { error } = await supabase.from("private_inquiries").insert(parsed.data);
+    const { error } = await supabase.from("private_inquiries").insert([parsed.data]);
     setSubmitting(false);
 
     if (error) {

@@ -86,7 +86,7 @@ const CityExperiences = () => {
     );
   }
 
-  const activeBundles = bundles?.filter((b) => b.is_active) ?? [];
+  const activeBundles = bundles ?? [];
 
   return (
     <div className="min-h-screen bg-background">
