@@ -82,7 +82,6 @@ export default function BookingRequestDialog({ serviceType, serviceTitle, servic
         },
       });
     }
-    }
   };
 
   const labels: Record<string, { dateLabel: string; guestLabel: string }> = {
