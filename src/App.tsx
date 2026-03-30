@@ -60,10 +60,22 @@ const App = () => (
             <Route path="/experiences/bundles/:slug" element={<BundleDetail />} />
             <Route path="/experiences/:city" element={<CityExperiences />} />
 
-            {/* Legacy dashboard redirect */}
-            <Route path="/dashboard" element={<Navigate to="/provider/dashboard" replace />} />
-            <Route path="/dashboard/new" element={<Navigate to="/provider/listings/new" replace />} />
-            <Route path="/dashboard/edit/:id" element={<Navigate to="/provider/listings/edit/:id" replace />} />
+            {/* Legacy redirects */}
+            <Route path="/dashboard" element={<Navigate to="/member/dashboard" replace />} />
+            <Route path="/properties" element={<Navigate to="/member/housing" replace />} />
+
+            {/* Member portal */}
+            <Route path="/member" element={<MemberLayout />}>
+              <Route path="dashboard" element={<MemberOverview />} />
+              <Route path="housing" element={<MemberHousing />} />
+              <Route path="security" element={<MemberSecurity />} />
+              <Route path="drivers" element={<MemberDrivers />} />
+              <Route path="experiences" element={<MemberExperiences />} />
+              <Route path="bookings" element={<MemberBookings />} />
+              <Route path="referrals" element={<MemberReferrals />} />
+              <Route path="profile" element={<MemberProfile />} />
+              <Route path="settings" element={<MemberSettings />} />
+            </Route>
 
             {/* Provider dashboard */}
             <Route path="/provider" element={<ProviderLayout />}>
