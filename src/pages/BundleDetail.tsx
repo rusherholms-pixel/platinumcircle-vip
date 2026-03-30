@@ -197,9 +197,6 @@ const BundleDetail = () => {
                   >
                     Request This Package
                   </Button>
-                  {bundle.starting_price && (
-                    <p className="text-xs text-muted-foreground mt-3">{bundle.starting_price}</p>
-                  )}
                 </div>
 
                 {/* Quick facts */}
