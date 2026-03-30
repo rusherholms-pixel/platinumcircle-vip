@@ -106,11 +106,6 @@ const BundleDetail = () => {
             >
               Request This Package
             </Button>
-            {bundle.starting_price && (
-              <span className="text-sm text-muted-foreground tracking-wide">
-                {bundle.starting_price}
-              </span>
-            )}
           </motion.div>
         </div>
       </section>
