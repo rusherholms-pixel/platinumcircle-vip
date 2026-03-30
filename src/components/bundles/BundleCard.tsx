@@ -44,13 +44,6 @@ const BundleCard = ({ bundle, index = 0, variant = "default" }: BundleCardProps)
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-          {bundle.starting_price && (
-            <div className="absolute top-4 right-4">
-              <Badge className="bg-background/80 backdrop-blur-sm text-foreground border-border text-[10px] tracking-widest uppercase">
-                {bundle.starting_price}
-              </Badge>
-            </div>
-          )}
         </div>
 
         {/* Content */}

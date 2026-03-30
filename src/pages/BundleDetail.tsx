@@ -106,11 +106,6 @@ const BundleDetail = () => {
             >
               Request This Package
             </Button>
-            {bundle.starting_price && (
-              <span className="text-sm text-muted-foreground tracking-wide">
-                {bundle.starting_price}
-              </span>
-            )}
           </motion.div>
         </div>
       </section>
@@ -202,9 +197,6 @@ const BundleDetail = () => {
                   >
                     Request This Package
                   </Button>
-                  {bundle.starting_price && (
-                    <p className="text-xs text-muted-foreground mt-3">{bundle.starting_price}</p>
-                  )}
                 </div>
 
                 {/* Quick facts */}
