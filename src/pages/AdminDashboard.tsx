@@ -48,7 +48,7 @@ interface Application {
   created_at: string;
 }
 
-type AdminTab = "applications" | "homepage";
+type AdminTab = "applications" | "homepage" | "bookings";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();

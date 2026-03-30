@@ -121,10 +121,11 @@ export default function BookingRequestsManager() {
 
   const filtered = bookings.filter((b) => {
     const q = searchQuery.toLowerCase();
+    const profile = profilesMap[b.user_id];
     const matchesSearch = !q ||
       b.service_title.toLowerCase().includes(q) ||
-      b.profiles?.full_name?.toLowerCase().includes(q) ||
-      b.profiles?.email?.toLowerCase().includes(q);
+      profile?.full_name?.toLowerCase().includes(q) ||
+      profile?.email?.toLowerCase().includes(q);
     const matchesStatus = statusFilter === "all" || b.status === statusFilter;
     const matchesType = typeFilter === "all" || b.service_type === typeFilter;
     return matchesSearch && matchesStatus && matchesType;
