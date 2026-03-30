@@ -211,10 +211,18 @@ const AdminDashboard = () => {
           >
             <Image size={16} /> Homepage Content
           </Button>
+          <Button
+            variant={activeTab === "bookings" ? "default" : "ghost"}
+            className={activeTab === "bookings" ? "bg-gradient-gold text-primary-foreground gap-2" : "text-muted-foreground gap-2"}
+            onClick={() => setActiveTab("bookings")}
+          >
+            <FileText size={16} /> Booking Requests
+          </Button>
         </div>
 
-        {activeTab === "homepage" ? (
-          <HomepageContentManager />
+        {activeTab === "bookings" ? (
+          <BookingRequestsManager />
+        ) : activeTab === "homepage" ? (
         ) : (
           <>
             {/* Stats */}
