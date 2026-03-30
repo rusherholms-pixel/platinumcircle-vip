@@ -38,7 +38,7 @@ export const EmailChangeEmail = ({
         </Section>
         <Heading style={h1}>Confirm Email Change</Heading>
         <Text style={text}>
-          You requested to change your email from{' '}
+          You requested to change your Platinum Circle account email from{' '}
           <Link href={`mailto:${email}`} style={link}>{email}</Link>{' '}
           to{' '}
           <Link href={`mailto:${newEmail}`} style={link}>{newEmail}</Link>.
