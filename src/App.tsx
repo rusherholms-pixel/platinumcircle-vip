@@ -60,6 +60,7 @@ const App = () => (
             <Route path="/experiences/bundles" element={<BundlesPage />} />
             <Route path="/experiences/bundles/:slug" element={<BundleDetail />} />
             <Route path="/experiences/:city" element={<CityExperiences />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
 
             {/* Legacy redirects */}
             <Route path="/dashboard" element={<Navigate to="/member/dashboard" replace />} />
