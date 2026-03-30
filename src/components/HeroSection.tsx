@@ -1,16 +1,38 @@
 import { motion } from "motion/react";
-import heroImage from "@/assets/hero-villa.webp";
+import { useSection } from "@/hooks/useHomepageContent";
+import heroImageFallback from "@/assets/hero-villa.webp";
 
 const HeroSection = () => {
+  const { section } = useSection("global_hero");
+
+  const headline = section?.headline || "Luxury Without Limits";
+  const subheadline = section?.subheadline || "Connecting you with elite homes, private chauffeurs, curated experiences, and personal security — all through one trusted platform.";
+  const ctaLabel = section?.cta_label || "Apply for Membership";
+  const useVideo = section?.use_video && section?.video_url;
+  const heroImage = section?.hero_image_url || heroImageFallback;
+
+  // Split headline by first space for styling
+  const words = headline.split(" ");
+  const firstWord = words[0];
+  const rest = words.slice(1).join(" ");
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image */}
+      {/* Background */}
       <div className="absolute inset-0">
-        <img
-          src={heroImage}
-          alt="Luxury villa overlooking the ocean at night"
-          className="w-full h-full object-cover"
-        />
+        {useVideo ? (
+          <video
+            src={section!.video_url!}
+            autoPlay muted loop playsInline
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <img
+            src={heroImage}
+            alt="Luxury villa overlooking the ocean at night"
+            className="w-full h-full object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
       </div>
 
@@ -31,9 +53,13 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="font-display text-5xl md:text-7xl lg:text-8xl font-medium leading-[0.95] mb-8"
         >
-          <span className="text-gradient-gold">Luxury</span>
-          <br />
-          <span className="text-foreground">Without Limits</span>
+          <span className="text-gradient-gold">{firstWord}</span>
+          {rest && (
+            <>
+              <br />
+              <span className="text-foreground">{rest}</span>
+            </>
+          )}
         </motion.h1>
 
         <motion.p
@@ -42,8 +68,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="font-sans text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed"
         >
-          Connecting you with elite homes, private chauffeurs, curated experiences, 
-          and personal security — all through one trusted platform.
+          {subheadline}
         </motion.p>
 
         <motion.div
@@ -56,7 +81,7 @@ const HeroSection = () => {
             href="/apply?type=member"
             className="px-10 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity"
           >
-            Apply for Membership
+            {ctaLabel}
           </a>
           <a
             href="/apply?type=provider"
