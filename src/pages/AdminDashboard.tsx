@@ -220,6 +220,20 @@ const AdminDashboard = () => {
           >
             <FileText size={16} /> Booking Requests
           </Button>
+          <Button
+            variant={activeTab === "inbox" ? "default" : "ghost"}
+            className={activeTab === "inbox" ? "bg-gradient-gold text-primary-foreground gap-2" : "text-muted-foreground gap-2"}
+            onClick={() => setActiveTab("inbox")}
+          >
+            <MessageSquare size={16} /> Concierge Inbox
+          </Button>
+          <Button
+            variant={activeTab === "mia-leads" ? "default" : "ghost"}
+            className={activeTab === "mia-leads" ? "bg-gradient-gold text-primary-foreground gap-2" : "text-muted-foreground gap-2"}
+            onClick={() => setActiveTab("mia-leads")}
+          >
+            <Sparkles size={16} /> Mia Leads
+          </Button>
         </div>
 
         {activeTab === "bookings" ? (
