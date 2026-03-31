@@ -38,7 +38,7 @@ export function MemberSidebar() {
       <SidebarContent className="pt-4">
         {!collapsed && (
           <div className="px-4 pb-4 mb-2 border-b border-border">
-            <a href="/" className="font-display text-xl tracking-wider text-gradient-gold">
+            <a href="/member/dashboard" className="font-display text-xl tracking-wider text-gradient-gold">
               Platinum Circle
             </a>
             <p className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground mt-1">
@@ -92,7 +92,7 @@ export function MemberSidebar() {
         <Button
           variant="ghost"
           size={collapsed ? "icon" : "default"}
-          onClick={() => { signOut(); navigate("/"); }}
+          onClick={() => { signOut(); navigate("/auth"); }}
           className="w-full justify-start text-muted-foreground hover:text-foreground text-xs"
         >
           <LogOut className={collapsed ? "" : "mr-2"} size={16} />

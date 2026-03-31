@@ -3,13 +3,20 @@ import { useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { MemberSidebar } from "./MemberSidebar";
+import { toast } from "@/hooks/use-toast";
 
 export default function MemberLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) navigate("/auth");
+    if (!loading && !user) {
+      toast({
+        title: "Session expired",
+        description: "Your session has expired. Please sign in to continue.",
+      });
+      navigate("/auth");
+    }
   }, [user, loading, navigate]);
 
   if (loading) {
@@ -20,6 +27,8 @@ export default function MemberLayout() {
     );
   }
 
+  if (!user) return null;
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -28,7 +37,7 @@ export default function MemberLayout() {
           <header className="h-14 flex items-center border-b border-border/50 bg-background/80 backdrop-blur-xl sticky top-0 z-40 px-4">
             <SidebarTrigger className="text-muted-foreground" />
           </header>
-          <main className="flex-1 p-6 lg:p-10">
+          <main className="flex-1 px-6 py-8 lg:px-12 lg:py-10">
             <Outlet />
           </main>
         </div>

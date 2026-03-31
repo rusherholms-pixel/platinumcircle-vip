@@ -11,13 +11,12 @@ const HeroSection = () => {
   const useVideo = section?.use_video && section?.video_url;
   const heroImage = section?.hero_image_url || heroImageFallback;
 
-  // Split headline by first space for styling
   const words = headline.split(" ");
   const firstWord = words[0];
   const rest = words.slice(1).join(" ");
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen md:min-h-screen flex items-center justify-center overflow-hidden" style={{ minHeight: "max(70vh, 520px)" }}>
       {/* Background */}
       <div className="absolute inset-0">
         {useVideo ? (
@@ -31,6 +30,7 @@ const HeroSection = () => {
             src={heroImage}
             alt="Luxury villa overlooking the ocean at night"
             className="w-full h-full object-cover"
+            loading="eager"
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
@@ -51,7 +51,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-display text-5xl md:text-7xl lg:text-8xl font-medium leading-[0.95] mb-8"
+          className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-medium leading-[0.95] mb-6 md:mb-8"
         >
           <span className="text-gradient-gold">{firstWord}</span>
           {rest && (
@@ -66,7 +66,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="font-sans text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed"
+          className="font-sans text-muted-foreground text-base md:text-xl max-w-2xl mx-auto mb-10 md:mb-12 leading-relaxed"
         >
           {subheadline}
         </motion.p>
@@ -79,7 +79,7 @@ const HeroSection = () => {
         >
           <a
             href="/apply"
-            className="px-10 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity"
+            className="px-10 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity min-h-[48px] flex items-center justify-center"
           >
             {ctaLabel}
           </a>

@@ -70,7 +70,7 @@ const FeaturedExperiencesSection = () => {
   const rest = experiences.filter((e) => !e.featured);
 
   return (
-    <section className="py-24 bg-card border-t border-border">
+    <section className="py-12 md:py-20 bg-card border-t border-border">
       <div className="container mx-auto px-6">
         {/* Header */}
         <motion.div
@@ -80,15 +80,15 @@ const FeaturedExperiencesSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-6"
         >
-          <p className="text-xs tracking-[0.4em] uppercase text-primary mb-4 font-sans">
+          <p className="text-xs tracking-[0.4em] uppercase text-primary mb-3 font-sans">
             Montreal's Premier Experiences
           </p>
-          <h2 className="font-display text-4xl md:text-5xl font-medium text-foreground mb-4">
+          <h2 className="font-display text-3xl md:text-5xl font-medium text-foreground mb-3">
             Your Night,
             <br />
             <span className="text-gradient-gold">Your Rules</span>
           </h2>
-          <p className="font-sans text-muted-foreground max-w-2xl mx-auto leading-relaxed text-lg">
+          <p className="font-sans text-muted-foreground max-w-2xl mx-auto leading-relaxed text-base md:text-lg">
             Bachelor weekends, VIP nightlife, private chauffeurs & bottle service —
             every detail handled so you don't have to lift a finger.
           </p>
@@ -99,15 +99,15 @@ const FeaturedExperiencesSection = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="flex justify-center mb-14"
+          className="flex justify-center mb-10 md:mb-14"
         >
           <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary text-[10px] tracking-[0.3em] uppercase font-semibold">
             🔥 Summer 2026 — Montreal Is Calling
           </span>
         </motion.div>
 
-        {/* Two featured large cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+        {/* Featured cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-3 md:mb-4">
           {featured.map((exp, i) => (
             <motion.div
               key={exp.title}
@@ -129,11 +129,11 @@ const FeaturedExperiencesSection = () => {
                   height={720}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-8">
-                  <h3 className="font-display text-3xl text-foreground mb-2 group-hover:text-primary transition-colors">
+                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8">
+                  <h3 className="font-display text-xl md:text-3xl text-foreground mb-1 md:mb-2 group-hover:text-primary transition-colors">
                     {exp.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mb-3">
+                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed max-w-sm mb-2 md:mb-3 line-clamp-2">
                     {exp.subtitle}
                   </p>
                   <span className="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-primary font-semibold">
@@ -145,8 +145,8 @@ const FeaturedExperiencesSection = () => {
           ))}
         </div>
 
-        {/* Remaining experiences — smaller cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-14">
+        {/* Smaller cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-10 md:mb-14">
           {rest.map((exp, i) => (
             <motion.div
               key={exp.title}
@@ -168,7 +168,7 @@ const FeaturedExperiencesSection = () => {
                   height={853}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4">
                   <h4 className="font-display text-sm text-foreground group-hover:text-primary transition-colors">
                     {exp.title}
                   </h4>
@@ -190,7 +190,7 @@ const FeaturedExperiencesSection = () => {
         >
           <Link
             to="/experiences/bundles"
-            className="inline-flex items-center gap-3 px-10 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-3 px-10 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity min-h-[48px]"
           >
             View All Packages <ArrowRight size={16} />
           </Link>
