@@ -105,13 +105,13 @@ ABSOLUTE RULES
 - Never break character unless sincerely asked if you are an AI — if asked, respond honestly: "I am an AI concierge for Platinum Circle. Every arrangement I begin connects to a real team who personally handles every detail of your experience."
 - Never end a conversation without a clear next step or captured contact information`;
 
-async function sendLeadEmail(leadData: Record<string, string>) {
+async function processLeadData(leadData: Record<string, string>, conversationHistory?: any[]) {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Store lead as a private inquiry
+    // Store lead in private_inquiries (existing behavior)
     await supabase.from("private_inquiries").insert({
       first_name: leadData.name || "Unknown",
       email: leadData.email || "not-provided@placeholder.com",
@@ -120,37 +120,44 @@ async function sendLeadEmail(leadData: Record<string, string>) {
       status: "new",
     });
 
-    // Send notification email to admin
-    const adminEmail = "slusere@yahoo.com";
-    const emailPayload = {
-      to: adminEmail,
-      subject: `New Lead from Mia — ${leadData.name || "Unknown"}`,
-      html: `
-        <h2>New Lead Captured by Mia</h2>
-        <table style="border-collapse:collapse;width:100%;max-width:500px;">
-          <tr><td style="padding:8px;font-weight:bold;">Name</td><td style="padding:8px;">${leadData.name || "N/A"}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold;">Email</td><td style="padding:8px;">${leadData.email || "N/A"}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold;">Phone/WhatsApp</td><td style="padding:8px;">${leadData.phone || "N/A"}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold;">Interest</td><td style="padding:8px;">${leadData.interest || "N/A"}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold;">Timeline</td><td style="padding:8px;">${leadData.timeline || "N/A"}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold;">Group Size</td><td style="padding:8px;">${leadData.group_size || "N/A"}</td></tr>
-          <tr><td style="padding:8px;font-weight:bold;">Notes</td><td style="padding:8px;">${leadData.notes || "N/A"}</td></tr>
-        </table>
-      `,
-    };
+    // Create Mia lead record for admin panel
+    const conversationSummary = conversationHistory
+      ? conversationHistory.map((m: any) => `${m.role}: ${m.content}`).join("\n").substring(0, 2000)
+      : null;
 
-    // Queue the email
-    await supabase.rpc("enqueue_email", {
-      queue_name: "transactional_emails",
-      payload: {
-        to: emailPayload.to,
-        subject: emailPayload.subject,
-        html: emailPayload.html,
-        template_name: "lead-notification",
+    await supabase.from("mia_leads").insert({
+      lead_name: leadData.name || "Unknown",
+      email: leadData.email || null,
+      phone: leadData.phone || null,
+      interest: leadData.interest || null,
+      timeline: leadData.timeline || null,
+      group_size: leadData.group_size || null,
+      conversation_summary: conversationSummary,
+      escalation_reason: leadData.notes || "Lead captured by Mia",
+      status: "new",
+      source: "mia_ai",
+    });
+
+    // Send escalation email via transactional email system
+    await supabase.functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "mia-escalation",
+        recipientEmail: "slusere@yahoo.com",
+        idempotencyKey: `mia-lead-${Date.now()}-${leadData.name}`,
+        templateData: {
+          leadName: leadData.name || "Unknown",
+          email: leadData.email || null,
+          phone: leadData.phone || null,
+          interest: leadData.interest || null,
+          timeline: leadData.timeline || null,
+          groupSize: leadData.group_size || null,
+          escalationReason: leadData.notes || "Lead captured during conversation",
+          conversationSummary: conversationSummary?.substring(0, 500) || null,
+        },
       },
     });
 
-    console.log("Lead saved and admin notified:", leadData.name);
+    console.log("Lead processed and escalation sent:", leadData.name);
   } catch (err) {
     console.error("Failed to process lead:", err);
   }
