@@ -92,7 +92,7 @@ export function MemberSidebar() {
         <Button
           variant="ghost"
           size={collapsed ? "icon" : "default"}
-          onClick={() => { signOut(); navigate("/"); }}
+          onClick={() => { signOut(); navigate("/auth"); }}
           className="w-full justify-start text-muted-foreground hover:text-foreground text-xs"
         >
           <LogOut className={collapsed ? "" : "mr-2"} size={16} />
