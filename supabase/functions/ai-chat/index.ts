@@ -248,7 +248,7 @@ serve(async (req) => {
         // Process lead data if present
         const leadData = extractLeadData(rawReply);
         if (leadData) {
-          await sendLeadEmail(leadData);
+          await processLeadData(leadData, history);
         }
 
         return new Response(
