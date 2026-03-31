@@ -30,6 +30,7 @@ import MemberBookings from "./pages/member/MemberBookings";
 import MemberReferrals from "./pages/member/MemberReferrals";
 import MemberProfile from "./pages/member/MemberProfile";
 import MemberSettings from "./pages/member/MemberSettings";
+import MemberMessages from "./pages/member/MemberMessages";
 
 // Provider dashboard
 import ProviderLayout from "./components/provider/ProviderLayout";
