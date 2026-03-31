@@ -107,7 +107,7 @@ const FeaturedExperiencesSection = () => {
         </motion.div>
 
         {/* Two featured large cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
           {featured.map((exp, i) => (
             <motion.div
               key={exp.title}
