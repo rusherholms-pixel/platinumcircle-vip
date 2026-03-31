@@ -236,7 +236,11 @@ const AdminDashboard = () => {
           </Button>
         </div>
 
-        {activeTab === "bookings" ? (
+        {activeTab === "inbox" ? (
+          <ConciergeInbox />
+        ) : activeTab === "mia-leads" ? (
+          <MiaLeadsManager />
+        ) : activeTab === "bookings" ? (
           <BookingRequestsManager />
         ) : activeTab === "homepage" ? (
           <HomepageContentManager />
