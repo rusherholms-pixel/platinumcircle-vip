@@ -1,0 +1,1 @@
+UPDATE public.bundles SET hero_image_url = 'https://ejnzkmzsinepbxrniuvj.supabase.co/storage/v1/object/public/homepage-assets/bundles%2Fbundle-elite-home.jpg', featured_card_image = 'https://ejnzkmzsinepbxrniuvj.supabase.co/storage/v1/object/public/homepage-assets/bundles%2Fbundle-elite-home.jpg' WHERE slug = 'elite-home-experience';
