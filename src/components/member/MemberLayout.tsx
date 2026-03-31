@@ -3,6 +3,8 @@ import { useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { MemberSidebar } from "./MemberSidebar";
+import { NotificationBell } from "./NotificationBell";
+import { FloatingConciergeButton } from "./FloatingConciergeButton";
 import { toast } from "@/hooks/use-toast";
 
 export default function MemberLayout() {
@@ -34,12 +36,14 @@ export default function MemberLayout() {
       <div className="min-h-screen flex w-full">
         <MemberSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center border-b border-border/50 bg-background/80 backdrop-blur-xl sticky top-0 z-40 px-4">
+          <header className="h-14 flex items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-xl sticky top-0 z-40 px-4">
             <SidebarTrigger className="text-muted-foreground" />
+            <NotificationBell />
           </header>
           <main className="flex-1 px-6 py-8 lg:px-12 lg:py-10">
             <Outlet />
           </main>
+          <FloatingConciergeButton />
         </div>
       </div>
     </SidebarProvider>

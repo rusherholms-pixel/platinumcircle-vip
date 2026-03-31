@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Users, FileText, CheckCircle, XCircle, Clock, LogOut,
-  ChevronDown, ChevronUp, Search, Filter, LayoutDashboard, Image,
+  ChevronDown, ChevronUp, Search, Filter, LayoutDashboard, Image, MessageSquare, Sparkles,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,6 +21,8 @@ import {
 import { toast } from "@/hooks/use-toast";
 import HomepageContentManager from "@/components/admin/HomepageContentManager";
 import BookingRequestsManager from "@/components/admin/BookingRequestsManager";
+import ConciergeInbox from "@/components/admin/ConciergeInbox";
+import MiaLeadsManager from "@/components/admin/MiaLeadsManager";
 
 interface Application {
   id: string;
@@ -49,7 +51,7 @@ interface Application {
   created_at: string;
 }
 
-type AdminTab = "applications" | "homepage" | "bookings";
+type AdminTab = "applications" | "homepage" | "bookings" | "inbox" | "mia-leads";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -218,9 +220,27 @@ const AdminDashboard = () => {
           >
             <FileText size={16} /> Booking Requests
           </Button>
+          <Button
+            variant={activeTab === "inbox" ? "default" : "ghost"}
+            className={activeTab === "inbox" ? "bg-gradient-gold text-primary-foreground gap-2" : "text-muted-foreground gap-2"}
+            onClick={() => setActiveTab("inbox")}
+          >
+            <MessageSquare size={16} /> Concierge Inbox
+          </Button>
+          <Button
+            variant={activeTab === "mia-leads" ? "default" : "ghost"}
+            className={activeTab === "mia-leads" ? "bg-gradient-gold text-primary-foreground gap-2" : "text-muted-foreground gap-2"}
+            onClick={() => setActiveTab("mia-leads")}
+          >
+            <Sparkles size={16} /> Mia Leads
+          </Button>
         </div>
 
-        {activeTab === "bookings" ? (
+        {activeTab === "inbox" ? (
+          <ConciergeInbox />
+        ) : activeTab === "mia-leads" ? (
+          <MiaLeadsManager />
+        ) : activeTab === "bookings" ? (
           <BookingRequestsManager />
         ) : activeTab === "homepage" ? (
           <HomepageContentManager />

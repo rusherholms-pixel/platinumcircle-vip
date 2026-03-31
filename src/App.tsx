@@ -30,6 +30,7 @@ import MemberBookings from "./pages/member/MemberBookings";
 import MemberReferrals from "./pages/member/MemberReferrals";
 import MemberProfile from "./pages/member/MemberProfile";
 import MemberSettings from "./pages/member/MemberSettings";
+import MemberMessages from "./pages/member/MemberMessages";
 
 // Provider dashboard
 import ProviderLayout from "./components/provider/ProviderLayout";
@@ -79,6 +80,7 @@ const App = () => (
               <Route path="referrals" element={<MemberReferrals />} />
               <Route path="profile" element={<MemberProfile />} />
               <Route path="settings" element={<MemberSettings />} />
+              <Route path="messages" element={<MemberMessages />} />
             </Route>
 
             {/* Provider dashboard */}

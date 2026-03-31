@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Home, Shield, Car, Sparkles, ClipboardList,
-  Gift, UserCircle, Settings, LogOut,
+  Gift, UserCircle, Settings, LogOut, MessageSquare,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,6 +22,7 @@ const browseNav = [
 
 const accountNav = [
   { title: "My Bookings", url: "/member/bookings", icon: ClipboardList },
+  { title: "Messages", url: "/member/messages", icon: MessageSquare },
   { title: "Referrals", url: "/member/referrals", icon: Gift },
   { title: "Profile", url: "/member/profile", icon: UserCircle },
   { title: "Settings", url: "/member/settings", icon: Settings },
