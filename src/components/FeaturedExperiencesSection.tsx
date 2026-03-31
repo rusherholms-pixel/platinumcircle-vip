@@ -9,6 +9,7 @@ import bundleLimousine from "@/assets/bundle-limousine.jpg";
 import bundleEscalade from "@/assets/bundle-escalade.jpg";
 import bundleVipLounge from "@/assets/bundle-vip-lounge.jpg";
 import bundleMaybach from "@/assets/bundle-maybach.jpg";
+import bundleEliteHome from "@/assets/bundle-elite-home.jpg";
 
 const experiences = [
   {
