@@ -3,6 +3,8 @@ import { useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { MemberSidebar } from "./MemberSidebar";
+import { NotificationBell } from "./NotificationBell";
+import { FloatingConciergeButton } from "./FloatingConciergeButton";
 import { toast } from "@/hooks/use-toast";
 
 export default function MemberLayout() {
