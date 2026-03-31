@@ -27,6 +27,13 @@ const experiences = [
     featured: true,
   },
   {
+    image: bundleEliteHome,
+    title: "Elite Home Experience",
+    subtitle: "Private chef, luxury penthouse & bespoke in-villa entertainment.",
+    link: "/experiences/bundles/elite-home-experience",
+    featured: true,
+  },
+  {
     image: bundleBachelorette,
     title: "Bachelorette Escapes",
     subtitle: "Champagne towers, spa days & glamorous nights out.",
