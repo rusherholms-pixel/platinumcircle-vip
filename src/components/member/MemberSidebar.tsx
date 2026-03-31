@@ -22,6 +22,7 @@ const browseNav = [
 
 const accountNav = [
   { title: "My Bookings", url: "/member/bookings", icon: ClipboardList },
+  { title: "Messages", url: "/member/messages", icon: MessageSquare },
   { title: "Referrals", url: "/member/referrals", icon: Gift },
   { title: "Profile", url: "/member/profile", icon: UserCircle },
   { title: "Settings", url: "/member/settings", icon: Settings },

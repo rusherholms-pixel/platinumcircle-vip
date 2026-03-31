@@ -80,6 +80,7 @@ const App = () => (
               <Route path="referrals" element={<MemberReferrals />} />
               <Route path="profile" element={<MemberProfile />} />
               <Route path="settings" element={<MemberSettings />} />
+              <Route path="messages" element={<MemberMessages />} />
             </Route>
 
             {/* Provider dashboard */}
