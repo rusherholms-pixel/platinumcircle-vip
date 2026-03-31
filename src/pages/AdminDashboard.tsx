@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   Users, FileText, CheckCircle, XCircle, Clock, LogOut,
-  ChevronDown, ChevronUp, Search, Filter, LayoutDashboard, Image,
+  ChevronDown, ChevronUp, Search, Filter, LayoutDashboard, Image, MessageSquare, Sparkles,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
