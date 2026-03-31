@@ -51,7 +51,7 @@ interface Application {
   created_at: string;
 }
 
-type AdminTab = "applications" | "homepage" | "bookings";
+type AdminTab = "applications" | "homepage" | "bookings" | "inbox" | "mia-leads";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
