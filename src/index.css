@@ -49,6 +49,12 @@
     --cream: 33 43% 94%;
     --charcoal: 0 0% 8%;
     --charcoal-light: 0 0% 14%;
+
+    /* Spacing tokens */
+    --section-gap-desktop: 3rem;
+    --section-gap-mobile: 2rem;
+    --page-px-mobile: 1.5rem;
+    --page-px-desktop: 3rem;
   }
 }
 
@@ -59,10 +65,23 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
+    line-height: 1.15;
+  }
+
+  /* Enforce consistent body line height */
+  p, li, span, a {
+    line-height: 1.5;
+  }
+
+  /* Prevent horizontal overflow globally */
+  html, body {
+    overflow-x: hidden;
   }
 }
 
@@ -81,4 +100,32 @@
   .border-gradient-gold {
     border-image: linear-gradient(135deg, hsl(37 45% 75%), hsl(37 38% 60%)) 1;
   }
+
+  /* Consistent section spacing */
+  .section-padding {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  /* Consistent page padding */
+  .page-padding {
+    @apply px-6 md:px-12 lg:px-20;
+  }
+}
+
+/* Ensure all images don't break layout */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Minimum button tap target for mobile */
+@media (pointer: coarse) {
+  button, a[role="button"], [role="button"] {
+    min-height: 44px;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
