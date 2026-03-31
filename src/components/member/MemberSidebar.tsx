@@ -1,6 +1,6 @@
 import {
   LayoutDashboard, Home, Shield, Car, Sparkles, ClipboardList,
-  Gift, UserCircle, Settings, LogOut,
+  Gift, UserCircle, Settings, LogOut, MessageSquare,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
