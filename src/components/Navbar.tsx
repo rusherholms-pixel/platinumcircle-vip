@@ -18,6 +18,7 @@ const memberLinks = [
   { label: "Drivers", href: "/member/drivers" },
   { label: "Experiences", href: "/member/experiences" },
   { label: "My Bookings", href: "/member/bookings" },
+  { label: "Messages", href: "/member/messages" },
 ];
 
 const Navbar = () => {
