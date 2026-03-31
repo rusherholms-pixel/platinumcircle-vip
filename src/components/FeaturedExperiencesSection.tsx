@@ -9,6 +9,7 @@ import bundleLimousine from "@/assets/bundle-limousine.jpg";
 import bundleEscalade from "@/assets/bundle-escalade.jpg";
 import bundleVipLounge from "@/assets/bundle-vip-lounge.jpg";
 import bundleMaybach from "@/assets/bundle-maybach.jpg";
+import bundleEliteHome from "@/assets/bundle-elite-home.jpg";
 
 const experiences = [
   {
@@ -23,6 +24,13 @@ const experiences = [
     title: "VIP Nightlife",
     subtitle: "Skip the line. Bottle service, private tables & the city's best venues.",
     link: "/experiences/bundles",
+    featured: true,
+  },
+  {
+    image: bundleEliteHome,
+    title: "Elite Home Experience",
+    subtitle: "Private chef, luxury penthouse & bespoke in-villa entertainment.",
+    link: "/experiences/bundles/elite-home-experience",
     featured: true,
   },
   {
@@ -99,7 +107,7 @@ const FeaturedExperiencesSection = () => {
         </motion.div>
 
         {/* Two featured large cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
           {featured.map((exp, i) => (
             <motion.div
               key={exp.title}
