@@ -209,7 +209,7 @@ serve(async (req) => {
         // Check for lead data in external agent response too
         const leadData = extractLeadData(rawReply);
         if (leadData) {
-          await sendLeadEmail(leadData);
+          await processLeadData(leadData, history);
         }
 
         return new Response(
