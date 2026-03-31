@@ -301,6 +301,54 @@ export type Database = {
         }
         Relationships: []
       }
+      concierge_status: {
+        Row: {
+          id: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      conversations: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          id: string
+          is_priority: boolean
+          member_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          id?: string
+          is_priority?: boolean
+          member_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          id?: string
+          is_priority?: boolean
+          member_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -461,6 +509,134 @@ export type Database = {
             referencedColumns: ["section_key"]
           },
         ]
+      }
+      messages: {
+        Row: {
+          attachment_name: string | null
+          attachment_type: string | null
+          attachment_url: string | null
+          content: string | null
+          conversation_id: string
+          created_at: string
+          id: string
+          is_internal_note: boolean
+          is_read: boolean
+          sender_id: string
+        }
+        Insert: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          content?: string | null
+          conversation_id: string
+          created_at?: string
+          id?: string
+          is_internal_note?: boolean
+          is_read?: boolean
+          sender_id: string
+        }
+        Update: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          content?: string | null
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          is_internal_note?: boolean
+          is_read?: boolean
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mia_leads: {
+        Row: {
+          conversation_summary: string | null
+          created_at: string
+          email: string | null
+          escalation_reason: string | null
+          group_size: string | null
+          id: string
+          interest: string | null
+          lead_name: string
+          notes: string | null
+          phone: string | null
+          source: string
+          status: string
+          timeline: string | null
+          updated_at: string
+        }
+        Insert: {
+          conversation_summary?: string | null
+          created_at?: string
+          email?: string | null
+          escalation_reason?: string | null
+          group_size?: string | null
+          id?: string
+          interest?: string | null
+          lead_name: string
+          notes?: string | null
+          phone?: string | null
+          source?: string
+          status?: string
+          timeline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          conversation_summary?: string | null
+          created_at?: string
+          email?: string | null
+          escalation_reason?: string | null
+          group_size?: string | null
+          id?: string
+          interest?: string | null
+          lead_name?: string
+          notes?: string | null
+          phone?: string | null
+          source?: string
+          status?: string
+          timeline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          is_read: boolean
+          link: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       private_inquiries: {
         Row: {
