@@ -48,27 +48,27 @@ const PrivateInquirySection = () => {
 
   if (submitted) {
     return (
-      <section className="py-20 bg-card border-t border-border">
+      <section className="py-12 md:py-20 bg-card border-t border-border">
         <div className="container mx-auto px-6 text-center">
           <Shield size={40} className="mx-auto text-primary mb-4" />
-          <h3 className="font-display text-2xl text-foreground mb-2">Thank You</h3>
-          <p className="text-muted-foreground">A dedicated concierge will reach out to you within 24 hours.</p>
+          <h3 className="font-display text-xl md:text-2xl text-foreground mb-2">Thank You</h3>
+          <p className="text-muted-foreground text-sm md:text-base">A dedicated concierge will reach out to you within 24 hours.</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-20 bg-card border-t border-border">
+    <section className="py-12 md:py-20 bg-card border-t border-border">
       <div className="container mx-auto px-6 max-w-xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-10"
+          className="text-center mb-8"
         >
-          <Shield size={28} className="mx-auto text-primary mb-4" />
-          <h2 className="font-display text-3xl text-foreground mb-3">Private Inquiry</h2>
+          <Shield size={28} className="mx-auto text-primary mb-3" />
+          <h2 className="font-display text-2xl md:text-3xl text-foreground mb-2">Private Inquiry</h2>
           <p className="text-muted-foreground text-sm leading-relaxed">
             Prefer to speak with someone before applying? Share a few details and a concierge will reach out discreetly.
           </p>
@@ -79,7 +79,7 @@ const PrivateInquirySection = () => {
             placeholder="First name"
             value={form.first_name}
             onChange={(e) => setForm((p) => ({ ...p, first_name: e.target.value }))}
-            className="bg-secondary border-border"
+            className="bg-secondary border-border h-12"
             required
           />
           <Input
@@ -87,7 +87,7 @@ const PrivateInquirySection = () => {
             placeholder="Email address"
             value={form.email}
             onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
-            className="bg-secondary border-border"
+            className="bg-secondary border-border h-12"
             required
           />
           <Textarea
@@ -102,7 +102,7 @@ const PrivateInquirySection = () => {
             value={form.preferred_contact}
             onValueChange={(v) => setForm((p) => ({ ...p, preferred_contact: v }))}
           >
-            <SelectTrigger className="bg-secondary border-border">
+            <SelectTrigger className="bg-secondary border-border h-12">
               <SelectValue placeholder="Preferred contact method" />
             </SelectTrigger>
             <SelectContent>
@@ -114,7 +114,7 @@ const PrivateInquirySection = () => {
           <Button
             type="submit"
             disabled={submitting}
-            className="w-full bg-gradient-gold text-primary-foreground gap-2 text-xs tracking-[0.2em] uppercase font-semibold"
+            className="w-full h-12 bg-gradient-gold text-primary-foreground gap-2 text-xs tracking-[0.2em] uppercase font-semibold"
           >
             {submitting ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
             Submit Inquiry
