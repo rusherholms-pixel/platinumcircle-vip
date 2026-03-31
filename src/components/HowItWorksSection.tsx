@@ -25,39 +25,39 @@ const steps = [
 
 const HowItWorksSection = () => {
   return (
-    <section id="how-it-works" className="py-32 bg-card">
+    <section id="how-it-works" className="py-12 md:py-20 bg-card">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="text-center mb-10 md:mb-16"
         >
-          <p className="text-xs tracking-[0.4em] uppercase text-primary mb-4 font-sans">
+          <p className="text-xs tracking-[0.4em] uppercase text-primary mb-3 font-sans">
             How It Works
           </p>
-          <h2 className="font-display text-4xl md:text-5xl font-medium text-foreground">
+          <h2 className="font-display text-3xl md:text-5xl font-medium text-foreground">
             Simplicity Meets
             <br />
             <span className="text-gradient-gold">Sophistication</span>
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {steps.map((step, index) => (
             <motion.div
               key={step.number}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
               className="relative"
             >
-              <span className="font-display text-6xl font-bold text-gradient-gold opacity-30">
+              <span className="font-display text-5xl md:text-6xl font-bold text-gradient-gold opacity-30">
                 {step.number}
               </span>
-              <h3 className="font-display text-xl text-foreground mt-4 mb-3">
+              <h3 className="font-display text-lg md:text-xl text-foreground mt-3 mb-2">
                 {step.title}
               </h3>
               <p className="font-sans text-sm text-muted-foreground leading-relaxed">
