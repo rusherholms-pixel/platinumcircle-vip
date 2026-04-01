@@ -29,6 +29,7 @@ const navItems = [
   { label: "Messages", path: "/admin/messages", icon: MessageSquare },
   { label: "Homepage", path: "/admin/homepage", icon: Settings },
   { label: "Team", path: "/admin/team", icon: Users },
+  { label: "Activity Log", path: "/admin/activity", icon: Activity },
 ];
 
 export default function AdminLayout() {

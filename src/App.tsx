@@ -94,6 +94,7 @@ const App = () => (
               <Route path="messages" element={<ConciergeInbox />} />
               <Route path="homepage" element={<HomepageContentManager />} />
               <Route path="team" element={<AdminTeam />} />
+              <Route path="activity" element={<AdminActivityLog />} />
             </Route>
 
             {/* Member portal */}
