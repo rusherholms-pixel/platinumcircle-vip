@@ -13,3 +13,5 @@ project_id = "ejnzkmzsinepbxrniuvj"
     verify_jwt = true
   [functions.send-transactional-email]
     verify_jwt = true
+  [functions.smart-escalations]
+    verify_jwt = false
