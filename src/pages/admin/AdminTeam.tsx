@@ -110,7 +110,18 @@ export default function AdminTeam() {
     setAdding(false);
   };
 
+  const OWNER_EMAIL = "slusere@yahoo.com";
+
+  const isOwner = (userId: string) => {
+    const admin = admins.find((a) => a.user_id === userId);
+    return admin?.profile?.email?.toLowerCase() === OWNER_EMAIL.toLowerCase();
+  };
+
   const handleRemove = async (userId: string) => {
+    if (isOwner(userId)) {
+      toast({ title: "Cannot remove owner", description: "The platform owner cannot be removed.", variant: "destructive" });
+      return;
+    }
     if (userId === user?.id) {
       toast({ title: "Cannot remove yourself", description: "You cannot revoke your own admin access.", variant: "destructive" });
       return;
