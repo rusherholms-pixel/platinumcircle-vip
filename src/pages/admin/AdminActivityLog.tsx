@@ -59,7 +59,7 @@ export default function AdminActivityLog() {
     setTotal(count || 0);
 
     if (data && data.length > 0) {
-      const adminIds = [...new Set(data.map((d: any) => d.admin_id))];
+      const adminIds = [...new Set(data.map((d: any) => d.admin_id))] as string[];
       const { data: profiles } = await supabase
         .from("profiles")
         .select("id, full_name")
