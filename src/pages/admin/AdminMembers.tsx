@@ -141,6 +141,7 @@ export default function AdminMembers() {
     await supabase.from("profiles").delete().eq("id", deleteId);
     setMembers((prev) => prev.filter((m) => m.id !== deleteId));
     toast({ title: "Member deleted" });
+    logAdminActivity({ actionType: "delete", description: `Deleted member account ${member?.full_name} (${member?.email})`, targetType: "member", targetId: deleteId! });
     setDeleteId(null);
     setDeleteConfirmEmail("");
   };
