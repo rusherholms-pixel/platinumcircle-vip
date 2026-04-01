@@ -29,6 +29,7 @@ import BookingRequestsManager from "./components/admin/BookingRequestsManager";
 import ConciergeInbox from "./components/admin/ConciergeInbox";
 import MiaLeadsManager from "./components/admin/MiaLeadsManager";
 import HomepageContentManager from "./components/admin/HomepageContentManager";
+import AdminTeam from "./pages/admin/AdminTeam";
 
 // Member dashboard
 import MemberLayout from "./components/member/MemberLayout";
@@ -91,6 +92,7 @@ const App = () => (
               <Route path="mia-leads" element={<MiaLeadsManager />} />
               <Route path="messages" element={<ConciergeInbox />} />
               <Route path="homepage" element={<HomepageContentManager />} />
+              <Route path="team" element={<AdminTeam />} />
             </Route>
 
             {/* Member portal */}
