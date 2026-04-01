@@ -33,6 +33,10 @@ export default function AdminTeam() {
   const [searchResult, setSearchResult] = useState<{ id: string; full_name: string; email: string } | null>(null);
   const [searching, setSearching] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [createMode, setCreateMode] = useState(false);
+  const [newAdminName, setNewAdminName] = useState("");
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [creating, setCreating] = useState(false);
 
   const fetchAdmins = async () => {
     setLoading(true);
