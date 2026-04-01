@@ -4,6 +4,7 @@ import {
   Save, Loader2, ArrowLeft, Upload, Trash2, X, CheckCircle, Circle,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/activityLogger";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
