@@ -29,5 +29,6 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'new-booking-alert': newBookingAlert,
   'new-member-message': newMemberMessage,
   'mia-escalation': miaEscalation,
+  'new-application-alert': newApplicationAlert,
   'welcome-invitation': welcomeInvitation,
 }

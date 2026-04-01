@@ -46,6 +46,21 @@ const Apply = () => {
 
       if (error) throw error;
 
+      // Notify admin of new application
+      supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "new-application-alert",
+          recipientEmail: "slusere@yahoo.com",
+          idempotencyKey: `new-app-${data.user?.id || Date.now()}`,
+          templateData: {
+            applicantName: fullName,
+            applicantEmail: email,
+            applicantPhone: phone,
+            applicantType: "member",
+          },
+        },
+      });
+
       if (data.user && !data.session) {
         // Email confirmation required
         toast({
