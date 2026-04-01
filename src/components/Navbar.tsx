@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, UserCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import logoEmblem from "@/assets/logo-emblem.svg";
 
 const publicLinks = [
   { label: "Homes", href: "#services" },
