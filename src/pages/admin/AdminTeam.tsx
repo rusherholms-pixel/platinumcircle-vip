@@ -97,6 +97,7 @@ export default function AdminTeam() {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Admin added", description: `${searchResult.full_name} now has admin access.` });
+      logAdminActivity({ actionType: "role_change", description: `Granted admin access to ${searchResult.full_name}`, targetType: "user", targetId: searchResult.id });
       setAddOpen(false);
       setSearchEmail("");
       setSearchResult(null);
