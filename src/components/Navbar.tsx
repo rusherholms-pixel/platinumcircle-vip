@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, UserCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import logoEmblem from "@/assets/logo-emblem.svg";
 
 const publicLinks = [
   { label: "Homes", href: "#services" },
@@ -30,8 +31,9 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
       <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to={user ? "/member/dashboard" : "/"} className="font-display text-2xl tracking-wider text-gradient-gold">
-          Platinum Circle
+        <Link to={user ? "/member/dashboard" : "/"} className="flex items-center gap-3">
+          <img src={logoEmblem} alt="Platinum Circle" className="h-10 w-10" />
+          <span className="font-display text-xl tracking-wider text-gradient-gold hidden sm:inline">Platinum Circle</span>
         </Link>
 
         {/* Desktop */}

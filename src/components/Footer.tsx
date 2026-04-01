@@ -1,15 +1,20 @@
+import logoEmblem from "@/assets/logo-emblem.svg";
+
 const Footer = () => {
   return (
     <footer className="py-10 md:py-16 bg-card border-t border-border">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
-          <div className="text-center md:text-left">
-            <span className="font-display text-2xl tracking-wider text-gradient-gold">
-              Platinum Circle
-            </span>
-            <p className="font-sans text-xs text-muted-foreground mt-2 tracking-wide">
-              World-Class VIP Concierge
-            </p>
+          <div className="flex items-center gap-3">
+            <img src={logoEmblem} alt="Platinum Circle" className="h-10 w-10" />
+            <div>
+              <span className="font-display text-xl tracking-wider text-gradient-gold">
+                Platinum Circle
+              </span>
+              <p className="font-sans text-xs text-muted-foreground mt-1 tracking-wide">
+                World-Class VIP Concierge
+              </p>
+            </div>
           </div>
 
           <div className="flex gap-6 md:gap-8">
