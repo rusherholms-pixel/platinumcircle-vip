@@ -41,13 +41,20 @@ const PropertyCard = ({
   isFeatured,
   showBooking = false,
 }: PropertyCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (id) navigate(`/member/listing/${id}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
-      className="group rounded-lg overflow-hidden bg-card border border-border hover:border-primary/30 transition-colors"
+      className="group rounded-lg overflow-hidden bg-card border border-border hover:border-primary/30 transition-colors cursor-pointer"
+      onClick={handleClick}
     >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">
