@@ -11,9 +11,10 @@ const Footer = () => {
               <span className="font-display text-xl tracking-wider text-gradient-gold">
                 Platinum Circle
               </span>
-            <p className="font-sans text-xs text-muted-foreground mt-2 tracking-wide">
-              World-Class VIP Concierge
-            </p>
+              <p className="font-sans text-xs text-muted-foreground mt-1 tracking-wide">
+                World-Class VIP Concierge
+              </p>
+            </div>
           </div>
 
           <div className="flex gap-6 md:gap-8">
