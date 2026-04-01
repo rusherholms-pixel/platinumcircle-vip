@@ -6,6 +6,7 @@ import {
   Home, Car, CarFront, Sparkles, Shield, Loader2,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/activityLogger";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
