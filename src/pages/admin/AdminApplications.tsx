@@ -6,6 +6,7 @@ import {
   ChevronDown, ChevronUp,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/activityLogger";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,7 +74,9 @@ export default function AdminApplications() {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
+      const app = applications.find((a) => a.id === id);
       toast({ title: `Application ${action}` });
+      logAdminActivity({ actionType: "status_change", description: `${action.charAt(0).toUpperCase() + action.slice(1)} application from ${app?.full_name || "Unknown"}`, targetType: "application", targetId: id });
       setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, status: action } : a)));
     }
     setActionDialog(null);

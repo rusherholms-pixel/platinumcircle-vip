@@ -3,7 +3,7 @@ import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Home, Car, CarFront, Sparkles, Shield,
   Users, FileText, ClipboardList, MessageSquare, Settings,
-  LogOut, ChevronDown, ChevronRight, Menu, X,
+  LogOut, ChevronDown, ChevronRight, Menu, X, Activity,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,6 +29,7 @@ const navItems = [
   { label: "Messages", path: "/admin/messages", icon: MessageSquare },
   { label: "Homepage", path: "/admin/homepage", icon: Settings },
   { label: "Team", path: "/admin/team", icon: Users },
+  { label: "Activity Log", path: "/admin/activity", icon: Activity },
 ];
 
 export default function AdminLayout() {

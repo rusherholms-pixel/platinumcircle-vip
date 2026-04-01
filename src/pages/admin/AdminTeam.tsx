@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { logAdminActivity } from "@/lib/activityLogger";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,6 +97,7 @@ export default function AdminTeam() {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Admin added", description: `${searchResult.full_name} now has admin access.` });
+      logAdminActivity({ actionType: "role_change", description: `Granted admin access to ${searchResult.full_name}`, targetType: "user", targetId: searchResult.id });
       setAddOpen(false);
       setSearchEmail("");
       setSearchResult(null);
@@ -119,7 +121,9 @@ export default function AdminTeam() {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
+      const removed = admins.find((a) => a.user_id === userId);
       toast({ title: "Admin removed", description: "Admin access has been revoked." });
+      logAdminActivity({ actionType: "role_change", description: `Revoked admin access from ${removed?.profile?.full_name || "Unknown"}`, targetType: "user", targetId: userId });
       fetchAdmins();
     }
   };

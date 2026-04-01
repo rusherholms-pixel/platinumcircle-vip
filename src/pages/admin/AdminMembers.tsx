@@ -5,6 +5,7 @@ import {
   Eye, Loader2, ChevronDown, ChevronUp,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/activityLogger";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -106,7 +107,9 @@ export default function AdminMembers() {
     setMembers((prev) =>
       prev.map((m) => m.id === restrictId ? { ...m, account_status: "restricted", restriction_type: restrictType, restriction_reason: restrictReason } : m)
     );
+    const restricted = members.find((m) => m.id === restrictId);
     toast({ title: "Member restricted" });
+    logAdminActivity({ actionType: "status_change", description: `Restricted member ${restricted?.full_name || "Unknown"} (${restrictType})`, targetType: "member", targetId: restrictId! });
     setRestrictId(null);
     setRestrictReason("");
   };
@@ -121,7 +124,9 @@ export default function AdminMembers() {
     setMembers((prev) =>
       prev.map((m) => m.id === id ? { ...m, account_status: "active", restriction_type: null, restriction_reason: null } : m)
     );
+    const unrestricted = members.find((m) => m.id === id);
     toast({ title: "Member unrestricted" });
+    logAdminActivity({ actionType: "status_change", description: `Unrestricted member ${unrestricted?.full_name || "Unknown"}`, targetType: "member", targetId: id });
   };
 
   const handleDelete = async () => {
@@ -136,6 +141,7 @@ export default function AdminMembers() {
     await supabase.from("profiles").delete().eq("id", deleteId);
     setMembers((prev) => prev.filter((m) => m.id !== deleteId));
     toast({ title: "Member deleted" });
+    logAdminActivity({ actionType: "delete", description: `Deleted member account ${member?.full_name} (${member?.email})`, targetType: "member", targetId: deleteId! });
     setDeleteId(null);
     setDeleteConfirmEmail("");
   };
@@ -341,6 +347,7 @@ export default function AdminMembers() {
                   toast({ title: "Failed to create member", description: error.message, variant: "destructive" });
                 } else {
                   toast({ title: "Member profile created" });
+                  logAdminActivity({ actionType: "create", description: `Created member account for ${createForm.full_name}`, targetType: "member" });
                   setCreateOpen(false);
                   setCreateForm({ full_name: "", email: "", country: "", city: "" });
                   fetchMembers();

@@ -6,6 +6,7 @@ import {
   Home, Car, CarFront, Sparkles, Shield, Loader2,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { logAdminActivity } from "@/lib/activityLogger";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -89,8 +90,10 @@ export default function AdminListings() {
     const newStatus = current === "active" ? "inactive" : "active";
     const { error } = await supabase.from("listings").update({ status: newStatus }).eq("id", id);
     if (!error) {
+      const listing = listings.find((l) => l.id === id);
       setListings((prev) => prev.map((l) => (l.id === id ? { ...l, status: newStatus } : l)));
       toast({ title: `Listing ${newStatus}` });
+      logAdminActivity({ actionType: "status_change", description: `Set listing "${listing?.title}" to ${newStatus}`, targetType: "listing", targetId: id });
     }
     setToggling(null);
   };
@@ -99,8 +102,10 @@ export default function AdminListings() {
     if (!deleteId) return;
     const { error } = await supabase.from("listings").delete().eq("id", deleteId);
     if (!error) {
+      const listing = listings.find((l) => l.id === deleteId);
       setListings((prev) => prev.filter((l) => l.id !== deleteId));
       toast({ title: "Listing deleted" });
+      logAdminActivity({ actionType: "delete", description: `Deleted listing "${listing?.title}"`, targetType: "listing", targetId: deleteId });
     }
     setDeleteId(null);
   };
