@@ -9,15 +9,24 @@ import { Slider } from "@/components/ui/slider";
 import PropertyCard from "@/components/PropertyCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface Property {
-  id: string; title: string; description: string; location: string; city: string;
-  country: string; price_per_night: number; bedrooms: number; bathrooms: number;
-  max_guests: number; amenities: string[]; images: string[]; property_type: string;
-  rating: number; review_count: number; is_featured: boolean;
+interface HomeListing {
+  id: string;
+  title: string;
+  short_description: string | null;
+  full_description: string | null;
+  neighbourhood: string | null;
+  city: string | null;
+  country: string | null;
+  primary_rate: number | null;
+  currency: string;
+  cover_image: string | null;
+  gallery_images: string[];
+  is_featured: boolean;
+  category_data: Record<string, any> | null;
 }
 
 export default function MemberHousing() {
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [listings, setListings] = useState<HomeListing[]>([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,31 +35,42 @@ export default function MemberHousing() {
   const [minBedrooms, setMinBedrooms] = useState("any");
   const [sortBy, setSortBy] = useState("featured");
 
-  useEffect(() => { fetchProperties(); }, []);
+  useEffect(() => { fetchListings(); }, []);
 
-  const fetchProperties = async () => {
+  const fetchListings = async () => {
     setLoading(true);
-    const { data } = await supabase.from("properties").select("*");
-    if (data) setProperties(data);
+    const { data } = await supabase
+      .from("listings")
+      .select("*")
+      .eq("category", "homes")
+      .eq("status", "active");
+    if (data) setListings(data as unknown as HomeListing[]);
     setLoading(false);
   };
 
-  const filtered = properties
-    .filter((p) => {
+  const getField = (l: HomeListing, key: string) => (l.category_data as any)?.[key];
+
+  const filtered = listings
+    .filter((l) => {
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
-        if (!p.title.toLowerCase().includes(q) && !p.city.toLowerCase().includes(q) && !p.country.toLowerCase().includes(q)) return false;
+        if (
+          !l.title.toLowerCase().includes(q) &&
+          !(l.city || "").toLowerCase().includes(q) &&
+          !(l.country || "").toLowerCase().includes(q)
+        ) return false;
       }
-      if (propertyType !== "all" && p.property_type !== propertyType) return false;
-      if (p.price_per_night < priceRange[0] || p.price_per_night > priceRange[1]) return false;
-      if (minBedrooms !== "any" && p.bedrooms < parseInt(minBedrooms)) return false;
+      const pType = getField(l, "property_type") || "";
+      if (propertyType !== "all" && pType.toLowerCase() !== propertyType.toLowerCase()) return false;
+      const rate = l.primary_rate || 0;
+      if (rate < priceRange[0] || rate > priceRange[1]) return false;
+      if (minBedrooms !== "any" && (getField(l, "bedrooms") || 0) < parseInt(minBedrooms)) return false;
       return true;
     })
     .sort((a, b) => {
       switch (sortBy) {
-        case "price-asc": return a.price_per_night - b.price_per_night;
-        case "price-desc": return b.price_per_night - a.price_per_night;
-        case "rating": return b.rating - a.rating;
+        case "price-asc": return (a.primary_rate || 0) - (b.primary_rate || 0);
+        case "price-desc": return (b.primary_rate || 0) - (a.primary_rate || 0);
         default: return (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0);
       }
     });
@@ -75,7 +95,6 @@ export default function MemberHousing() {
               <SelectItem value="featured">Featured First</SelectItem>
               <SelectItem value="price-asc">Price: Low → High</SelectItem>
               <SelectItem value="price-desc">Price: High → Low</SelectItem>
-              <SelectItem value="rating">Highest Rated</SelectItem>
             </SelectContent>
           </Select>
           <Button variant="outline" className="h-12 gap-2 border-border" onClick={() => setShowFilters(!showFilters)}>
@@ -93,11 +112,12 @@ export default function MemberHousing() {
                 <SelectTrigger className="bg-secondary border-border"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="villa">Villa</SelectItem>
-                  <SelectItem value="mansion">Mansion</SelectItem>
-                  <SelectItem value="penthouse">Penthouse</SelectItem>
-                  <SelectItem value="chalet">Chalet</SelectItem>
-                  <SelectItem value="estate">Estate</SelectItem>
+                  <SelectItem value="Villa">Villa</SelectItem>
+                  <SelectItem value="Penthouse">Penthouse</SelectItem>
+                  <SelectItem value="Private Estate">Private Estate</SelectItem>
+                  <SelectItem value="Chalet">Chalet</SelectItem>
+                  <SelectItem value="Yacht">Yacht</SelectItem>
+                  <SelectItem value="Boutique Property">Boutique Property</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -136,12 +156,33 @@ export default function MemberHousing() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((p) => (
-            <PropertyCard key={p.id} id={p.id} title={p.title} location={p.location} city={p.city} country={p.country}
-              pricePerNight={p.price_per_night} bedrooms={p.bedrooms} bathrooms={p.bathrooms}
-              maxGuests={p.max_guests} amenities={p.amenities} images={p.images}
-              propertyType={p.property_type} rating={p.rating} reviewCount={p.review_count} isFeatured={p.is_featured} showBooking />
-          ))}
+          {filtered.map((l) => {
+            const catData = (l.category_data || {}) as Record<string, any>;
+            const images = l.cover_image
+              ? [l.cover_image, ...(l.gallery_images || [])]
+              : (l.gallery_images || []);
+            return (
+              <PropertyCard
+                key={l.id}
+                id={l.id}
+                title={l.title}
+                location={l.neighbourhood || ""}
+                city={l.city || ""}
+                country={l.country || ""}
+                pricePerNight={l.primary_rate || 0}
+                bedrooms={catData.bedrooms || 0}
+                bathrooms={catData.bathrooms || 0}
+                maxGuests={catData.max_guests || 0}
+                amenities={[]}
+                images={images}
+                propertyType={catData.property_type || "Home"}
+                rating={0}
+                reviewCount={0}
+                isFeatured={l.is_featured || false}
+                showBooking
+              />
+            );
+          })}
         </div>
       )}
     </div>
