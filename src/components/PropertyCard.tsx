@@ -135,16 +135,18 @@ const PropertyCard = ({
 
         {/* Booking button */}
         {showBooking && (
-          <BookingRequestDialog
-            serviceType="housing"
-            serviceTitle={title}
-            serviceId={id}
-            trigger={
-              <Button className="w-full bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase">
-                Request Booking
-              </Button>
-            }
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <BookingRequestDialog
+              serviceType="housing"
+              serviceTitle={title}
+              serviceId={id}
+              trigger={
+                <Button className="w-full bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase">
+                  Request Booking
+                </Button>
+              }
+            />
+          </div>
         )}
       </div>
     </motion.div>
