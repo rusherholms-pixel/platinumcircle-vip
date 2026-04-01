@@ -347,6 +347,7 @@ export default function AdminMembers() {
                   toast({ title: "Failed to create member", description: error.message, variant: "destructive" });
                 } else {
                   toast({ title: "Member profile created" });
+                  logAdminActivity({ actionType: "create", description: `Created member account for ${createForm.full_name}`, targetType: "member" });
                   setCreateOpen(false);
                   setCreateForm({ full_name: "", email: "", country: "", city: "" });
                   fetchMembers();

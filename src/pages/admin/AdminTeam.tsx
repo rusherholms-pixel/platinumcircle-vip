@@ -121,7 +121,9 @@ export default function AdminTeam() {
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
+      const removed = admins.find((a) => a.user_id === userId);
       toast({ title: "Admin removed", description: "Admin access has been revoked." });
+      logAdminActivity({ actionType: "role_change", description: `Revoked admin access from ${removed?.profile?.full_name || "Unknown"}`, targetType: "user", targetId: userId });
       fetchAdmins();
     }
   };

@@ -241,6 +241,7 @@ export default function AdminListingForm() {
     } else {
       setLastSaved(new Date());
       toast({ title: isEdit ? "Listing updated" : "Listing created" });
+      logAdminActivity({ actionType: isEdit ? "update" : "create", description: `${isEdit ? "Updated" : "Created"} ${cat} listing: ${form.title}`, targetType: "listing", targetId: isEdit ? id : undefined });
       if (!isEdit) navigate(`/admin/listings/${cat}`);
     }
   };
