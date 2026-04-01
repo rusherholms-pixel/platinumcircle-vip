@@ -106,10 +106,10 @@ export default function BookingRequestsManager() {
         b.id === id ? { ...b, status: newStatus, admin_notes: notes ?? b.admin_notes } : b
       ));
 
-      // Send confirmation email when status changes to confirmed
-      if (newStatus === "confirmed" && booking) {
-        const profile = profilesMap[booking.user_id];
-        if (profile?.email) {
+      const profile = profilesMap[booking?.user_id || ""];
+      if (profile?.email && booking) {
+        // Send appropriate email based on status change
+        if (newStatus === "confirmed") {
           supabase.functions.invoke("send-transactional-email", {
             body: {
               templateName: "booking-confirmation",
@@ -125,10 +125,35 @@ export default function BookingRequestsManager() {
                 adminNotes: (notes ?? booking.admin_notes) || undefined,
               },
             },
-          }).then(({ error: emailError }) => {
-            if (emailError) console.error("Failed to send confirmation email", emailError);
+          });
+        } else if (newStatus === "cancelled") {
+          supabase.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "booking-cancelled",
+              recipientEmail: profile.email,
+              idempotencyKey: `booking-cancel-${id}`,
+              templateData: {
+                memberName: profile.full_name || undefined,
+                serviceTitle: booking.service_title,
+                serviceType: booking.service_type,
+                checkIn: booking.check_in || undefined,
+                reason: (notes ?? booking.admin_notes) || undefined,
+                referenceId: id,
+              },
+            },
           });
         }
+      }
+
+      // Create in-app notification for member
+      if (booking && (newStatus === "confirmed" || newStatus === "cancelled" || newStatus === "completed")) {
+        const statusLabel = newStatus === "confirmed" ? "confirmed" : newStatus === "cancelled" ? "cancelled" : "completed";
+        supabase.from("notifications").insert({
+          user_id: booking.user_id,
+          title: `Booking ${statusLabel}`,
+          body: `Your ${booking.service_title} booking has been ${statusLabel}.`,
+          link: "/member/bookings",
+        });
       }
     }
   };
