@@ -102,8 +102,10 @@ export default function AdminListings() {
     if (!deleteId) return;
     const { error } = await supabase.from("listings").delete().eq("id", deleteId);
     if (!error) {
+      const listing = listings.find((l) => l.id === deleteId);
       setListings((prev) => prev.filter((l) => l.id !== deleteId));
       toast({ title: "Listing deleted" });
+      logAdminActivity({ actionType: "delete", description: `Deleted listing "${listing?.title}"`, targetType: "listing", targetId: deleteId });
     }
     setDeleteId(null);
   };
