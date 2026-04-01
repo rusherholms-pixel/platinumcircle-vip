@@ -92,6 +92,7 @@ const App = () => (
               <Route path="mia-leads" element={<MiaLeadsManager />} />
               <Route path="messages" element={<ConciergeInbox />} />
               <Route path="homepage" element={<HomepageContentManager />} />
+              <Route path="team" element={<AdminTeam />} />
             </Route>
 
             {/* Member portal */}

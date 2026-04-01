@@ -28,6 +28,7 @@ const navItems = [
   { label: "Mia Leads", path: "/admin/mia-leads", icon: Sparkles },
   { label: "Messages", path: "/admin/messages", icon: MessageSquare },
   { label: "Homepage", path: "/admin/homepage", icon: Settings },
+  { label: "Team", path: "/admin/team", icon: Users },
 ];
 
 export default function AdminLayout() {
