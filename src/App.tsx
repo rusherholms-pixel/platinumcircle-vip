@@ -12,12 +12,23 @@ import Apply from "./pages/Apply";
 import Properties from "./pages/Properties";
 import PropertyNew from "./pages/PropertyNew";
 import PropertyEdit from "./pages/PropertyEdit";
-import AdminDashboard from "./pages/AdminDashboard";
 import BundlesPage from "./pages/BundlesPage";
 import BundleDetail from "./pages/BundleDetail";
 import CityExperiences from "./pages/CityExperiences";
 import NotFound from "./pages/NotFound";
 import Unsubscribe from "./pages/Unsubscribe";
+
+// Admin dashboard
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminListings from "./pages/admin/AdminListings";
+import AdminListingForm from "./pages/admin/AdminListingForm";
+import AdminMembers from "./pages/admin/AdminMembers";
+import AdminApplications from "./pages/admin/AdminApplications";
+import BookingRequestsManager from "./components/admin/BookingRequestsManager";
+import ConciergeInbox from "./components/admin/ConciergeInbox";
+import MiaLeadsManager from "./components/admin/MiaLeadsManager";
+import HomepageContentManager from "./components/admin/HomepageContentManager";
 
 // Member dashboard
 import MemberLayout from "./components/member/MemberLayout";
@@ -63,11 +74,24 @@ const App = () => (
             <Route path="/experiences/bundles/:slug" element={<BundleDetail />} />
             <Route path="/experiences/:city" element={<CityExperiences />} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
-            <Route path="/admin" element={<AdminDashboard />} />
 
             {/* Legacy redirects */}
             <Route path="/dashboard" element={<Navigate to="/member/dashboard" replace />} />
             <Route path="/properties" element={<Navigate to="/member/housing" replace />} />
+
+            {/* Admin portal */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminOverview />} />
+              <Route path="listings/:category" element={<AdminListings />} />
+              <Route path="listings/:category/new" element={<AdminListingForm />} />
+              <Route path="listings/:category/edit/:id" element={<AdminListingForm />} />
+              <Route path="members" element={<AdminMembers />} />
+              <Route path="applications" element={<AdminApplications />} />
+              <Route path="bookings" element={<BookingRequestsManager />} />
+              <Route path="mia-leads" element={<MiaLeadsManager />} />
+              <Route path="messages" element={<ConciergeInbox />} />
+              <Route path="homepage" element={<HomepageContentManager />} />
+            </Route>
 
             {/* Member portal */}
             <Route path="/member" element={<MemberLayout />}>
