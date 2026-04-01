@@ -124,7 +124,9 @@ export default function AdminMembers() {
     setMembers((prev) =>
       prev.map((m) => m.id === id ? { ...m, account_status: "active", restriction_type: null, restriction_reason: null } : m)
     );
+    const unrestricted = members.find((m) => m.id === id);
     toast({ title: "Member unrestricted" });
+    logAdminActivity({ actionType: "status_change", description: `Unrestricted member ${unrestricted?.full_name || "Unknown"}`, targetType: "member", targetId: id });
   };
 
   const handleDelete = async () => {
