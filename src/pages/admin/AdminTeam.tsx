@@ -33,6 +33,10 @@ export default function AdminTeam() {
   const [searchResult, setSearchResult] = useState<{ id: string; full_name: string; email: string } | null>(null);
   const [searching, setSearching] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [createMode, setCreateMode] = useState(false);
+  const [newAdminName, setNewAdminName] = useState("");
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [creating, setCreating] = useState(false);
 
   const fetchAdmins = async () => {
     setLoading(true);
@@ -136,47 +140,116 @@ export default function AdminTeam() {
           <p className="text-sm text-muted-foreground mt-1">Manage who has access to the admin dashboard</p>
         </div>
 
-        <Dialog open={addOpen} onOpenChange={(o) => { setAddOpen(o); if (!o) { setSearchEmail(""); setSearchResult(null); } }}>
+        <Dialog open={addOpen} onOpenChange={(o) => { setAddOpen(o); if (!o) { setSearchEmail(""); setSearchResult(null); setCreateMode(false); setNewAdminName(""); setNewAdminEmail(""); } }}>
           <DialogTrigger asChild>
             <Button className="bg-gradient-gold text-primary-foreground text-xs tracking-widest uppercase">
               <UserPlus size={14} className="mr-2" /> Add Admin
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border-border">
+          <DialogContent className="bg-card border-border" aria-describedby="add-admin-desc">
             <DialogHeader>
               <DialogTitle className="font-display">Add Admin Access</DialogTitle>
+              <p id="add-admin-desc" className="text-xs text-muted-foreground">Search for an existing user or create a new admin account.</p>
             </DialogHeader>
-            <div className="space-y-4 py-2">
-              <div className="space-y-2">
-                <Label className="text-xs uppercase tracking-widest text-muted-foreground">Search by email</Label>
-                <div className="flex gap-2">
-                  <Input
-                    value={searchEmail}
-                    onChange={(e) => setSearchEmail(e.target.value)}
-                    placeholder="user@example.com"
-                    className="bg-background border-border"
-                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  />
-                  <Button variant="outline" size="icon" onClick={handleSearch} disabled={searching}>
-                    <Search size={16} />
+
+            {!createMode ? (
+              <div className="space-y-4 py-2">
+                <div className="space-y-2">
+                  <Label className="text-xs uppercase tracking-widest text-muted-foreground">Search by email</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={searchEmail}
+                      onChange={(e) => setSearchEmail(e.target.value)}
+                      placeholder="user@example.com"
+                      className="bg-background border-border"
+                      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                    />
+                    <Button variant="outline" size="icon" onClick={handleSearch} disabled={searching}>
+                      <Search size={16} />
+                    </Button>
+                  </div>
+                </div>
+
+                {searchResult && (
+                  <Card className="bg-background border-border">
+                    <CardContent className="p-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{searchResult.full_name}</p>
+                        <p className="text-xs text-muted-foreground">{searchResult.email}</p>
+                      </div>
+                      <Button size="sm" onClick={handleAdd} disabled={adding} className="bg-gradient-gold text-primary-foreground text-xs">
+                        {adding ? "Adding..." : "Grant Access"}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <div className="border-t border-border pt-3">
+                  <Button variant="outline" className="w-full text-xs border-border" onClick={() => setCreateMode(true)}>
+                    <UserPlus size={14} className="mr-2" /> Create New Admin Account
                   </Button>
                 </div>
               </div>
+            ) : (
+              <div className="space-y-4 py-2">
+                <div className="space-y-2">
+                  <Label className="text-xs uppercase tracking-widest text-muted-foreground">Full Name *</Label>
+                  <Input value={newAdminName} onChange={(e) => setNewAdminName(e.target.value)} placeholder="Full name" className="bg-background border-border" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs uppercase tracking-widest text-muted-foreground">Email *</Label>
+                  <Input value={newAdminEmail} onChange={(e) => setNewAdminEmail(e.target.value)} placeholder="admin@example.com" className="bg-background border-border" />
+                </div>
+                <Button
+                  className="w-full bg-gradient-gold text-primary-foreground text-xs"
+                  disabled={creating || !newAdminName.trim() || !newAdminEmail.trim()}
+                  onClick={async () => {
+                    setCreating(true);
+                    // Check if profile already exists
+                    const { data: existing } = await supabase.from("profiles").select("id").ilike("email", newAdminEmail.trim()).maybeSingle();
+                    if (existing) {
+                      // Profile exists, just grant admin role
+                      const alreadyAdmin = admins.some((a) => a.user_id === existing.id);
+                      if (alreadyAdmin) {
+                        toast({ title: "Already an admin", variant: "destructive" });
+                      } else {
+                        await supabase.from("user_roles").insert({ user_id: existing.id, role: "admin" as any });
+                        toast({ title: "Admin access granted" });
+                        logAdminActivity({ actionType: "role_change", description: `Granted admin access to ${newAdminEmail.trim()}`, targetType: "user", targetId: existing.id });
+                        fetchAdmins();
+                      }
+                    } else {
+                      // Create new profile + admin role
+                      const newId = crypto.randomUUID();
+                      const { error: profileErr } = await supabase.from("profiles").insert({
+                        id: newId,
+                        full_name: newAdminName.trim(),
+                        email: newAdminEmail.trim(),
+                      });
+                      if (profileErr) {
+                        toast({ title: "Failed to create profile", description: profileErr.message, variant: "destructive" });
+                      } else {
+                        await supabase.from("user_roles").insert({ user_id: newId, role: "admin" as any });
+                        toast({ title: "Admin account created", description: `${newAdminName.trim()} has been added as admin.` });
+                        logAdminActivity({ actionType: "create", description: `Created admin account for ${newAdminName.trim()} (${newAdminEmail.trim()})`, targetType: "user", targetId: newId });
+                        fetchAdmins();
+                      }
+                    }
+                    setCreating(false);
+                    setAddOpen(false);
+                    setCreateMode(false);
+                    setNewAdminName("");
+                    setNewAdminEmail("");
+                  }}
+                >
+                  {creating ? "Creating..." : "Create Admin"}
+                </Button>
+                <Button variant="ghost" className="w-full text-xs text-muted-foreground" onClick={() => setCreateMode(false)}>
+                  ← Back to search
+                </Button>
+              </div>
+            )}
 
-              {searchResult && (
-                <Card className="bg-background border-border">
-                  <CardContent className="p-4 flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{searchResult.full_name}</p>
-                      <p className="text-xs text-muted-foreground">{searchResult.email}</p>
-                    </div>
-                    <Button size="sm" onClick={handleAdd} disabled={adding} className="bg-gradient-gold text-primary-foreground text-xs">
-                      {adding ? "Adding..." : "Grant Access"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="ghost" className="text-muted-foreground">Cancel</Button>
