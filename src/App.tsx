@@ -36,6 +36,7 @@ import AdminActivityLog from "./pages/admin/AdminActivityLog";
 import MemberLayout from "./components/member/MemberLayout";
 import MemberOverview from "./pages/member/MemberOverview";
 import MemberHousing from "./pages/member/MemberHousing";
+import MemberListingDetail from "./pages/member/MemberListingDetail";
 import MemberSecurity from "./pages/member/MemberSecurity";
 import MemberDrivers from "./pages/member/MemberDrivers";
 import MemberExperiences from "./pages/member/MemberExperiences";
@@ -101,6 +102,7 @@ const App = () => (
             <Route path="/member" element={<MemberLayout />}>
               <Route path="dashboard" element={<MemberOverview />} />
               <Route path="housing" element={<MemberHousing />} />
+              <Route path="listing/:id" element={<MemberListingDetail />} />
               <Route path="security" element={<MemberSecurity />} />
               <Route path="drivers" element={<MemberDrivers />} />
               <Route path="experiences" element={<MemberExperiences />} />

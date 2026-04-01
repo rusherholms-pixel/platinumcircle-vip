@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
 import { MapPin, Users, Bed, Bath, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,13 +41,20 @@ const PropertyCard = ({
   isFeatured,
   showBooking = false,
 }: PropertyCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (id) navigate(`/member/listing/${id}`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3 }}
-      className="group rounded-lg overflow-hidden bg-card border border-border hover:border-primary/30 transition-colors"
+      className="group rounded-lg overflow-hidden bg-card border border-border hover:border-primary/30 transition-colors cursor-pointer"
+      onClick={handleClick}
     >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -127,16 +135,18 @@ const PropertyCard = ({
 
         {/* Booking button */}
         {showBooking && (
-          <BookingRequestDialog
-            serviceType="housing"
-            serviceTitle={title}
-            serviceId={id}
-            trigger={
-              <Button className="w-full bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase">
-                Request Booking
-              </Button>
-            }
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <BookingRequestDialog
+              serviceType="housing"
+              serviceTitle={title}
+              serviceId={id}
+              trigger={
+                <Button className="w-full bg-gradient-gold text-primary-foreground text-xs tracking-[0.2em] uppercase">
+                  Request Booking
+                </Button>
+              }
+            />
+          </div>
         )}
       </div>
     </motion.div>

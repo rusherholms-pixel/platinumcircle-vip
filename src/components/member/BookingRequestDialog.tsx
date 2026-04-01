@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast";
 
 interface BookingRequestDialogProps {
-  serviceType: "housing" | "security" | "drivers" | "experiences";
+  serviceType: "housing" | "security" | "drivers" | "experiences" | "car_fleet" | "experience" | "driver" | string;
   serviceTitle: string;
   serviceId?: string;
   trigger: React.ReactNode;
