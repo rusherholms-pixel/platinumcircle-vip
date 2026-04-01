@@ -205,33 +205,23 @@ export default function AdminTeam() {
                   disabled={creating || !newAdminName.trim() || !newAdminEmail.trim()}
                   onClick={async () => {
                     setCreating(true);
-                    // Check if profile already exists
-                    const { data: existing } = await supabase.from("profiles").select("id").ilike("email", newAdminEmail.trim()).maybeSingle();
-                    if (existing) {
-                      // Profile exists, just grant admin role
-                      const alreadyAdmin = admins.some((a) => a.user_id === existing.id);
-                      if (alreadyAdmin) {
-                        toast({ title: "Already an admin", variant: "destructive" });
-                      } else {
-                        await supabase.from("user_roles").insert({ user_id: existing.id, role: "admin" as any });
-                        toast({ title: "Admin access granted" });
-                        logAdminActivity({ actionType: "role_change", description: `Granted admin access to ${newAdminEmail.trim()}`, targetType: "user", targetId: existing.id });
-                        fetchAdmins();
-                      }
+                    // Check if already an admin
+                    const alreadyAdmin = admins.some((a) => a.profile?.email?.toLowerCase() === newAdminEmail.trim().toLowerCase());
+                    if (alreadyAdmin) {
+                      toast({ title: "Already an admin", variant: "destructive" });
                     } else {
-                      // Create new profile + admin role
-                      const newId = crypto.randomUUID();
-                      const { error: profileErr } = await supabase.from("profiles").insert({
-                        id: newId,
-                        full_name: newAdminName.trim(),
-                        email: newAdminEmail.trim(),
+                      const { data, error } = await supabase.functions.invoke('invite-user', {
+                        body: {
+                          email: newAdminEmail.trim(),
+                          full_name: newAdminName.trim(),
+                          role: 'admin',
+                        },
                       });
-                      if (profileErr) {
-                        toast({ title: "Failed to create profile", description: profileErr.message, variant: "destructive" });
+                      if (error || data?.error) {
+                        toast({ title: "Failed to create admin", description: data?.error || error?.message, variant: "destructive" });
                       } else {
-                        await supabase.from("user_roles").insert({ user_id: newId, role: "admin" as any });
-                        toast({ title: "Admin account created", description: `${newAdminName.trim()} has been added as admin.` });
-                        logAdminActivity({ actionType: "create", description: `Created admin account for ${newAdminName.trim()} (${newAdminEmail.trim()})`, targetType: "user", targetId: newId });
+                        toast({ title: "Admin invited", description: data?.alreadyExists ? "User already exists — admin role granted." : `Welcome email sent to ${newAdminEmail.trim()}.` });
+                        logAdminActivity({ actionType: "create", description: `Invited admin ${newAdminName.trim()} (${newAdminEmail.trim()})`, targetType: "user", targetId: data?.userId });
                         fetchAdmins();
                       }
                     }
