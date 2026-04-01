@@ -18,6 +18,7 @@ import { template as newBookingAlert } from './new-booking-alert.tsx'
 import { template as newMemberMessage } from './new-member-message.tsx'
 import { template as miaEscalation } from './mia-escalation.tsx'
 import { template as newApplicationAlert } from './new-application-alert.tsx'
+import { template as smartEscalation } from './smart-escalation.tsx'
 import { template as welcomeInvitation } from './welcome-invitation.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
@@ -30,5 +31,6 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'new-member-message': newMemberMessage,
   'mia-escalation': miaEscalation,
   'new-application-alert': newApplicationAlert,
+  'smart-escalation': smartEscalation,
   'welcome-invitation': welcomeInvitation,
 }
