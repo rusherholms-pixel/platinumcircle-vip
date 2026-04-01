@@ -63,6 +63,24 @@ export default function BookingRequestDialog({ serviceType, serviceTitle, servic
       setOpen(false);
       setForm({ checkIn: "", checkOut: "", numGuests: "1", specialRequests: "", preferredContact: "email" });
 
+      // Send confirmation email to member
+      supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "booking-received",
+          recipientEmail: user.email,
+          idempotencyKey: `booking-received-${bookingId}`,
+          templateData: {
+            memberName: user.user_metadata?.full_name || undefined,
+            serviceTitle: serviceTitle.slice(0, 200),
+            serviceType,
+            checkIn: form.checkIn,
+            checkOut: form.checkOut || undefined,
+            numGuests: parseInt(form.numGuests) || 1,
+            referenceId: bookingId,
+          },
+        },
+      });
+
       // Notify admin of new booking request
       supabase.functions.invoke("send-transactional-email", {
         body: {

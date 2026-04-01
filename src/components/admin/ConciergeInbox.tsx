@@ -187,10 +187,11 @@ export default function ConciergeInbox() {
     if (!input.trim() || !selectedId || !user || sending) return;
     setSending(true);
 
+    const messageContent = input.trim();
     await supabase.from("messages").insert({
       conversation_id: selectedId,
       sender_id: user.id,
-      content: input.trim(),
+      content: messageContent,
     });
 
     // Create notification for member
@@ -199,9 +200,30 @@ export default function ConciergeInbox() {
       await supabase.from("notifications").insert({
         user_id: conv.member_id,
         title: "Your concierge has replied",
-        body: input.trim().substring(0, 100),
+        body: messageContent.substring(0, 100),
         link: "/member/messages",
       });
+
+      // Send email notification to member
+      const { data: memberProfile } = await supabase
+        .from("profiles")
+        .select("email, full_name")
+        .eq("id", conv.member_id)
+        .single();
+
+      if (memberProfile?.email) {
+        supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "concierge-reply",
+            recipientEmail: memberProfile.email,
+            idempotencyKey: `concierge-reply-${selectedId}-${Date.now()}`,
+            templateData: {
+              memberName: memberProfile.full_name || undefined,
+              messagePreview: messageContent.substring(0, 120),
+            },
+          },
+        });
+      }
     }
 
     setInput("");
