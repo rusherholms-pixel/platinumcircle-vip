@@ -29,6 +29,7 @@ import BookingRequestsManager from "./components/admin/BookingRequestsManager";
 import ConciergeInbox from "./components/admin/ConciergeInbox";
 import MiaLeadsManager from "./components/admin/MiaLeadsManager";
 import HomepageContentManager from "./components/admin/HomepageContentManager";
+import AdminTeam from "./pages/admin/AdminTeam";
 
 // Member dashboard
 import MemberLayout from "./components/member/MemberLayout";
