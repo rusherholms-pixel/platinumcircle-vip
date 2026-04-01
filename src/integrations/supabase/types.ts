@@ -510,6 +510,81 @@ export type Database = {
           },
         ]
       }
+      listings: {
+        Row: {
+          category: string
+          category_data: Json | null
+          city: string | null
+          country: string | null
+          cover_image: string | null
+          created_at: string
+          created_by: string | null
+          currency: string | null
+          custom_quote_available: boolean | null
+          full_description: string | null
+          gallery_images: string[] | null
+          id: string
+          is_featured: boolean | null
+          neighbourhood: string | null
+          primary_rate: number | null
+          secondary_rate: number | null
+          short_description: string | null
+          status: string
+          title: string
+          updated_at: string
+          verification_data: Json | null
+          video_url: string | null
+        }
+        Insert: {
+          category: string
+          category_data?: Json | null
+          city?: string | null
+          country?: string | null
+          cover_image?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          custom_quote_available?: boolean | null
+          full_description?: string | null
+          gallery_images?: string[] | null
+          id?: string
+          is_featured?: boolean | null
+          neighbourhood?: string | null
+          primary_rate?: number | null
+          secondary_rate?: number | null
+          short_description?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          verification_data?: Json | null
+          video_url?: string | null
+        }
+        Update: {
+          category?: string
+          category_data?: Json | null
+          city?: string | null
+          country?: string | null
+          cover_image?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string | null
+          custom_quote_available?: boolean | null
+          full_description?: string | null
+          gallery_images?: string[] | null
+          id?: string
+          is_featured?: boolean | null
+          neighbourhood?: string | null
+          primary_rate?: number | null
+          secondary_rate?: number | null
+          short_description?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          verification_data?: Json | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           attachment_name: string | null
@@ -670,6 +745,8 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_status: string | null
+          admin_notes: string | null
           avatar_url: string | null
           city: string | null
           country: string | null
@@ -677,10 +754,16 @@ export type Database = {
           email: string
           full_name: string
           id: string
+          last_login_at: string | null
           phone: string | null
+          restriction_expires_at: string | null
+          restriction_reason: string | null
+          restriction_type: string | null
           updated_at: string
         }
         Insert: {
+          account_status?: string | null
+          admin_notes?: string | null
           avatar_url?: string | null
           city?: string | null
           country?: string | null
@@ -688,10 +771,16 @@ export type Database = {
           email: string
           full_name: string
           id: string
+          last_login_at?: string | null
           phone?: string | null
+          restriction_expires_at?: string | null
+          restriction_reason?: string | null
+          restriction_type?: string | null
           updated_at?: string
         }
         Update: {
+          account_status?: string | null
+          admin_notes?: string | null
           avatar_url?: string | null
           city?: string | null
           country?: string | null
@@ -699,7 +788,11 @@ export type Database = {
           email?: string
           full_name?: string
           id?: string
+          last_login_at?: string | null
           phone?: string | null
+          restriction_expires_at?: string | null
+          restriction_reason?: string | null
+          restriction_type?: string | null
           updated_at?: string
         }
         Relationships: []
