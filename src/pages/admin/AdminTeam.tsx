@@ -287,9 +287,6 @@ export default function AdminTeam() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    {isOwner(admin.user_id) && (
-                      <Badge variant="outline" className="text-[9px] tracking-widest uppercase border-amber-500/40 text-amber-400">Owner</Badge>
-                    )}
                     {admin.user_id === user?.id && (
                       <Badge variant="outline" className="text-[9px] tracking-widest uppercase border-primary/30 text-primary">You</Badge>
                     )}
