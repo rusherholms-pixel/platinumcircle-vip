@@ -110,7 +110,18 @@ export default function AdminTeam() {
     setAdding(false);
   };
 
+  const OWNER_EMAIL = "slusere@yahoo.com";
+
+  const isOwner = (userId: string) => {
+    const admin = admins.find((a) => a.user_id === userId);
+    return admin?.profile?.email?.toLowerCase() === OWNER_EMAIL.toLowerCase();
+  };
+
   const handleRemove = async (userId: string) => {
+    if (isOwner(userId)) {
+      toast({ title: "Cannot remove owner", description: "The platform owner cannot be removed.", variant: "destructive" });
+      return;
+    }
     if (userId === user?.id) {
       toast({ title: "Cannot remove yourself", description: "You cannot revoke your own admin access.", variant: "destructive" });
       return;
@@ -276,9 +287,13 @@ export default function AdminTeam() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    {admin.user_id === user?.id ? (
+                    {isOwner(admin.user_id) && (
+                      <Badge variant="outline" className="text-[9px] tracking-widest uppercase border-amber-500/40 text-amber-400">Owner</Badge>
+                    )}
+                    {admin.user_id === user?.id && (
                       <Badge variant="outline" className="text-[9px] tracking-widest uppercase border-primary/30 text-primary">You</Badge>
-                    ) : (
+                    )}
+                    {!isOwner(admin.user_id) && admin.user_id !== user?.id && (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
