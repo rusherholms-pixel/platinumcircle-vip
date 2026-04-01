@@ -107,7 +107,9 @@ export default function AdminMembers() {
     setMembers((prev) =>
       prev.map((m) => m.id === restrictId ? { ...m, account_status: "restricted", restriction_type: restrictType, restriction_reason: restrictReason } : m)
     );
+    const restricted = members.find((m) => m.id === restrictId);
     toast({ title: "Member restricted" });
+    logAdminActivity({ actionType: "status_change", description: `Restricted member ${restricted?.full_name || "Unknown"} (${restrictType})`, targetType: "member", targetId: restrictId! });
     setRestrictId(null);
     setRestrictReason("");
   };
