@@ -90,8 +90,10 @@ export default function AdminListings() {
     const newStatus = current === "active" ? "inactive" : "active";
     const { error } = await supabase.from("listings").update({ status: newStatus }).eq("id", id);
     if (!error) {
+      const listing = listings.find((l) => l.id === id);
       setListings((prev) => prev.map((l) => (l.id === id ? { ...l, status: newStatus } : l)));
       toast({ title: `Listing ${newStatus}` });
+      logAdminActivity({ actionType: "status_change", description: `Set listing "${listing?.title}" to ${newStatus}`, targetType: "listing", targetId: id });
     }
     setToggling(null);
   };
