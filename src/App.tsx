@@ -102,6 +102,7 @@ const App = () => (
             <Route path="/member" element={<MemberLayout />}>
               <Route path="dashboard" element={<MemberOverview />} />
               <Route path="housing" element={<MemberHousing />} />
+              <Route path="listing/:id" element={<MemberListingDetail />} />
               <Route path="security" element={<MemberSecurity />} />
               <Route path="drivers" element={<MemberDrivers />} />
               <Route path="experiences" element={<MemberExperiences />} />
