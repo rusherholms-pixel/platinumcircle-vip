@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="goldMetal" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8B6914"/>
+      <stop offset="25%" stop-color="#C9A84C"/>
+      <stop offset="50%" stop-color="#F0D080"/>
+      <stop offset="75%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+    <linearGradient id="goldMetal2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A07830"/>
+      <stop offset="35%" stop-color="#C9A84C"/>
+      <stop offset="60%" stop-color="#F0D080"/>
+      <stop offset="80%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#A07830"/>
+    </linearGradient>
+    <radialGradient id="goldSheen" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#F5E070"/>
+      <stop offset="100%" stop-color="#A07830"/>
+    </radialGradient>
+    <linearGradient id="goldText" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A07830"/>
+      <stop offset="30%" stop-color="#C9A84C"/>
+      <stop offset="50%" stop-color="#F0D080"/>
+      <stop offset="70%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#A07830"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" fill="#0A0A0A"/>
+
+  <!-- Outer Ring -->
+  <g id="ring">
+    <circle cx="200" cy="175" r="130" fill="none" stroke="url(#goldMetal2)" stroke-width="4"/>
+    <circle cx="200" cy="175" r="122" fill="none" stroke="url(#goldMetal)" stroke-width="1.5"/>
+  </g>
+
+  <!-- Crown -->
+  <g id="crown" fill="url(#goldMetal)" stroke="url(#goldMetal2)" stroke-width="0.5">
+    <!-- Crown base bar -->
+    <rect x="160" y="185" width="80" height="3" rx="1"/>
+    <!-- Crown body -->
+    <polygon points="165,185 170,150 178,170 200,130 222,170 230,150 235,185"/>
+    <!-- Crown point accents - circles -->
+    <circle cx="170" cy="148" r="3"/>
+    <circle cx="200" cy="127" r="4"/>
+    <circle cx="230" cy="148" r="3"/>
+  </g>
+
+  <!-- Star accents -->
+  <g id="stars" fill="#F0D080">
+    <!-- Left star -->
+    <polygon points="145,165 147,160 149,165 154,167 149,169 147,174 145,169 140,167" opacity="0.8"/>
+    <!-- Right star -->
+    <polygon points="251,165 253,160 255,165 260,167 255,169 253,174 251,169 246,167" opacity="0.8"/>
+  </g>
+
+  <!-- Separator line inside circle -->
+  <line x1="155" y1="196" x2="245" y2="196" stroke="url(#goldText)" stroke-width="0.75" opacity="0.6"/>
+
+  <!-- Wordmark inside circle -->
+  <g id="wordmark">
+    <text x="200" y="220" text-anchor="middle" font-family="'Times New Roman', 'Georgia', serif" font-size="22" font-weight="400" letter-spacing="8" fill="url(#goldText)">PLATINUM</text>
+    <text x="200" y="244" text-anchor="middle" font-family="'Times New Roman', 'Georgia', serif" font-size="16" font-weight="400" letter-spacing="10" fill="url(#goldText)">CIRCLE</text>
+  </g>
+
+  <!-- Tagline separator -->
+  <line x1="155" y1="265" x2="245" y2="265" stroke="#C9A84C" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- Tagline -->
+  <g id="tagline">
+    <text x="200" y="282" text-anchor="middle" font-family="'Helvetica Neue', 'Arial', sans-serif" font-size="8" font-weight="300" letter-spacing="6" fill="#E8E8E8" opacity="0.7">CONCIERGE</text>
+  </g>
+</svg>
