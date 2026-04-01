@@ -334,20 +334,21 @@ export default function AdminMembers() {
               disabled={creating || !createForm.full_name || !createForm.email}
               onClick={async () => {
                 setCreating(true);
-                // Create profile entry (actual auth invite would need admin API)
-                const { error } = await supabase.from("profiles").insert({
-                  id: crypto.randomUUID(),
-                  full_name: createForm.full_name,
-                  email: createForm.email,
-                  country: createForm.country,
-                  city: createForm.city,
+                const { data, error } = await supabase.functions.invoke('invite-user', {
+                  body: {
+                    email: createForm.email,
+                    full_name: createForm.full_name,
+                    role: 'member',
+                    country: createForm.country,
+                    city: createForm.city,
+                  },
                 });
                 setCreating(false);
-                if (error) {
-                  toast({ title: "Failed to create member", description: error.message, variant: "destructive" });
+                if (error || data?.error) {
+                  toast({ title: "Failed to create member", description: data?.error || error?.message, variant: "destructive" });
                 } else {
-                  toast({ title: "Member profile created" });
-                  logAdminActivity({ actionType: "create", description: `Created member account for ${createForm.full_name}`, targetType: "member" });
+                  toast({ title: "Member invited", description: data?.alreadyExists ? "User already exists — role updated." : "Welcome email with login instructions sent." });
+                  logAdminActivity({ actionType: "create", description: `Invited member ${createForm.full_name} (${createForm.email})`, targetType: "member", targetId: data?.userId });
                   setCreateOpen(false);
                   setCreateForm({ full_name: "", email: "", country: "", city: "" });
                   fetchMembers();
