@@ -28,6 +28,7 @@ const navItems = [
   { label: "Concierge Requests", path: "/admin/bookings", icon: ClipboardList },
   { label: "Mia Leads", path: "/admin/mia-leads", icon: Sparkles },
   { label: "Partnership Leads", path: "/admin/partnership-leads", icon: Briefcase },
+  { label: "Partnership Pipeline", path: "/admin/partnership-pipeline", icon: Briefcase },
   { label: "Messages", path: "/admin/messages", icon: MessageSquare },
   { label: "Homepage", path: "/admin/homepage", icon: Settings },
   { label: "Team", path: "/admin/team", icon: Users },

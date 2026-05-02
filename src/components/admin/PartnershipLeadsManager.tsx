@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Search, Briefcase, Building2, Phone, Clock, RefreshCw, Download } from "lucide-react";
+import { Search, Briefcase, Building2, Phone, Clock, RefreshCw, Download, Star } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface PartnershipLead {
@@ -65,7 +65,7 @@ export default function PartnershipLeadsManager() {
         .limit(100);
 
       if (error) throw error;
-      setLeads((data || []) as PartnershipLead[]);
+      setLeads((data || []) as unknown as PartnershipLead[]);
     } catch (err) {
       toast({ title: "Error fetching leads", description: String(err), variant: "destructive" });
     } finally {
@@ -86,6 +86,19 @@ export default function PartnershipLeadsManager() {
       toast({ title: "Status updated" });
     } catch (err) {
       toast({ title: "Update failed", description: String(err), variant: "destructive" });
+    }
+  };
+
+  const promoteLead = async (id: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke("partnership-scout", {
+        body: { action: "promote", partner_id: id },
+      });
+      if (error) throw error;
+      toast({ title: "Promoted to pipeline", description: data?.lead?.company_name });
+      setLeads(prev => prev.map(l => l.id === id ? { ...l, status: "researching" as any } : l));
+    } catch (err: any) {
+      toast({ title: "Promote failed", description: err.message || String(err), variant: "destructive" });
     }
   };
 
@@ -151,12 +164,12 @@ export default function PartnershipLeadsManager() {
             className="pl-10"
           />
         </div>
-        <Select value={statusFilter || ""} onValueChange={(v) => setStatusFilter(v || null)}>
+        <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? null : v)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Statuses</SelectItem>
+            <SelectItem value="all">All Statuses</SelectItem>
             <SelectItem value="new">New</SelectItem>
             <SelectItem value="researching">Researching</SelectItem>
             <SelectItem value="contacted">Contacted</SelectItem>
@@ -254,6 +267,10 @@ export default function PartnershipLeadsManager() {
                       <SelectItem value="closed">Closed</SelectItem>
                     </SelectContent>
                   </Select>
+                  <Button variant="default" size="sm" onClick={() => promoteLead(lead.id)}>
+                    <Star className="w-3.5 h-3.5 mr-1.5" />
+                    Promote
+                  </Button>
                   {lead.raw_opportunity?.link && (
                     <Button variant="outline" size="sm" asChild>
                       <a href={lead.raw_opportunity.link} target="_blank" rel="noopener noreferrer">
