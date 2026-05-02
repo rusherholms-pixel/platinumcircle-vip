@@ -267,6 +267,10 @@ export default function PartnershipLeadsManager() {
                       <SelectItem value="closed">Closed</SelectItem>
                     </SelectContent>
                   </Select>
+                  <Button variant="default" size="sm" onClick={() => promoteLead(lead.id)}>
+                    <Star className="w-3.5 h-3.5 mr-1.5" />
+                    Promote
+                  </Button>
                   {lead.raw_opportunity?.link && (
                     <Button variant="outline" size="sm" asChild>
                       <a href={lead.raw_opportunity.link} target="_blank" rel="noopener noreferrer">
