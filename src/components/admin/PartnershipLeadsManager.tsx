@@ -65,7 +65,7 @@ export default function PartnershipLeadsManager() {
         .limit(100);
 
       if (error) throw error;
-      setLeads((data || []) as PartnershipLead[]);
+      setLeads((data || []) as unknown as PartnershipLead[]);
     } catch (err) {
       toast({ title: "Error fetching leads", description: String(err), variant: "destructive" });
     } finally {
