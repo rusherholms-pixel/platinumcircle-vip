@@ -28,6 +28,7 @@ import AdminApplications from "./pages/admin/AdminApplications";
 import BookingRequestsManager from "./components/admin/BookingRequestsManager";
 import ConciergeInbox from "./components/admin/ConciergeInbox";
 import MiaLeadsManager from "./components/admin/MiaLeadsManager";
+import PartnershipLeadsManager from "./components/admin/PartnershipLeadsManager";
 import HomepageContentManager from "./components/admin/HomepageContentManager";
 import AdminTeam from "./pages/admin/AdminTeam";
 import AdminActivityLog from "./pages/admin/AdminActivityLog";
@@ -92,6 +93,7 @@ const App = () => (
               <Route path="applications" element={<AdminApplications />} />
               <Route path="bookings" element={<BookingRequestsManager />} />
               <Route path="mia-leads" element={<MiaLeadsManager />} />
+              <Route path="partnership-leads" element={<PartnershipLeadsManager />} />
               <Route path="messages" element={<ConciergeInbox />} />
               <Route path="homepage" element={<HomepageContentManager />} />
               <Route path="team" element={<AdminTeam />} />
