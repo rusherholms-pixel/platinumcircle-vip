@@ -110,18 +110,16 @@ export default function PartnershipScoutLeadsManager() {
 
   const importFromExternal = async () => {
     setImporting(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("fetch-external-leads", {
-        body: { limit: 100 },
-      });
-      if (error) throw error;
-      const externalLeads: any[] = data?.leads || [];
-      if (externalLeads.length === 0) {
-        toast({ title: "No leads found", description: "External database returned 0 records." });
-        return;
-      }
+    const BATCH = 100;
+    const MAX_BATCHES = 50; // safety cap → up to 5,000 rows per click
+    let offset = 0;
+    let totalFetched = 0;
+    let totalImported = 0;
+    let totalDuplicates = 0;
+    let grandTotal: number | null = null;
 
-      // De-dup against existing rows by company_name + source_url
+    try {
+      // Pre-fetch existing keys once for de-dup across all batches
       const { data: existing } = await supabase
         .from("partnership_scout_leads")
         .select("company_name, source_url");
@@ -129,39 +127,69 @@ export default function PartnershipScoutLeadsManager() {
         (existing || []).map(e => `${(e.company_name || "").toLowerCase()}|${e.source_url || ""}`)
       );
 
-      const rows = externalLeads
-        .map((l: any) => ({
-          company_name: l.company_name || l.title || "Unknown",
-          industry: l.industry || null,
-          contact_name: l.contact_name || null,
-          contact_email: l.contact_email || null,
-          contact_phone: l.contact_phone || null,
-          source_url: l.source_url || l.url || l.link || null,
-          opportunity_type: l.opportunity_type || [],
-          priority_score: typeof l.priority_score === "number" ? l.priority_score : null,
-          stage: "qualified" as Stage,
-          notes: l.notes || null,
-          metadata: { imported_from: "external_supabase", original: l },
-        }))
-        .filter(r => !existingKeys.has(`${r.company_name.toLowerCase()}|${r.source_url || ""}`));
+      for (let i = 0; i < MAX_BATCHES; i++) {
+        const { data, error } = await supabase.functions.invoke("fetch-external-leads", {
+          body: { limit: BATCH, offset },
+        });
+        if (error) throw error;
 
-      if (rows.length === 0) {
-        toast({ title: "Already up to date", description: `Fetched ${externalLeads.length}, all already imported.` });
-        return;
+        const externalLeads: any[] = data?.leads || [];
+        if (grandTotal === null && typeof data?.total === "number") grandTotal = data.total;
+        totalFetched += externalLeads.length;
+
+        if (externalLeads.length === 0) break;
+
+        const rows = externalLeads
+          .map((l: any) => ({
+            company_name: l.company_name || l.title || "Unknown",
+            industry: l.industry || null,
+            contact_name: l.contact_name || null,
+            contact_email: l.contact_email || null,
+            contact_phone: l.contact_phone || null,
+            source_url: l.source_url || l.url || l.link || null,
+            opportunity_type: l.opportunity_type || [],
+            priority_score: typeof l.priority_score === "number" ? l.priority_score : null,
+            stage: "qualified" as Stage,
+            notes: l.notes || null,
+            metadata: { imported_from: "external_supabase", original: l },
+          }))
+          .filter(r => {
+            const key = `${r.company_name.toLowerCase()}|${r.source_url || ""}`;
+            if (existingKeys.has(key)) return false;
+            existingKeys.add(key); // also dedup within this run
+            return true;
+          });
+
+        totalDuplicates += externalLeads.length - rows.length;
+
+        if (rows.length > 0) {
+          const { error: insertError } = await supabase
+            .from("partnership_scout_leads")
+            .insert(rows);
+          if (insertError) throw insertError;
+          totalImported += rows.length;
+        }
+
+        toast({
+          title: `Batch ${i + 1} done`,
+          description: `Imported ${totalImported} so far${grandTotal ? ` of ${grandTotal}` : ""}…`,
+        });
+
+        if (!data?.has_more) break;
+        offset = data.next_offset ?? offset + externalLeads.length;
       }
-
-      const { error: insertError } = await supabase
-        .from("partnership_scout_leads")
-        .insert(rows);
-      if (insertError) throw insertError;
 
       toast({
         title: "Import complete",
-        description: `${rows.length} new lead(s) imported (${externalLeads.length - rows.length} duplicates skipped).`,
+        description: `${totalImported} new lead(s) imported, ${totalDuplicates} duplicate(s) skipped (fetched ${totalFetched}${grandTotal ? ` of ${grandTotal}` : ""}).`,
       });
       fetchLeads();
     } catch (err: any) {
-      toast({ title: "Import failed", description: err.message || String(err), variant: "destructive" });
+      toast({
+        title: "Import failed",
+        description: `${err.message || String(err)} (imported ${totalImported} before error)`,
+        variant: "destructive",
+      });
     } finally {
       setImporting(false);
     }
