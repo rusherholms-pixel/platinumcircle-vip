@@ -29,7 +29,7 @@ serve(async (req) => {
     // Fetch data from external database
     // You'll need to adjust the table name based on your actual schema
     const { data, error } = await externalSupabase
-      .from("leads") // Change this to your actual table name
+      .from("partnership_scout_leads")
       .select("*")
       .order("created_at", { ascending: false })
       .limit(limit);
