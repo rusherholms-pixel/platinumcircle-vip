@@ -27,7 +27,7 @@ serve(async (req) => {
     const externalSupabase = createClient(externalUrl, externalKey);
 
     const { data, error, count } = await externalSupabase
-      .from("partnership_scout_leads")
+      .from("leads")
       .select("*", { count: "exact" })
       .order("created_at", { ascending: false })
       .range(safeOffset, safeOffset + safeLimit - 1);
