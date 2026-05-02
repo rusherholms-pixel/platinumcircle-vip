@@ -249,12 +249,12 @@ const AdminDashboard = () => {
           <ConciergeInbox />
         ) : activeTab === "mia-leads" ? (
           <MiaLeadsManager />
-        ) : activeTab === "partnership-scout" ? (
-          <PartnershipScoutPanel />
         ) : activeTab === "bookings" ? (
           <BookingRequestsManager />
         ) : activeTab === "homepage" ? (
           <HomepageContentManager />
+        ) : activeTab === "partnership-scout" ? (
+          <PartnershipScoutPanel />
         ) : (
           <>
             {/* Stats */}
