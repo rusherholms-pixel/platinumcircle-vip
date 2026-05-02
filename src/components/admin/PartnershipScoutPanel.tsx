@@ -250,7 +250,7 @@ export default function PartnershipScoutPanel() {
         const industry = determineIndustry(text);
         const opportunityTypes = determineOpportunityType(text);
 
-        const { data: existing } = await supabase
+        const { data: existing } = await (supabase as any)
           .from("partners_raw")
           .select("id")
           .eq("raw_opportunity->>link", item.link)
@@ -278,7 +278,7 @@ export default function PartnershipScoutPanel() {
           created_at: new Date().toISOString()
         };
 
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from("partners_raw")
           .insert(lead);
 
