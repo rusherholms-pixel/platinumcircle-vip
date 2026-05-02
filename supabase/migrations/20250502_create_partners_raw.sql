@@ -1,7 +1,12 @@
 -- Create partners_raw table for Platinum Circle
 -- Stores insurance/relocation partnership leads
+-- WARNING: This will DROP and recreate the table, losing all existing data
 
-CREATE TABLE IF NOT EXISTS partners_raw (
+-- Drop existing table if it exists (CASCADE removes dependent objects like indexes, policies)
+DROP TABLE IF EXISTS partners_raw CASCADE;
+
+-- Recreate table with latest schema
+CREATE TABLE partners_raw (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     source_route TEXT NOT NULL DEFAULT 'platinum_circle',
     company_name TEXT NOT NULL,

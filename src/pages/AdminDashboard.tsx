@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import {
   Users, FileText, CheckCircle, XCircle, Clock, LogOut,
   ChevronDown, ChevronUp, Search, Filter, LayoutDashboard, Image, MessageSquare, Sparkles,
+  Play, Loader2, Target
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -23,6 +24,7 @@ import HomepageContentManager from "@/components/admin/HomepageContentManager";
 import BookingRequestsManager from "@/components/admin/BookingRequestsManager";
 import ConciergeInbox from "@/components/admin/ConciergeInbox";
 import MiaLeadsManager from "@/components/admin/MiaLeadsManager";
+import PartnershipScoutPanel from "@/components/admin/PartnershipScoutPanel";
 
 interface Application {
   id: string;
@@ -51,7 +53,7 @@ interface Application {
   created_at: string;
 }
 
-type AdminTab = "applications" | "homepage" | "bookings" | "inbox" | "mia-leads";
+type AdminTab = "applications" | "homepage" | "bookings" | "inbox" | "mia-leads" | "partnership-scout";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -234,12 +236,21 @@ const AdminDashboard = () => {
           >
             <Sparkles size={16} /> Mia Leads
           </Button>
+          <Button
+            variant={activeTab === "partnership-scout" ? "default" : "ghost"}
+            className={activeTab === "partnership-scout" ? "bg-gradient-gold text-primary-foreground gap-2" : "text-muted-foreground gap-2"}
+            onClick={() => setActiveTab("partnership-scout")}
+          >
+            <Target size={16} /> Partnership Scout
+          </Button>
         </div>
 
         {activeTab === "inbox" ? (
           <ConciergeInbox />
         ) : activeTab === "mia-leads" ? (
           <MiaLeadsManager />
+        ) : activeTab === "partnership-scout" ? (
+          <PartnershipScoutPanel />
         ) : activeTab === "bookings" ? (
           <BookingRequestsManager />
         ) : activeTab === "homepage" ? (
