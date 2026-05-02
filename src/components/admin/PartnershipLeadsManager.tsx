@@ -56,7 +56,7 @@ export default function PartnershipLeadsManager() {
   const fetchLeads = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("partners_raw")
         .select("*")
         .eq("source_route", "platinum_circle")
@@ -75,7 +75,7 @@ export default function PartnershipLeadsManager() {
 
   const updateStatus = async (id: string, newStatus: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("partners_raw")
         .update({ status: newStatus, updated_at: new Date().toISOString() })
         .eq("id", id);
