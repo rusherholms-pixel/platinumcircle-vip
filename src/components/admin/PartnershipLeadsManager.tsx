@@ -65,7 +65,7 @@ export default function PartnershipLeadsManager() {
         .limit(100);
 
       if (error) throw error;
-      setLeads((data || []) as PartnershipLead[]);
+      setLeads((data || []) as unknown as PartnershipLead[]);
     } catch (err) {
       toast({ title: "Error fetching leads", description: String(err), variant: "destructive" });
     } finally {
@@ -151,12 +151,12 @@ export default function PartnershipLeadsManager() {
             className="pl-10"
           />
         </div>
-        <Select value={statusFilter || ""} onValueChange={(v) => setStatusFilter(v || null)}>
+        <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? null : v)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Statuses</SelectItem>
+            <SelectItem value="all">All Statuses</SelectItem>
             <SelectItem value="new">New</SelectItem>
             <SelectItem value="researching">Researching</SelectItem>
             <SelectItem value="contacted">Contacted</SelectItem>

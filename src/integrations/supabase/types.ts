@@ -746,6 +746,51 @@ export type Database = {
         }
         Relationships: []
       }
+      partners_raw: {
+        Row: {
+          company_name: string
+          contact_hint: string | null
+          created_at: string | null
+          extracted_at: string | null
+          id: string
+          industry: string | null
+          opportunity_type: string[] | null
+          priority_score: number | null
+          raw_opportunity: Json | null
+          source_route: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_name: string
+          contact_hint?: string | null
+          created_at?: string | null
+          extracted_at?: string | null
+          id?: string
+          industry?: string | null
+          opportunity_type?: string[] | null
+          priority_score?: number | null
+          raw_opportunity?: Json | null
+          source_route?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_name?: string
+          contact_hint?: string | null
+          created_at?: string | null
+          extracted_at?: string | null
+          id?: string
+          industry?: string | null
+          opportunity_type?: string[] | null
+          priority_score?: number | null
+          raw_opportunity?: Json | null
+          source_route?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       private_inquiries: {
         Row: {
           created_at: string
