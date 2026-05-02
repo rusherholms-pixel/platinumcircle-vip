@@ -13,9 +13,10 @@ serve(async (req) => {
   }
 
   try {
-    const { limit = 50 } = await req.json().catch(() => ({}));
+    const { limit = 100, offset = 0 } = await req.json().catch(() => ({}));
+    const safeLimit = Math.min(Math.max(Number(limit) || 100, 1), 1000);
+    const safeOffset = Math.max(Number(offset) || 0, 0);
 
-    // External Supabase credentials
     const externalUrl = "https://vraxmojlnkxlddenfrjv.supabase.co";
     const externalKey = Deno.env.get('EXTERNAL_SUPABASE_SERVICE_ROLE_KEY');
 
@@ -23,16 +24,13 @@ serve(async (req) => {
       throw new Error('EXTERNAL_SUPABASE_SERVICE_ROLE_KEY not configured');
     }
 
-    // Create external Supabase client
     const externalSupabase = createClient(externalUrl, externalKey);
 
-    // Fetch data from external database
-    // You'll need to adjust the table name based on your actual schema
-    const { data, error } = await externalSupabase
+    const { data, error, count } = await externalSupabase
       .from("partnership_scout_leads")
-      .select("*")
+      .select("*", { count: "exact" })
       .order("created_at", { ascending: false })
-      .limit(limit);
+      .range(safeOffset, safeOffset + safeLimit - 1);
 
     if (error) {
       console.error('External DB error:', error);
@@ -42,8 +40,20 @@ serve(async (req) => {
       );
     }
 
+    const total = count ?? 0;
+    const returned = (data || []).length;
+    const hasMore = safeOffset + returned < total;
+
     return new Response(
-      JSON.stringify({ leads: data || [] }),
+      JSON.stringify({
+        leads: data || [],
+        total,
+        offset: safeOffset,
+        limit: safeLimit,
+        returned,
+        has_more: hasMore,
+        next_offset: hasMore ? safeOffset + returned : null,
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
