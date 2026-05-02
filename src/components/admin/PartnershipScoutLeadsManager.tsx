@@ -108,6 +108,65 @@ export default function PartnershipScoutLeadsManager() {
     }
   };
 
+  const importFromExternal = async () => {
+    setImporting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("fetch-external-leads", {
+        body: { limit: 100 },
+      });
+      if (error) throw error;
+      const externalLeads: any[] = data?.leads || [];
+      if (externalLeads.length === 0) {
+        toast({ title: "No leads found", description: "External database returned 0 records." });
+        return;
+      }
+
+      // De-dup against existing rows by company_name + source_url
+      const { data: existing } = await supabase
+        .from("partnership_scout_leads")
+        .select("company_name, source_url");
+      const existingKeys = new Set(
+        (existing || []).map(e => `${(e.company_name || "").toLowerCase()}|${e.source_url || ""}`)
+      );
+
+      const rows = externalLeads
+        .map((l: any) => ({
+          company_name: l.company_name || l.title || "Unknown",
+          industry: l.industry || null,
+          contact_name: l.contact_name || null,
+          contact_email: l.contact_email || null,
+          contact_phone: l.contact_phone || null,
+          source_url: l.source_url || l.url || l.link || null,
+          opportunity_type: l.opportunity_type || [],
+          priority_score: typeof l.priority_score === "number" ? l.priority_score : null,
+          stage: "qualified" as Stage,
+          notes: l.notes || null,
+          metadata: { imported_from: "external_supabase", original: l },
+        }))
+        .filter(r => !existingKeys.has(`${r.company_name.toLowerCase()}|${r.source_url || ""}`));
+
+      if (rows.length === 0) {
+        toast({ title: "Already up to date", description: `Fetched ${externalLeads.length}, all already imported.` });
+        return;
+      }
+
+      const { error: insertError } = await supabase
+        .from("partnership_scout_leads")
+        .insert(rows);
+      if (insertError) throw insertError;
+
+      toast({
+        title: "Import complete",
+        description: `${rows.length} new lead(s) imported (${externalLeads.length - rows.length} duplicates skipped).`,
+      });
+      fetchLeads();
+    } catch (err: any) {
+      toast({ title: "Import failed", description: err.message || String(err), variant: "destructive" });
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const updateStage = async (id: string, stage: Stage) => {
     const { error } = await supabase
       .from("partnership_scout_leads")
