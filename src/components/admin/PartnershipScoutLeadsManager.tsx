@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   Briefcase, Building2, Mail, Phone, ExternalLink, RefreshCw,
-  Plus, Trash2, Search, Calendar,
+  Plus, Trash2, Search, Calendar, Download,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
@@ -69,6 +69,7 @@ export default function PartnershipScoutLeadsManager() {
   const [search, setSearch] = useState("");
   const [stageFilter, setStageFilter] = useState<string>("all");
   const [running, setRunning] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
 
@@ -104,6 +105,65 @@ export default function PartnershipScoutLeadsManager() {
       toast({ title: "Scout failed", description: err.message || String(err), variant: "destructive" });
     } finally {
       setRunning(false);
+    }
+  };
+
+  const importFromExternal = async () => {
+    setImporting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("fetch-external-leads", {
+        body: { limit: 100 },
+      });
+      if (error) throw error;
+      const externalLeads: any[] = data?.leads || [];
+      if (externalLeads.length === 0) {
+        toast({ title: "No leads found", description: "External database returned 0 records." });
+        return;
+      }
+
+      // De-dup against existing rows by company_name + source_url
+      const { data: existing } = await supabase
+        .from("partnership_scout_leads")
+        .select("company_name, source_url");
+      const existingKeys = new Set(
+        (existing || []).map(e => `${(e.company_name || "").toLowerCase()}|${e.source_url || ""}`)
+      );
+
+      const rows = externalLeads
+        .map((l: any) => ({
+          company_name: l.company_name || l.title || "Unknown",
+          industry: l.industry || null,
+          contact_name: l.contact_name || null,
+          contact_email: l.contact_email || null,
+          contact_phone: l.contact_phone || null,
+          source_url: l.source_url || l.url || l.link || null,
+          opportunity_type: l.opportunity_type || [],
+          priority_score: typeof l.priority_score === "number" ? l.priority_score : null,
+          stage: "qualified" as Stage,
+          notes: l.notes || null,
+          metadata: { imported_from: "external_supabase", original: l },
+        }))
+        .filter(r => !existingKeys.has(`${r.company_name.toLowerCase()}|${r.source_url || ""}`));
+
+      if (rows.length === 0) {
+        toast({ title: "Already up to date", description: `Fetched ${externalLeads.length}, all already imported.` });
+        return;
+      }
+
+      const { error: insertError } = await supabase
+        .from("partnership_scout_leads")
+        .insert(rows);
+      if (insertError) throw insertError;
+
+      toast({
+        title: "Import complete",
+        description: `${rows.length} new lead(s) imported (${externalLeads.length - rows.length} duplicates skipped).`,
+      });
+      fetchLeads();
+    } catch (err: any) {
+      toast({ title: "Import failed", description: err.message || String(err), variant: "destructive" });
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -188,6 +248,10 @@ export default function PartnershipScoutLeadsManager() {
           <Button variant="outline" onClick={runScout} disabled={running}>
             <RefreshCw className={`w-4 h-4 mr-2 ${running ? "animate-spin" : ""}`} />
             Run Scout
+          </Button>
+          <Button variant="outline" onClick={importFromExternal} disabled={importing}>
+            <Download className={`w-4 h-4 mr-2 ${importing ? "animate-pulse" : ""}`} />
+            {importing ? "Importing..." : "Import External"}
           </Button>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
