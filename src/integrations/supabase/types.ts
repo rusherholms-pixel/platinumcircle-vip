@@ -748,48 +748,140 @@ export type Database = {
       }
       partners_raw: {
         Row: {
+          assigned_to: string | null
           company_name: string
           contact_hint: string | null
+          contacted_at: string | null
           created_at: string | null
           extracted_at: string | null
+          follow_up_at: string | null
           id: string
           industry: string | null
+          last_contact_channel: string | null
+          notes: string | null
           opportunity_type: string[] | null
           priority_score: number | null
           raw_opportunity: Json | null
           source_route: string
+          source_url: string | null
           status: string | null
           updated_at: string | null
         }
         Insert: {
+          assigned_to?: string | null
           company_name: string
           contact_hint?: string | null
+          contacted_at?: string | null
           created_at?: string | null
           extracted_at?: string | null
+          follow_up_at?: string | null
           id?: string
           industry?: string | null
+          last_contact_channel?: string | null
+          notes?: string | null
           opportunity_type?: string[] | null
           priority_score?: number | null
           raw_opportunity?: Json | null
           source_route?: string
+          source_url?: string | null
           status?: string | null
           updated_at?: string | null
         }
         Update: {
+          assigned_to?: string | null
           company_name?: string
           contact_hint?: string | null
+          contacted_at?: string | null
           created_at?: string | null
           extracted_at?: string | null
+          follow_up_at?: string | null
           id?: string
           industry?: string | null
+          last_contact_channel?: string | null
+          notes?: string | null
           opportunity_type?: string[] | null
           priority_score?: number | null
           raw_opportunity?: Json | null
           source_route?: string
+          source_url?: string | null
           status?: string | null
           updated_at?: string | null
         }
         Relationships: []
+      }
+      partnership_scout_leads: {
+        Row: {
+          assigned_to: string | null
+          company_name: string
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          industry: string | null
+          metadata: Json | null
+          next_action: string | null
+          next_action_at: string | null
+          notes: string | null
+          opportunity_type: string[] | null
+          priority_score: number | null
+          source_partner_id: string | null
+          source_url: string | null
+          stage: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          company_name: string
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          industry?: string | null
+          metadata?: Json | null
+          next_action?: string | null
+          next_action_at?: string | null
+          notes?: string | null
+          opportunity_type?: string[] | null
+          priority_score?: number | null
+          source_partner_id?: string | null
+          source_url?: string | null
+          stage?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          company_name?: string
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          industry?: string | null
+          metadata?: Json | null
+          next_action?: string | null
+          next_action_at?: string | null
+          notes?: string | null
+          opportunity_type?: string[] | null
+          priority_score?: number | null
+          source_partner_id?: string | null
+          source_url?: string | null
+          stage?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partnership_scout_leads_source_partner_id_fkey"
+            columns: ["source_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners_raw"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       private_inquiries: {
         Row: {
