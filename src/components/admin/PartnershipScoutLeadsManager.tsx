@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   Briefcase, Building2, Mail, Phone, ExternalLink, RefreshCw,
-  Plus, Trash2, Search, Calendar,
+  Plus, Trash2, Search, Calendar, Download,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
