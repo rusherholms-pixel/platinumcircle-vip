@@ -249,6 +249,10 @@ export default function PartnershipScoutLeadsManager() {
             <RefreshCw className={`w-4 h-4 mr-2 ${running ? "animate-spin" : ""}`} />
             Run Scout
           </Button>
+          <Button variant="outline" onClick={importFromExternal} disabled={importing}>
+            <Download className={`w-4 h-4 mr-2 ${importing ? "animate-pulse" : ""}`} />
+            {importing ? "Importing..." : "Import External"}
+          </Button>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button>
