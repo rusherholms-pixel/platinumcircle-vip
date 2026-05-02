@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+
 interface ScoutResult {
   company: string;
   industry: string;
@@ -53,8 +54,40 @@ const LUXURY_KEYWORDS = [
   "exclusive", "high-end", "premium service", "executive"
 ];
 
-// Mock data source - replace with real RSS/API feeds
+// Use Supabase Edge Function to fetch external data securely
 async function fetchPartnershipNews(): Promise<NewsItem[]> {
+  try {
+    // Call the edge function that queries the external database
+    const { data, error } = await supabase.functions.invoke("fetch-external-leads", {
+      body: { limit: 50 }
+    });
+
+    if (error) {
+      console.error("Edge function error:", error);
+      return getMockData();
+    }
+
+    if (!data || !data.leads || data.leads.length === 0) {
+      console.log("No data from external DB, using mock");
+      return getMockData();
+    }
+
+    // Map external data to NewsItem format
+    return data.leads.map((item: any) => ({
+      title: item.title || item.headline || "Untitled",
+      summary: item.summary || item.description || item.content || "",
+      link: item.url || item.link || item.source_url || "",
+      source: item.source || item.publisher || "External Database",
+      published_at: item.published_at || item.created_at || item.date || new Date().toISOString()
+    }));
+  } catch (error) {
+    console.error("Error fetching leads:", error);
+    return getMockData();
+  }
+}
+
+// Mock data fallback
+function getMockData(): NewsItem[] {
   return [
     {
       title: "Global Insurance Corp announces VIP concierge partnerships for high-net-worth clients",

@@ -1,1 +1,7 @@
 project_id = "ejnzkmzsinepbxrniuvj"
+
+[functions.fetch-external-leads]
+verify_jwt = true
+
+[functions.fetch-external-leads.secrets]
+EXTERNAL_SUPABASE_SERVICE_ROLE_KEY = "your-external-service-role-key-here"
