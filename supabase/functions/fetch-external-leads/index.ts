@@ -27,7 +27,7 @@ serve(async (req) => {
     const externalSupabase = createClient(externalUrl, externalKey);
 
     const { data, error, count } = await externalSupabase
-      .from("leads")
+      .from("processed_data")
       .select("*", { count: "exact" })
       .order("created_at", { ascending: false })
       .range(safeOffset, safeOffset + safeLimit - 1);
