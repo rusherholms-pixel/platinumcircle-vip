@@ -15,3 +15,9 @@ EXTERNAL_AI_FUNCTION_NAME = "ai-parse"
 
 [functions.incoming-webhook]
 verify_jwt = false
+
+[functions.sync-partnership-leads]
+verify_jwt = true
+
+[functions.sync-partnership-leads.secrets]
+EXTERNAL_SUPABASE_SERVICE_ROLE_KEY = "your-external-service-role-key-here"
