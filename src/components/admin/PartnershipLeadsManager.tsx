@@ -9,29 +9,28 @@ import {
 import { Search, Briefcase, Building2, Phone, Clock, RefreshCw, Download, Star } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
+type Stage = "qualified" | "outreach" | "meeting" | "proposal" | "won" | "lost";
+
 interface PartnershipLead {
   id: string;
   company_name: string;
-  industry: string;
-  opportunity_type: string[];
-  priority_score: number;
-  contact_hint: string;
-  status: "new" | "researching" | "contacted" | "negotiating" | "closed";
-  extracted_at: string;
-  raw_opportunity: {
-    title: string;
-    summary: string;
-    link: string;
-    keywords_matched: string[];
-  };
+  industry: string | null;
+  opportunity_type: string[] | null;
+  priority_score: number | null;
+  source_url: string | null;
+  notes: string | null;
+  stage: Stage;
+  created_at: string;
+  metadata: any;
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  new: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-  researching: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-  contacted: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
-  negotiating: "bg-orange-500/10 text-orange-500 border-orange-500/20",
-  closed: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+const STAGE_COLORS: Record<Stage, string> = {
+  qualified: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+  outreach: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+  meeting: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
+  proposal: "bg-orange-500/10 text-orange-500 border-orange-500/20",
+  won: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+  lost: "bg-muted text-muted-foreground border-border",
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
@@ -40,15 +39,16 @@ const PRIORITY_COLORS: Record<string, string> = {
   low: "bg-blue-500/10 text-blue-500 border-blue-500/20",
 };
 
+const STAGES: Stage[] = ["qualified", "outreach", "meeting", "proposal", "won", "lost"];
+
 export default function PartnershipLeadsManager() {
   const [leads, setLeads] = useState<PartnershipLead[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [stageFilter, setStageFilter] = useState<string | null>(null);
 
   useEffect(() => {
     fetchLeads();
-    // Auto-refresh every 5 minutes
     const interval = setInterval(fetchLeads, 300000);
     return () => clearInterval(interval);
   }, []);
@@ -56,12 +56,11 @@ export default function PartnershipLeadsManager() {
   const fetchLeads = async () => {
     setLoading(true);
     try {
-      const { data, error } = await (supabase as any)
-        .from("partners_raw")
+      const { data, error } = await supabase
+        .from("partnership_scout_leads")
         .select("*")
-        .eq("source_route", "platinum_circle")
-        .order("priority_score", { ascending: false })
-        .order("extracted_at", { ascending: false })
+        .order("priority_score", { ascending: false, nullsFirst: false })
+        .order("created_at", { ascending: false })
         .limit(100);
 
       if (error) throw error;
@@ -73,17 +72,15 @@ export default function PartnershipLeadsManager() {
     }
   };
 
-  const updateStatus = async (id: string, newStatus: string) => {
+  const updateStage = async (id: string, newStage: Stage) => {
     try {
-      const { error } = await (supabase as any)
-        .from("partners_raw")
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
+      const { error } = await supabase
+        .from("partnership_scout_leads")
+        .update({ stage: newStage, updated_at: new Date().toISOString() })
         .eq("id", id);
-
       if (error) throw error;
-      
-      setLeads(leads.map(l => l.id === id ? { ...l, status: newStatus as any } : l));
-      toast({ title: "Status updated" });
+      setLeads(leads.map(l => l.id === id ? { ...l, stage: newStage } : l));
+      toast({ title: "Stage updated" });
     } catch (err) {
       toast({ title: "Update failed", description: String(err), variant: "destructive" });
     }
@@ -95,18 +92,18 @@ export default function PartnershipLeadsManager() {
         body: { action: "promote", partner_id: id },
       });
       if (error) throw error;
-      toast({ title: "Promoted to pipeline", description: data?.lead?.company_name });
-      setLeads(prev => prev.map(l => l.id === id ? { ...l, status: "researching" as any } : l));
+      toast({ title: "Promoted", description: data?.lead?.company_name });
+      setLeads(prev => prev.map(l => l.id === id ? { ...l, stage: "outreach" } : l));
     } catch (err: any) {
       toast({ title: "Promote failed", description: err.message || String(err), variant: "destructive" });
     }
   };
 
   const exportLeads = () => {
-    const csv = leads.map(l => 
-      `${l.company_name},${l.industry},"${l.opportunity_type.join('; ')}",${l.priority_score},${l.status}`
+    const csv = leads.map(l =>
+      `${l.company_name},${l.industry ?? ""},"${(l.opportunity_type ?? []).join('; ')}",${l.priority_score ?? ""},${l.stage}`
     ).join("\n");
-    const blob = new Blob([`Company,Industry,Type,Priority,Status\n${csv}`], { type: "text/csv" });
+    const blob = new Blob([`Company,Industry,Type,Priority,Stage\n${csv}`], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -115,22 +112,22 @@ export default function PartnershipLeadsManager() {
   };
 
   const filteredLeads = leads.filter(l => {
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       l.company_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      l.industry.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = !statusFilter || l.status === statusFilter;
-    return matchesSearch && matchesStatus;
+      (l.industry ?? "").toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStage = !stageFilter || l.stage === stageFilter;
+    return matchesSearch && matchesStage;
   });
 
-  const getPriorityLabel = (score: number) => {
-    if (score >= 0.8) return "high";
-    if (score >= 0.6) return "medium";
+  const getPriorityLabel = (score: number | null) => {
+    const s = score ?? 0;
+    if (s >= 0.8) return "high";
+    if (s >= 0.6) return "medium";
     return "low";
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -153,7 +150,6 @@ export default function PartnershipLeadsManager() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -164,22 +160,17 @@ export default function PartnershipLeadsManager() {
             className="pl-10"
           />
         </div>
-        <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? null : v)}>
+        <Select value={stageFilter || "all"} onValueChange={(v) => setStageFilter(v === "all" ? null : v)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
+            <SelectValue placeholder="Filter by stage" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="new">New</SelectItem>
-            <SelectItem value="researching">Researching</SelectItem>
-            <SelectItem value="contacted">Contacted</SelectItem>
-            <SelectItem value="negotiating">Negotiating</SelectItem>
-            <SelectItem value="closed">Closed</SelectItem>
+            <SelectItem value="all">All Stages</SelectItem>
+            {STAGES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-card rounded-lg border p-4">
           <div className="text-2xl font-bold">{leads.length}</div>
@@ -187,20 +178,20 @@ export default function PartnershipLeadsManager() {
         </div>
         <div className="bg-card rounded-lg border p-4">
           <div className="text-2xl font-bold text-red-500">
-            {leads.filter(l => l.priority_score >= 0.8).length}
+            {leads.filter(l => (l.priority_score ?? 0) >= 0.8).length}
           </div>
           <div className="text-sm text-muted-foreground">High Priority</div>
         </div>
         <div className="bg-card rounded-lg border p-4">
           <div className="text-2xl font-bold text-yellow-500">
-            {leads.filter(l => l.status !== "new").length}
+            {leads.filter(l => l.stage !== "qualified").length}
           </div>
           <div className="text-sm text-muted-foreground">In Progress</div>
         </div>
         <div className="bg-card rounded-lg border p-4">
           <div className="text-2xl font-bold text-emerald-500">
             {leads.filter(l => {
-              const daysAgo = (Date.now() - new Date(l.extracted_at).getTime()) / 86400000;
+              const daysAgo = (Date.now() - new Date(l.created_at).getTime()) / 86400000;
               return daysAgo <= 7;
             }).length}
           </div>
@@ -208,7 +199,6 @@ export default function PartnershipLeadsManager() {
         </div>
       </div>
 
-      {/* Leads List */}
       {loading ? (
         <div className="text-center py-8">Loading...</div>
       ) : filteredLeads.length === 0 ? (
@@ -217,71 +207,75 @@ export default function PartnershipLeadsManager() {
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredLeads.map((lead) => (
-            <div key={lead.id} className="bg-card rounded-lg border p-4 space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="text-lg font-semibold">{lead.company_name}</h3>
-                    <Badge className={PRIORITY_COLORS[getPriorityLabel(lead.priority_score)]}>
-                      {getPriorityLabel(lead.priority_score)} Priority
-                    </Badge>
-                    <Badge className={STATUS_COLORS[lead.status]}>
-                      {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}
-                    </Badge>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    <Badge variant="outline">
-                      <Building2 className="w-3 h-3 mr-1" />
-                      {lead.industry}
-                    </Badge>
-                    {lead.opportunity_type?.map((type) => (
-                      <Badge key={type} variant="secondary">
-                        {type.replace("_", " ")}
+          {filteredLeads.map((lead) => {
+            const opp = lead.metadata?.raw_opportunity;
+            const contactHint = lead.metadata?.contact_hint;
+            return (
+              <div key={lead.id} className="bg-card rounded-lg border p-4 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <h3 className="text-lg font-semibold">{lead.company_name}</h3>
+                      <Badge className={PRIORITY_COLORS[getPriorityLabel(lead.priority_score)]}>
+                        {getPriorityLabel(lead.priority_score)} Priority
                       </Badge>
-                    ))}
+                      <Badge className={STAGE_COLORS[lead.stage]}>
+                        {lead.stage.charAt(0).toUpperCase() + lead.stage.slice(1)}
+                      </Badge>
+                    </div>
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {lead.industry && (
+                        <Badge variant="outline">
+                          <Building2 className="w-3 h-3 mr-1" />
+                          {lead.industry}
+                        </Badge>
+                      )}
+                      {lead.opportunity_type?.map((type) => (
+                        <Badge key={type} variant="secondary">
+                          {type.replace("_", " ")}
+                        </Badge>
+                      ))}
+                    </div>
+                    {opp?.title && <p className="text-sm font-medium">{opp.title}</p>}
+                    <p className="text-sm text-muted-foreground">{opp?.summary ?? lead.notes}</p>
+                    <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
+                      {contactHint && (
+                        <span className="flex items-center gap-1">
+                          <Phone className="w-4 h-4" />
+                          {String(contactHint).split(";")[0]}
+                        </span>
+                      )}
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        {new Date(lead.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-sm font-medium">{lead.raw_opportunity?.title}</p>
-                  <p className="text-sm text-muted-foreground">{lead.raw_opportunity?.summary}</p>
-                  <div className="flex flex-wrap gap-4 mt-2 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <Phone className="w-4 h-4" />
-                      {lead.contact_hint?.split(";")[0]}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {new Date(lead.extracted_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Select value={lead.status} onValueChange={(v) => updateStatus(lead.id, v)}>
-                    <SelectTrigger className="w-[140px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="new">New</SelectItem>
-                      <SelectItem value="researching">Researching</SelectItem>
-                      <SelectItem value="contacted">Contacted</SelectItem>
-                      <SelectItem value="negotiating">Negotiating</SelectItem>
-                      <SelectItem value="closed">Closed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Button variant="default" size="sm" onClick={() => promoteLead(lead.id)}>
-                    <Star className="w-3.5 h-3.5 mr-1.5" />
-                    Promote
-                  </Button>
-                  {lead.raw_opportunity?.link && (
-                    <Button variant="outline" size="sm" asChild>
-                      <a href={lead.raw_opportunity.link} target="_blank" rel="noopener noreferrer">
-                        View Source
-                      </a>
+                  <div className="flex flex-col gap-2">
+                    <Select value={lead.stage} onValueChange={(v) => updateStage(lead.id, v as Stage)}>
+                      <SelectTrigger className="w-[140px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {STAGES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <Button variant="default" size="sm" onClick={() => promoteLead(lead.id)}>
+                      <Star className="w-3.5 h-3.5 mr-1.5" />
+                      Promote
                     </Button>
-                  )}
+                    {(lead.source_url || opp?.link) && (
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={lead.source_url || opp.link} target="_blank" rel="noopener noreferrer">
+                          View Source
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

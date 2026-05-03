@@ -100,23 +100,26 @@ async function runScout(supabase: any) {
     const opportunity_type = determineOpportunityType(text)
 
     const { data: existing } = await supabase
-      .from('partners_raw')
+      .from('partnership_scout_leads')
       .select('id')
-      .eq('raw_opportunity->>link', item.link)
+      .eq('source_url', item.link)
       .maybeSingle()
     if (existing) continue
 
     const lead = {
-      source_route: 'platinum_circle',
       company_name, industry, opportunity_type, priority_score,
-      contact_hint: `Source: ${item.source}`,
       source_url: item.link,
-      raw_opportunity: { title: item.title, summary: item.summary, link: item.link, keywords_matched: opportunity_type },
-      status: 'new',
-      extracted_at: item.published_at,
+      notes: item.summary,
+      stage: 'qualified',
+      metadata: {
+        raw_opportunity: { title: item.title, summary: item.summary, link: item.link, keywords_matched: opportunity_type },
+        contact_hint: `Source: ${item.source}`,
+        source_route: 'platinum_circle',
+        extracted_at: item.published_at,
+      },
     }
 
-    const { data, error } = await supabase.from('partners_raw').insert(lead).select().single()
+    const { data, error } = await supabase.from('partnership_scout_leads').insert(lead).select().single()
     if (!error) inserted.push(data)
     else console.error('Insert error:', error)
   }
@@ -130,33 +133,18 @@ async function runScout(supabase: any) {
 }
 
 async function promoteLead(supabase: any, partnerId: string, overrides: Record<string, any> = {}) {
-  const { data: partner, error: fetchErr } = await supabase
-    .from('partners_raw')
-    .select('*')
+  // Lead is already in partnership_scout_leads; just advance the stage.
+  const { data, error } = await supabase
+    .from('partnership_scout_leads')
+    .update({
+      stage: overrides.stage ?? 'outreach',
+      next_action: overrides.next_action ?? 'Initial outreach',
+      updated_at: new Date().toISOString(),
+    })
     .eq('id', partnerId)
-    .maybeSingle()
-  if (fetchErr || !partner) throw new Error(fetchErr?.message || 'Partner not found')
-
-  const payload = {
-    source_partner_id: partner.id,
-    company_name: overrides.company_name ?? partner.company_name,
-    industry: overrides.industry ?? partner.industry,
-    contact_name: overrides.contact_name ?? null,
-    contact_email: overrides.contact_email ?? null,
-    contact_phone: overrides.contact_phone ?? null,
-    source_url: overrides.source_url ?? partner.source_url ?? partner.raw_opportunity?.link ?? null,
-    opportunity_type: overrides.opportunity_type ?? partner.opportunity_type ?? [],
-    priority_score: overrides.priority_score ?? partner.priority_score,
-    stage: overrides.stage ?? 'qualified',
-    next_action: overrides.next_action ?? 'Initial outreach',
-    notes: overrides.notes ?? null,
-    metadata: { raw_opportunity: partner.raw_opportunity ?? null, contact_hint: partner.contact_hint ?? null },
-  }
-
-  const { data, error } = await supabase.from('partnership_scout_leads').insert(payload).select().single()
+    .select()
+    .single()
   if (error) throw new Error(error.message)
-
-  await supabase.from('partners_raw').update({ status: 'researching', updated_at: new Date().toISOString() }).eq('id', partner.id)
   return data
 }
 
