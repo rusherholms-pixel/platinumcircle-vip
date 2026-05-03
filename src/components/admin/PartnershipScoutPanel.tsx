@@ -250,10 +250,10 @@ export default function PartnershipScoutPanel() {
         const industry = determineIndustry(text);
         const opportunityTypes = determineOpportunityType(text);
 
-        const { data: existing } = await (supabase as any)
-          .from("partners_raw")
+        const { data: existing } = await supabase
+          .from("partnership_scout_leads")
           .select("id")
-          .eq("raw_opportunity->>link", item.link)
+          .eq("source_url", item.link)
           .maybeSingle();
 
         if (existing) {
@@ -278,12 +278,27 @@ export default function PartnershipScoutPanel() {
           created_at: new Date().toISOString()
         };
 
-        const { error } = await (supabase as any)
-          .from("partners_raw")
-          .insert(lead);
+        const { error } = await supabase
+          .from("partnership_scout_leads")
+          .insert({
+            company_name: companyName,
+            industry,
+            opportunity_type: opportunityTypes,
+            priority_score: priorityScore,
+            source_url: item.link,
+            notes: item.summary,
+            metadata: {
+              raw_opportunity: lead.raw_opportunity,
+              contact_hint: lead.contact_hint,
+              source_route: "platinum_circle",
+              extracted_at: item.published_at,
+            },
+          });
 
         if (!error) {
           processedLeads.push(lead);
+        } else {
+          console.error("Insert error:", error);
         }
       }
 
