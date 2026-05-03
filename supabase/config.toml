@@ -12,3 +12,6 @@ verify_jwt = true
 [functions.parse-rental-deals.secrets]
 EXTERNAL_SUPABASE_SERVICE_ROLE_KEY = "your-external-service-role-key-here"
 EXTERNAL_AI_FUNCTION_NAME = "ai-parse"
+
+[functions.incoming-webhook]
+verify_jwt = false
