@@ -100,23 +100,26 @@ async function runScout(supabase: any) {
     const opportunity_type = determineOpportunityType(text)
 
     const { data: existing } = await supabase
-      .from('partners_raw')
+      .from('partnership_scout_leads')
       .select('id')
-      .eq('raw_opportunity->>link', item.link)
+      .eq('source_url', item.link)
       .maybeSingle()
     if (existing) continue
 
     const lead = {
-      source_route: 'platinum_circle',
       company_name, industry, opportunity_type, priority_score,
-      contact_hint: `Source: ${item.source}`,
       source_url: item.link,
-      raw_opportunity: { title: item.title, summary: item.summary, link: item.link, keywords_matched: opportunity_type },
-      status: 'new',
-      extracted_at: item.published_at,
+      notes: item.summary,
+      stage: 'qualified',
+      metadata: {
+        raw_opportunity: { title: item.title, summary: item.summary, link: item.link, keywords_matched: opportunity_type },
+        contact_hint: `Source: ${item.source}`,
+        source_route: 'platinum_circle',
+        extracted_at: item.published_at,
+      },
     }
 
-    const { data, error } = await supabase.from('partners_raw').insert(lead).select().single()
+    const { data, error } = await supabase.from('partnership_scout_leads').insert(lead).select().single()
     if (!error) inserted.push(data)
     else console.error('Insert error:', error)
   }
