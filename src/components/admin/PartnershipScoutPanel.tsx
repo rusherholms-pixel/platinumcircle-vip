@@ -232,96 +232,62 @@ export default function PartnershipScoutPanel() {
 
   const runScout = async () => {
     setIsRunning(true);
-    toast({ title: "Running Partnership Scout...", description: "Scanning for new opportunities" });
+    toast({ title: "Running Partnership Scout...", description: "Scanning external database for new opportunities" });
 
     try {
-      const newsItems = await fetchPartnershipNews();
-      const processedLeads: LeadData[] = [];
+      // Server-side sync: pulls from external processed_data and inserts into partnership_scout_leads
+      const { data: syncData, error: syncError } = await supabase.functions.invoke(
+        "sync-partnership-leads",
+        { body: { limit: 100, min_score: 0.4 } }
+      );
 
-      for (const item of newsItems) {
-        const text = `${item.title} ${item.summary}`;
-        const priorityScore = calculatePriorityScore(text);
+      if (syncError) throw syncError;
 
-        if (priorityScore < 0.4) {
-          continue;
-        }
+      // Load the most recently inserted leads to display
+      const { data: recentLeads } = await supabase
+        .from("partnership_scout_leads")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(syncData?.inserted || 0);
 
-        const companyName = extractCompanyName(item.title);
-        const industry = determineIndustry(text);
-        const opportunityTypes = determineOpportunityType(text);
-
-        const { data: existing } = await supabase
-          .from("partnership_scout_leads")
-          .select("id")
-          .eq("source_url", item.link)
-          .maybeSingle();
-
-        if (existing) {
-          continue;
-        }
-
-        const lead: LeadData = {
-          source_route: "platinum_circle",
-          company_name: companyName,
-          industry: industry,
-          opportunity_type: opportunityTypes,
-          priority_score: priorityScore,
-          contact_hint: `Source: ${item.source}`,
-          raw_opportunity: {
-            title: item.title,
-            summary: item.summary,
-            link: item.link,
-            keywords_matched: opportunityTypes
-          },
-          status: "new",
-          extracted_at: item.published_at,
-          created_at: new Date().toISOString()
-        };
-
-        const { error } = await supabase
-          .from("partnership_scout_leads")
-          .insert({
-            company_name: companyName,
-            industry,
-            opportunity_type: opportunityTypes,
-            priority_score: priorityScore,
-            source_url: item.link,
-            notes: item.summary,
-            metadata: {
-              raw_opportunity: lead.raw_opportunity,
-              contact_hint: lead.contact_hint,
-              source_route: "platinum_circle",
-              extracted_at: item.published_at,
-            },
-          });
-
-        if (!error) {
-          processedLeads.push(lead);
-        } else {
-          console.error("Insert error:", error);
-        }
-      }
+      const processedLeads: LeadData[] = (recentLeads || []).map((l: any) => ({
+        source_route: l.metadata?.source_route || "processed_data",
+        company_name: l.company_name,
+        industry: l.industry || "Corporate",
+        opportunity_type: l.opportunity_type || [],
+        priority_score: Number(l.priority_score) || 0,
+        contact_hint: l.contact_email || `Source: ${l.metadata?.source_route || "external"}`,
+        raw_opportunity: {
+          title: l.metadata?.raw_opportunity?.title || l.company_name,
+          summary: l.notes || l.metadata?.raw_opportunity?.summary || "",
+          link: l.source_url || l.metadata?.raw_opportunity?.link || "",
+          keywords_matched: l.opportunity_type || [],
+        },
+        status: "new",
+        extracted_at: l.metadata?.extracted_at || l.created_at,
+        created_at: l.created_at,
+      }));
 
       const report: ScoutReport = {
         status: "success",
         timestamp: new Date().toISOString(),
-        leads_found: newsItems.length,
-        leads_inserted: processedLeads.length,
+        leads_found: syncData?.read || 0,
+        leads_inserted: syncData?.inserted || 0,
         high_priority: processedLeads.filter(l => l.priority_score >= 0.7).length,
         leads: processedLeads.map(l => ({
           company: l.company_name,
           industry: l.industry,
           score: l.priority_score,
-          types: l.opportunity_type
-        }))
+          types: l.opportunity_type,
+        })),
       };
 
       setLastReport(report);
       setScoutedLeads(processedLeads);
 
       toast({
-        title: "Scout Complete!",
-        description: `Found ${processedLeads.length} new partnership opportunities`,
+        title: "Scout Complete",
+        description: `Scanned ${syncData?.read || 0} records, inserted ${syncData?.inserted || 0} new leads`,
       });
     } catch (error) {
       console.error("Scout error:", error);
