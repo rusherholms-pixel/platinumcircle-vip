@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useBundles } from "@/hooks/useBundles";
+import SEO from "@/components/SEO";
 
 const CITIES: Record<string, { name: string; country: string; tagline: string; description: string; heroKeyword: string }> = {
   dubai: {
