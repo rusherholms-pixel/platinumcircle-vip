@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import BundleCard from "@/components/bundles/BundleCard";
 import { useBundles } from "@/hooks/useBundles";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/SEO";
 
 const BundlesPage = () => {
   const { data: bundles, isLoading } = useBundles();
