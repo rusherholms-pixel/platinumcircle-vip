@@ -11,6 +11,7 @@ import BookingRequestDialog from "@/components/member/BookingRequestDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/SEO";
 
 const BundleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
