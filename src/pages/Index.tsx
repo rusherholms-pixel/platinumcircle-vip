@@ -20,6 +20,7 @@ const Index = () => {
       <HeroSection />
       <SocialProofBar />
       <FeaturedExperiencesSection />
+      <F1WeekendSection />
       
       <GroupCalloutSection />
       <ServicesSection />
