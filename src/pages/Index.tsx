@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import SocialProofBar from "@/components/SocialProofBar";
 import FeaturedExperiencesSection from "@/components/FeaturedExperiencesSection";
+import F1WeekendSection from "@/components/F1WeekendSection";
 
 import GroupCalloutSection from "@/components/GroupCalloutSection";
 import ServicesSection from "@/components/ServicesSection";
