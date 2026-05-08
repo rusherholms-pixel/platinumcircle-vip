@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import SEO from "@/components/SEO";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -81,6 +82,7 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <SEO title="Reset Password" description="Reset your Platinum Circle account password." noindex />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

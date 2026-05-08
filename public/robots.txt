@@ -1,3 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /member
+Disallow: /provider
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /unsubscribe
+
+# Search & social crawlers
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +20,29 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+# AI / LLM crawlers — allow indexing of public marketing content
+User-agent: GPTBot
 Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://platinumcircle.ca/sitemap.xml

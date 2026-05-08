@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
+import SEO from "@/components/SEO";
 
 const Apply = () => {
   const navigate = useNavigate();
@@ -83,6 +84,10 @@ const Apply = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Join Platinum Circle — Member Access"
+        description="Join Platinum Circle for instant access to luxury homes, elite drivers, and curated VIP experiences worldwide."
+      />
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="container mx-auto px-6 py-4">
           <Link to="/" className="font-display text-2xl tracking-wider text-gradient-gold">

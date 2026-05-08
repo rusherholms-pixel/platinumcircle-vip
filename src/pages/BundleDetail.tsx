@@ -11,6 +11,7 @@ import BookingRequestDialog from "@/components/member/BookingRequestDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/SEO";
 
 const BundleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -49,6 +50,20 @@ const BundleDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`${bundle.name} — Signature Experience`}
+        description={bundle.tagline ?? bundle.description?.slice(0, 155) ?? `${bundle.name} — a curated luxury experience by Platinum Circle.`}
+        image={bundle.hero_image_url ?? undefined}
+        type="product"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: bundle.name,
+          description: bundle.tagline ?? bundle.description ?? "",
+          image: bundle.hero_image_url ?? undefined,
+          brand: { "@type": "Brand", name: "Platinum Circle" },
+        }}
+      />
       <Navbar />
 
       {/* Hero */}

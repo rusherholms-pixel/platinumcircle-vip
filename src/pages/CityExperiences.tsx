@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useBundles } from "@/hooks/useBundles";
+import SEO from "@/components/SEO";
 
 const CITIES: Record<string, { name: string; country: string; tagline: string; description: string; heroKeyword: string }> = {
   dubai: {
@@ -90,6 +91,11 @@ const CityExperiences = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`Luxury Experiences in ${city.name}, ${city.country}`}
+        description={`${city.tagline}. ${city.description}`}
+        keywords={`luxury ${city.name}, VIP concierge ${city.name}, private experiences ${city.name}, elite travel ${city.country}`}
+      />
       <Navbar />
 
       {/* Hero */}

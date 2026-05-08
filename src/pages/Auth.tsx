@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import SEO from "@/components/SEO";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -88,6 +89,11 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <SEO
+        title="Sign In — Platinum Circle Members"
+        description="Access your Platinum Circle member dashboard for VIP concierge services, luxury bookings, and private experiences."
+        noindex
+      />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

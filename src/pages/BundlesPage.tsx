@@ -6,12 +6,18 @@ import Footer from "@/components/Footer";
 import BundleCard from "@/components/bundles/BundleCard";
 import { useBundles } from "@/hooks/useBundles";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/SEO";
 
 const BundlesPage = () => {
   const { data: bundles, isLoading } = useBundles();
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Signature Experience Bundles — Bachelor, VIP Nightlife, Elite Home"
+        description="Curated luxury packages: bachelor weekends, VIP nightlife, private chef penthouses, and Elite Home experiences. Fully bespoke, members-only group bookings."
+        keywords="luxury bundles, bachelor party package, VIP nightlife Montreal, elite home experience, private chef penthouse"
+      />
       <Navbar />
 
       {/* Hero */}
