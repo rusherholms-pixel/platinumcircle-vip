@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import SEO from "@/components/SEO";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
