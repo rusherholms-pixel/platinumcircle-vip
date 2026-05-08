@@ -44,6 +44,7 @@ export default function Unsubscribe() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
+      <SEO title="Email Preferences" description="Manage your Platinum Circle email subscription." noindex />
       <div className="max-w-md w-full text-center space-y-6">
         {state === "loading" && <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />}
 
