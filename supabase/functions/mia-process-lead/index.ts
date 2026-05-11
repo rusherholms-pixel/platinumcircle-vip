@@ -95,6 +95,13 @@ Write a personalized 2-3 sentence first reply addressed to them.`,
       escalation_reason: triage.quality_score === "hot" ? "High-quality Meta Ads lead" : null,
     }).eq("id", lead_id);
 
+    // Seed the conversation thread with Mia's opening reply
+    if (triage.first_reply) {
+      await supabase.from("mia_lead_messages").insert({
+        lead_id, role: "mia", channel: lead.messenger_psid ? "messenger" : "internal", content: triage.first_reply,
+      });
+    }
+
     // If Messenger PSID present, send first reply
     if (lead.messenger_psid && triage.first_reply) {
       const PAGE_TOKEN = Deno.env.get("META_PAGE_ACCESS_TOKEN");
