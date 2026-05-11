@@ -93,18 +93,15 @@ export default function MiaLeadsManager() {
   const sendAdminMessage = async (lead: MiaLead) => {
     if (!draft.trim()) return;
     setSending(true);
-    await supabase.from("mia_lead_messages").insert({
-      lead_id: lead.id, role: "admin", channel: lead.messenger_psid ? "messenger" : "internal", content: draft.trim(),
-    });
-    if (lead.messenger_psid) {
-      // Send via meta-ads-manager or a dedicated path; here we reuse mia-converse path is wrong (it triggers AI). Use direct invoke of a simple sender.
-      try {
-        await supabase.functions.invoke("meta-ads-manager", {
-          body: { action: "send_message", psid: lead.messenger_psid, text: draft.trim() },
-        });
-      } catch (e) { console.error(e); }
+    try {
+      await supabase.functions.invoke("mia-converse", {
+        body: { lead_id: lead.id, admin_text: draft.trim() },
+      });
+      setDraft("");
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Failed to send message", variant: "destructive" });
     }
-    setDraft("");
     setSending(false);
   };
 
