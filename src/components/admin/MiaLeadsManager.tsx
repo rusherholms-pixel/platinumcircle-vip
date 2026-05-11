@@ -52,10 +52,6 @@ export default function MiaLeadsManager() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editingNotes, setEditingNotes] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    fetchLeads();
-  }, []);
-
   const [thread, setThread] = useState<MiaMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
