@@ -21,3 +21,15 @@ verify_jwt = true
 
 [functions.sync-partnership-leads.secrets]
 EXTERNAL_SUPABASE_SERVICE_ROLE_KEY = "your-external-service-role-key-here"
+
+[functions.meta-webhook]
+verify_jwt = false
+
+[functions.meta-sync]
+verify_jwt = false
+
+[functions.mia-process-lead]
+verify_jwt = false
+
+[functions.mia-ad-optimizer]
+verify_jwt = false
