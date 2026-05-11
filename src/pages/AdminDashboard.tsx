@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import {
   Users, FileText, CheckCircle, XCircle, Clock, LogOut,
   ChevronDown, ChevronUp, Search, Filter, LayoutDashboard, Image, MessageSquare, Sparkles,
-  Play, Loader2, Target
+  Play, Loader2, Target, TrendingUp
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -25,6 +25,7 @@ import BookingRequestsManager from "@/components/admin/BookingRequestsManager";
 import ConciergeInbox from "@/components/admin/ConciergeInbox";
 import MiaLeadsManager from "@/components/admin/MiaLeadsManager";
 import PartnershipScoutPanel from "@/components/admin/PartnershipScoutPanel";
+import MetaAdsPanel from "@/components/admin/MetaAdsPanel";
 
 interface Application {
   id: string;
@@ -53,7 +54,7 @@ interface Application {
   created_at: string;
 }
 
-type AdminTab = "applications" | "homepage" | "bookings" | "inbox" | "mia-leads" | "partnership-scout";
+type AdminTab = "applications" | "homepage" | "bookings" | "inbox" | "mia-leads" | "partnership-scout" | "meta-ads";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -243,6 +244,13 @@ const AdminDashboard = () => {
           >
             <Target size={16} /> Partnership Scout
           </Button>
+          <Button
+            variant={activeTab === "meta-ads" ? "default" : "ghost"}
+            className={activeTab === "meta-ads" ? "bg-gradient-gold text-primary-foreground gap-2" : "text-muted-foreground gap-2"}
+            onClick={() => setActiveTab("meta-ads")}
+          >
+            <TrendingUp size={16} /> Meta Ads
+          </Button>
         </div>
 
         {activeTab === "inbox" ? (
@@ -255,6 +263,8 @@ const AdminDashboard = () => {
           <HomepageContentManager />
         ) : activeTab === "partnership-scout" ? (
           <PartnershipScoutPanel />
+        ) : activeTab === "meta-ads" ? (
+          <MetaAdsPanel />
         ) : (
           <>
             {/* Stats */}
