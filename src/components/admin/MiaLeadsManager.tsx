@@ -56,6 +56,62 @@ export default function MiaLeadsManager() {
     fetchLeads();
   }, []);
 
+  const [thread, setThread] = useState<MiaMessage[]>([]);
+  const [draft, setDraft] = useState("");
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  useEffect(() => {
+    if (!expandedId) { setThread([]); return; }
+    loadThread(expandedId);
+    const ch = supabase
+      .channel(`mia-thread-${expandedId}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "mia_lead_messages", filter: `lead_id=eq.${expandedId}` },
+        (p) => setThread((prev) => [...prev, p.new as MiaMessage]))
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [expandedId]);
+
+  const loadThread = async (leadId: string) => {
+    const { data } = await supabase
+      .from("mia_lead_messages")
+      .select("*")
+      .eq("lead_id", leadId)
+      .order("created_at", { ascending: true });
+    setThread((data as MiaMessage[]) ?? []);
+  };
+
+  const takeOver = async (leadId: string) => {
+    await supabase.from("mia_leads").update({
+      mia_handoff_state: "handed_off",
+      handoff_at: new Date().toISOString(),
+      status: "contacted",
+    }).eq("id", leadId);
+    setLeads((prev) => prev.map((l) => l.id === leadId ? { ...l, mia_handoff_state: "handed_off", status: "contacted" } : l));
+    toast({ title: "You've taken over this conversation. Mia will stop auto-replying." });
+  };
+
+  const sendAdminMessage = async (lead: MiaLead) => {
+    if (!draft.trim()) return;
+    setSending(true);
+    await supabase.from("mia_lead_messages").insert({
+      lead_id: lead.id, role: "admin", channel: lead.messenger_psid ? "messenger" : "internal", content: draft.trim(),
+    });
+    if (lead.messenger_psid) {
+      // Send via meta-ads-manager or a dedicated path; here we reuse mia-converse path is wrong (it triggers AI). Use direct invoke of a simple sender.
+      try {
+        await supabase.functions.invoke("meta-ads-manager", {
+          body: { action: "send_message", psid: lead.messenger_psid, text: draft.trim() },
+        });
+      } catch (e) { console.error(e); }
+    }
+    setDraft("");
+    setSending(false);
+  };
+
   const fetchLeads = async () => {
     const { data } = await supabase
       .from("mia_leads")
