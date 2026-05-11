@@ -22,6 +22,10 @@ interface MiaLead {
   escalation_reason: string | null;
   notes: string | null;
   status: string;
+  source: string | null;
+  quality_score: string | null;
+  meta_campaign_id: string | null;
+  mia_first_reply: string | null;
   created_at: string;
 }
 
@@ -101,11 +105,23 @@ export default function MiaLeadsManager() {
                 className="w-full flex items-center gap-3 p-4 hover:bg-secondary/30 transition-colors text-left"
               >
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
+                  <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                     <span className="font-medium text-foreground">{lead.lead_name}</span>
                     <Badge variant="outline" className={`${STATUS_COLORS[lead.status]} text-[9px] tracking-widest uppercase`}>
                       {lead.status}
                     </Badge>
+                    {lead.source === "meta_ads" && (
+                      <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[9px] tracking-widest uppercase">Meta Ads</Badge>
+                    )}
+                    {lead.quality_score && (
+                      <Badge variant="outline" className={`text-[9px] tracking-widest uppercase ${
+                        lead.quality_score === "hot" ? "bg-red-500/10 text-red-400 border-red-500/20" :
+                        lead.quality_score === "warm" ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" :
+                        "bg-muted text-muted-foreground border-border"
+                      }`}>
+                        {lead.quality_score}
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-xs text-muted-foreground truncate">
                     {lead.interest || "No interest specified"} · {lead.email || lead.phone || "No contact"}
