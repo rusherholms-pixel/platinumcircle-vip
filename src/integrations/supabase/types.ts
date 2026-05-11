@@ -829,6 +829,44 @@ export type Database = {
         }
         Relationships: []
       }
+      mia_lead_messages: {
+        Row: {
+          channel: string
+          content: string
+          created_at: string
+          id: string
+          lead_id: string
+          meta: Json | null
+          role: string
+        }
+        Insert: {
+          channel?: string
+          content: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          meta?: Json | null
+          role: string
+        }
+        Update: {
+          channel?: string
+          content?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          meta?: Json | null
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mia_lead_messages_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "mia_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mia_leads: {
         Row: {
           conversation_summary: string | null
@@ -836,6 +874,8 @@ export type Database = {
           email: string | null
           escalation_reason: string | null
           group_size: string | null
+          handoff_admin_id: string | null
+          handoff_at: string | null
           id: string
           interest: string | null
           lead_name: string
@@ -860,6 +900,8 @@ export type Database = {
           email?: string | null
           escalation_reason?: string | null
           group_size?: string | null
+          handoff_admin_id?: string | null
+          handoff_at?: string | null
           id?: string
           interest?: string | null
           lead_name: string
@@ -884,6 +926,8 @@ export type Database = {
           email?: string | null
           escalation_reason?: string | null
           group_size?: string | null
+          handoff_admin_id?: string | null
+          handoff_at?: string | null
           id?: string
           interest?: string | null
           lead_name?: string
