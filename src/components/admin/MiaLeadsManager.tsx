@@ -221,10 +221,60 @@ export default function MiaLeadsManager() {
 
                   {lead.conversation_summary && (
                     <div>
-                      <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-1">Conversation Summary</p>
+                      <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-1">Mia Summary</p>
                       <p className="text-sm text-foreground bg-muted p-3 rounded-lg">{lead.conversation_summary}</p>
                     </div>
                   )}
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[10px] tracking-widest uppercase text-muted-foreground">Conversation Thread</p>
+                      <div className="flex items-center gap-2">
+                        {lead.mia_handoff_state && (
+                          <Badge variant="outline" className="text-[9px] tracking-widest uppercase border-border">
+                            {lead.mia_handoff_state.replace(/_/g, " ")}
+                          </Badge>
+                        )}
+                        {lead.mia_handoff_state !== "handed_off" && (
+                          <Button size="sm" variant="outline" className="h-7 text-[10px]" onClick={() => takeOver(lead.id)}>
+                            Take Over
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="bg-muted/40 border border-border rounded-lg p-3 space-y-2 max-h-72 overflow-y-auto">
+                      {thread.length === 0 ? (
+                        <p className="text-xs text-muted-foreground text-center py-4">No messages yet</p>
+                      ) : (
+                        thread.map((m) => (
+                          <div key={m.id} className={`flex ${m.role === "lead" ? "justify-start" : "justify-end"}`}>
+                            <div className={`max-w-[80%] rounded-lg px-3 py-2 text-xs ${
+                              m.role === "lead"
+                                ? "bg-card border border-border text-foreground"
+                                : m.role === "admin"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-secondary text-secondary-foreground"
+                            }`}>
+                              <p className="text-[9px] uppercase tracking-widest opacity-60 mb-0.5">{m.role}</p>
+                              <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        value={draft}
+                        onChange={(e) => setDraft(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendAdminMessage(lead); } }}
+                        placeholder={lead.messenger_psid ? "Reply via Messenger…" : "Internal note (no channel linked)…"}
+                        className="h-9 text-sm bg-background border-border"
+                      />
+                      <Button size="sm" onClick={() => sendAdminMessage(lead)} disabled={sending || !draft.trim()}>
+                        Send
+                      </Button>
+                    </div>
+                  </div>
 
                   <div>
                     <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-1">Notes</p>
