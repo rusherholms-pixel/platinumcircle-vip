@@ -26,6 +26,16 @@ interface MiaLead {
   quality_score: string | null;
   meta_campaign_id: string | null;
   mia_first_reply: string | null;
+  mia_handoff_state: string | null;
+  messenger_psid: string | null;
+  created_at: string;
+}
+
+interface MiaMessage {
+  id: string;
+  role: string;
+  content: string;
+  channel: string;
   created_at: string;
 }
 
@@ -42,9 +52,58 @@ export default function MiaLeadsManager() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [editingNotes, setEditingNotes] = useState<Record<string, string>>({});
 
+  const [thread, setThread] = useState<MiaMessage[]>([]);
+  const [draft, setDraft] = useState("");
+  const [sending, setSending] = useState(false);
+
   useEffect(() => {
     fetchLeads();
   }, []);
+
+  useEffect(() => {
+    if (!expandedId) { setThread([]); return; }
+    loadThread(expandedId);
+    const ch = supabase
+      .channel(`mia-thread-${expandedId}`)
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "mia_lead_messages", filter: `lead_id=eq.${expandedId}` },
+        (p) => setThread((prev) => [...prev, p.new as MiaMessage]))
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [expandedId]);
+
+  const loadThread = async (leadId: string) => {
+    const { data } = await supabase
+      .from("mia_lead_messages")
+      .select("*")
+      .eq("lead_id", leadId)
+      .order("created_at", { ascending: true });
+    setThread((data as MiaMessage[]) ?? []);
+  };
+
+  const takeOver = async (leadId: string) => {
+    await supabase.from("mia_leads").update({
+      mia_handoff_state: "handed_off",
+      handoff_at: new Date().toISOString(),
+      status: "contacted",
+    }).eq("id", leadId);
+    setLeads((prev) => prev.map((l) => l.id === leadId ? { ...l, mia_handoff_state: "handed_off", status: "contacted" } : l));
+    toast({ title: "You've taken over this conversation. Mia will stop auto-replying." });
+  };
+
+  const sendAdminMessage = async (lead: MiaLead) => {
+    if (!draft.trim()) return;
+    setSending(true);
+    try {
+      await supabase.functions.invoke("mia-converse", {
+        body: { lead_id: lead.id, admin_text: draft.trim() },
+      });
+      setDraft("");
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Failed to send message", variant: "destructive" });
+    }
+    setSending(false);
+  };
 
   const fetchLeads = async () => {
     const { data } = await supabase
@@ -162,10 +221,60 @@ export default function MiaLeadsManager() {
 
                   {lead.conversation_summary && (
                     <div>
-                      <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-1">Conversation Summary</p>
+                      <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-1">Mia Summary</p>
                       <p className="text-sm text-foreground bg-muted p-3 rounded-lg">{lead.conversation_summary}</p>
                     </div>
                   )}
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[10px] tracking-widest uppercase text-muted-foreground">Conversation Thread</p>
+                      <div className="flex items-center gap-2">
+                        {lead.mia_handoff_state && (
+                          <Badge variant="outline" className="text-[9px] tracking-widest uppercase border-border">
+                            {lead.mia_handoff_state.replace(/_/g, " ")}
+                          </Badge>
+                        )}
+                        {lead.mia_handoff_state !== "handed_off" && (
+                          <Button size="sm" variant="outline" className="h-7 text-[10px]" onClick={() => takeOver(lead.id)}>
+                            Take Over
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="bg-muted/40 border border-border rounded-lg p-3 space-y-2 max-h-72 overflow-y-auto">
+                      {thread.length === 0 ? (
+                        <p className="text-xs text-muted-foreground text-center py-4">No messages yet</p>
+                      ) : (
+                        thread.map((m) => (
+                          <div key={m.id} className={`flex ${m.role === "lead" ? "justify-start" : "justify-end"}`}>
+                            <div className={`max-w-[80%] rounded-lg px-3 py-2 text-xs ${
+                              m.role === "lead"
+                                ? "bg-card border border-border text-foreground"
+                                : m.role === "admin"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-secondary text-secondary-foreground"
+                            }`}>
+                              <p className="text-[9px] uppercase tracking-widest opacity-60 mb-0.5">{m.role}</p>
+                              <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        value={draft}
+                        onChange={(e) => setDraft(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendAdminMessage(lead); } }}
+                        placeholder={lead.messenger_psid ? "Reply via Messenger…" : "Internal note (no channel linked)…"}
+                        className="h-9 text-sm bg-background border-border"
+                      />
+                      <Button size="sm" onClick={() => sendAdminMessage(lead)} disabled={sending || !draft.trim()}>
+                        Send
+                      </Button>
+                    </div>
+                  </div>
 
                   <div>
                     <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-1">Notes</p>

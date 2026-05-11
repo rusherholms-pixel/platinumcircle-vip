@@ -55,6 +55,26 @@ Deno.serve(async (req) => {
 
   await supabase.from("meta_webhook_log").insert({ event_type: payload.object, payload });
 
+  // Messenger inbound messages → route to Mia conversation engine
+  if (payload.object === "page") {
+    for (const entry of payload.entry ?? []) {
+      for (const event of entry.messaging ?? []) {
+        if (event.message?.is_echo) continue;
+        const senderPsid = event.sender?.id;
+        const text = event.message?.text;
+        if (!senderPsid || !text) continue;
+        try {
+          await supabase.functions.invoke("mia-converse", {
+            body: { psid: senderPsid, inbound_text: text, channel: "messenger" },
+          });
+        } catch (e) {
+          console.error("mia-converse invoke failed:", e);
+        }
+      }
+    }
+    return new Response("ok", { headers: corsHeaders });
+  }
+
   // Process leadgen events
   for (const entry of payload.entry ?? []) {
     for (const change of entry.changes ?? []) {
