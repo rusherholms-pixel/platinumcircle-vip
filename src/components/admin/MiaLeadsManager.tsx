@@ -26,6 +26,16 @@ interface MiaLead {
   quality_score: string | null;
   meta_campaign_id: string | null;
   mia_first_reply: string | null;
+  mia_handoff_state: string | null;
+  messenger_psid: string | null;
+  created_at: string;
+}
+
+interface MiaMessage {
+  id: string;
+  role: string;
+  content: string;
+  channel: string;
   created_at: string;
 }
 
