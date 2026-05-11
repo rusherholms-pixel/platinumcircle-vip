@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { lead_id, inbound_text, channel = "messenger", psid } = await req.json();
+    const { lead_id, inbound_text, channel = "messenger", psid, admin_text } = await req.json();
     if (!lead_id && !psid) {
       return new Response(JSON.stringify({ error: "lead_id or psid required" }), { status: 400, headers: corsHeaders });
     }
