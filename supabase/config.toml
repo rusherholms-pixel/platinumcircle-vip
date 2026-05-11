@@ -33,3 +33,6 @@ verify_jwt = false
 
 [functions.mia-ad-optimizer]
 verify_jwt = false
+
+[functions.mia-converse]
+verify_jwt = false
