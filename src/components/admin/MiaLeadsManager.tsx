@@ -22,6 +22,10 @@ interface MiaLead {
   escalation_reason: string | null;
   notes: string | null;
   status: string;
+  source: string | null;
+  quality_score: string | null;
+  meta_campaign_id: string | null;
+  mia_first_reply: string | null;
   created_at: string;
 }
 
