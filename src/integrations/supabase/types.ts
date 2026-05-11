@@ -665,170 +665,6 @@ export type Database = {
           },
         ]
       }
-      meta_ads: {
-        Row: {
-          adset_id: string | null
-          campaign_id: string | null
-          clicks: number | null
-          created_at: string
-          creative_summary: string | null
-          id: string
-          impressions: number | null
-          last_synced_at: string | null
-          leads_count: number | null
-          name: string
-          spend: number | null
-          status: string | null
-          updated_at: string
-        }
-        Insert: {
-          adset_id?: string | null
-          campaign_id?: string | null
-          clicks?: number | null
-          created_at?: string
-          creative_summary?: string | null
-          id: string
-          impressions?: number | null
-          last_synced_at?: string | null
-          leads_count?: number | null
-          name: string
-          spend?: number | null
-          status?: string | null
-          updated_at?: string
-        }
-        Update: {
-          adset_id?: string | null
-          campaign_id?: string | null
-          clicks?: number | null
-          created_at?: string
-          creative_summary?: string | null
-          id?: string
-          impressions?: number | null
-          last_synced_at?: string | null
-          leads_count?: number | null
-          name?: string
-          spend?: number | null
-          status?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "meta_ads_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "meta_campaigns"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      meta_campaigns: {
-        Row: {
-          clicks: number | null
-          cpl: number | null
-          created_at: string
-          ctr: number | null
-          daily_budget: number | null
-          id: string
-          impressions: number | null
-          last_synced_at: string | null
-          leads_count: number | null
-          lifetime_budget: number | null
-          name: string
-          objective: string | null
-          spend: number | null
-          status: string | null
-          updated_at: string
-        }
-        Insert: {
-          clicks?: number | null
-          cpl?: number | null
-          created_at?: string
-          ctr?: number | null
-          daily_budget?: number | null
-          id: string
-          impressions?: number | null
-          last_synced_at?: string | null
-          leads_count?: number | null
-          lifetime_budget?: number | null
-          name: string
-          objective?: string | null
-          spend?: number | null
-          status?: string | null
-          updated_at?: string
-        }
-        Update: {
-          clicks?: number | null
-          cpl?: number | null
-          created_at?: string
-          ctr?: number | null
-          daily_budget?: number | null
-          id?: string
-          impressions?: number | null
-          last_synced_at?: string | null
-          leads_count?: number | null
-          lifetime_budget?: number | null
-          name?: string
-          objective?: string | null
-          spend?: number | null
-          status?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      meta_lead_forms: {
-        Row: {
-          created_at: string
-          id: string
-          is_active: boolean | null
-          name: string
-          page_id: string | null
-          questions: Json | null
-        }
-        Insert: {
-          created_at?: string
-          id: string
-          is_active?: boolean | null
-          name: string
-          page_id?: string | null
-          questions?: Json | null
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          is_active?: boolean | null
-          name?: string
-          page_id?: string | null
-          questions?: Json | null
-        }
-        Relationships: []
-      }
-      meta_webhook_log: {
-        Row: {
-          created_at: string
-          error: string | null
-          event_type: string | null
-          id: string
-          payload: Json | null
-          processed: boolean | null
-        }
-        Insert: {
-          created_at?: string
-          error?: string | null
-          event_type?: string | null
-          id?: string
-          payload?: Json | null
-          processed?: boolean | null
-        }
-        Update: {
-          created_at?: string
-          error?: string | null
-          event_type?: string | null
-          id?: string
-          payload?: Json | null
-          processed?: boolean | null
-        }
-        Relationships: []
-      }
       mia_leads: {
         Row: {
           conversation_summary: string | null
@@ -839,16 +675,8 @@ export type Database = {
           id: string
           interest: string | null
           lead_name: string
-          messenger_psid: string | null
-          meta_ad_id: string | null
-          meta_campaign_id: string | null
-          meta_form_id: string | null
-          meta_lead_id: string | null
-          mia_first_reply: string | null
-          mia_handoff_state: string | null
           notes: string | null
           phone: string | null
-          quality_score: string | null
           source: string
           status: string
           timeline: string | null
@@ -863,16 +691,8 @@ export type Database = {
           id?: string
           interest?: string | null
           lead_name: string
-          messenger_psid?: string | null
-          meta_ad_id?: string | null
-          meta_campaign_id?: string | null
-          meta_form_id?: string | null
-          meta_lead_id?: string | null
-          mia_first_reply?: string | null
-          mia_handoff_state?: string | null
           notes?: string | null
           phone?: string | null
-          quality_score?: string | null
           source?: string
           status?: string
           timeline?: string | null
@@ -887,59 +707,12 @@ export type Database = {
           id?: string
           interest?: string | null
           lead_name?: string
-          messenger_psid?: string | null
-          meta_ad_id?: string | null
-          meta_campaign_id?: string | null
-          meta_form_id?: string | null
-          meta_lead_id?: string | null
-          mia_first_reply?: string | null
-          mia_handoff_state?: string | null
           notes?: string | null
           phone?: string | null
-          quality_score?: string | null
           source?: string
           status?: string
           timeline?: string | null
           updated_at?: string
-        }
-        Relationships: []
-      }
-      mia_optimizer_actions: {
-        Row: {
-          action_type: string
-          admin_id: string | null
-          applied_at: string | null
-          created_at: string
-          id: string
-          proposed_value: Json | null
-          reasoning: string | null
-          status: string
-          target_id: string
-          target_type: string
-        }
-        Insert: {
-          action_type: string
-          admin_id?: string | null
-          applied_at?: string | null
-          created_at?: string
-          id?: string
-          proposed_value?: Json | null
-          reasoning?: string | null
-          status?: string
-          target_id: string
-          target_type: string
-        }
-        Update: {
-          action_type?: string
-          admin_id?: string | null
-          applied_at?: string | null
-          created_at?: string
-          id?: string
-          proposed_value?: Json | null
-          reasoning?: string | null
-          status?: string
-          target_id?: string
-          target_type?: string
         }
         Relationships: []
       }
