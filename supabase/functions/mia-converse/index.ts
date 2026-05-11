@@ -78,6 +78,15 @@ Deno.serve(async (req) => {
     }
     if (!lead) return new Response(JSON.stringify({ error: "lead not found" }), { status: 404, headers: corsHeaders });
 
+    // Admin send: just record + forward to Messenger, no AI
+    if (admin_text) {
+      await supabase.from("mia_lead_messages").insert({
+        lead_id: lead.id, role: "admin", channel: lead.messenger_psid ? "messenger" : "internal", content: admin_text,
+      });
+      if (lead.messenger_psid) await sendMessenger(lead.messenger_psid, admin_text);
+      return new Response(JSON.stringify({ ok: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     // Stop if already handed off — store message for admin but do not auto-reply
     if (lead.mia_handoff_state === "handed_off") {
       if (inbound_text) {
