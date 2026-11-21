@@ -10,6 +10,7 @@ const publicLinks = [
   { label: "Drivers", href: "#services" },
   { label: "Experiences", href: "/experiences/bundles", isRoute: true },
   { label: "Security", href: "#services" },
+  { label: "Join as Provider", href: "/apply", isRoute: true },
   { label: "Member Login", href: "/auth", isRoute: true },
 ];
 

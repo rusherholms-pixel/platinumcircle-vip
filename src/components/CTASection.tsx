@@ -24,12 +24,20 @@ const CTASection = () => {
           <p className="font-sans text-muted-foreground mb-8 md:mb-10 leading-relaxed text-base">
             Create your free account and unlock access to luxury homes, private drivers, curated experiences, and more.
           </p>
-          <a
-            href="/apply"
-            className="inline-flex items-center justify-center px-12 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity min-h-[48px]"
-          >
-            Join Now
-          </a>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="/apply"
+              className="inline-flex items-center justify-center px-12 py-4 text-xs tracking-[0.3em] uppercase font-semibold bg-gradient-gold text-primary-foreground rounded-sm hover:opacity-90 transition-opacity min-h-[48px]"
+            >
+              Join Now
+            </a>
+            <a
+              href="/apply"
+              className="inline-flex items-center justify-center px-12 py-4 text-xs tracking-[0.3em] uppercase font-semibold border border-primary/40 text-primary rounded-sm hover:border-primary hover:bg-primary/5 transition-colors min-h-[48px]"
+            >
+              Join as a Provider
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
