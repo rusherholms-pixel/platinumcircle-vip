@@ -32,7 +32,7 @@ const CTASection = () => {
               Join Now
             </a>
             <a
-              href="/apply"
+              href="/provider/apply"
               className="inline-flex items-center justify-center px-12 py-4 text-xs tracking-[0.3em] uppercase font-semibold border border-primary/40 text-primary rounded-sm hover:border-primary hover:bg-primary/5 transition-colors min-h-[48px]"
             >
               Join as a Provider

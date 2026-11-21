@@ -45,6 +45,7 @@ interface Application {
   service_cities: string | null;
   service_description: string | null;
   portfolio_url: string | null;
+  user_id: string | null;
   created_at: string;
 }
 
@@ -68,15 +69,29 @@ export default function AdminApplications() {
   };
 
   const handleAction = async (id: string, action: "approved" | "declined") => {
+    const app = applications.find((a) => a.id === id);
+
+    // When approving a PROVIDER application, grant the `provider` role so the
+    // vetting gate in /provider/* unlocks. Members don't get a new role.
+    let roleError: { message?: string } | null = null;
+    if (action === "approved" && app?.applicant_type === "provider" && app.user_id) {
+      const { error } = await supabase
+        .from("user_roles")
+        .upsert({ user_id: app.user_id, role: "provider" }, { onConflict: "user_id, role" });
+      roleError = error;
+      if (roleError) {
+        toast({ title: "Error granting provider role", description: roleError.message, variant: "destructive" });
+      }
+    }
+
     const { error } = await supabase.from("applications")
       .update({ status: action, reviewed_by: user!.id, reviewed_at: new Date().toISOString() })
       .eq("id", id);
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      const app = applications.find((a) => a.id === id);
       toast({ title: `Application ${action}` });
-      logAdminActivity({ actionType: "status_change", description: `${action.charAt(0).toUpperCase() + action.slice(1)} application from ${app?.full_name || "Unknown"}`, targetType: "application", targetId: id });
+      logAdminActivity({ actionType: "status_change", description: `${action.charAt(0).toUpperCase() + action.slice(1)} ${app?.applicant_type || ""} application from ${app?.full_name || "Unknown"}`, targetType: "application", targetId: id });
       setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, status: action } : a)));
     }
     setActionDialog(null);
@@ -189,9 +204,30 @@ export default function AdminApplications() {
                 <div className="border-t border-border p-4 space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     <Detail label="Phone" value={app.phone} />
-                    <Detail label="Traveler Status" value={app.traveler_status?.join(", ") || "—"} />
+                    <Detail label="Reference" value={app.reference_number} />
+                    <Detail label="City / Country" value={`${app.city}, ${app.country}`} />
                     <Detail label="Heard About Us" value={app.heard_about_us || "—"} />
-                    {app.personal_statement && <div className="sm:col-span-2"><Detail label="Personal Statement" value={app.personal_statement} /></div>}
+                    {app.personal_statement && <div className="sm:col-span-2"><Detail label="Statement" value={app.personal_statement} /></div>}
+
+                    {app.applicant_type === "provider" && (
+                      <>
+                        <div className="sm:col-span-2">
+                          <p className="text-[10px] tracking-widest uppercase text-muted-foreground mb-0.5">Service Categories</p>
+                          <div className="flex flex-wrap gap-1.5 mt-1">
+                            {(app.service_categories || []).map((c) => (
+                              <Badge key={c} variant="outline" className="border-border text-[10px] uppercase tracking-wider">{c.replace(/_/g, " ")}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                        <Detail label="Business" value={app.business_name || app.business_type || "—"} />
+                        <Detail label="Business Type" value={app.business_type || "—"} />
+                        <Detail label="Years Experience" value={app.years_experience != null ? String(app.years_experience) : "—"} />
+                        <Detail label="Countries Served" value={(app.service_countries || []).join(", ") || "—"} />
+                        <Detail label="Cities Served" value={app.service_cities || "—"} />
+                        <Detail label="Portfolio" value={app.portfolio_url || "—"} />
+                        {app.service_description && <div className="sm:col-span-2"><Detail label="Service Description" value={app.service_description} /></div>}
+                      </>
+                    )}
                   </div>
 
                   {app.status === "pending" && (
