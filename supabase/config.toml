@@ -1,26 +1,16 @@
-project_id = "ejnzkmzsinepbxrniuvj"
+project_id = "ylnxckjrkpnofoapebsy"
 
 [functions.fetch-external-leads]
 verify_jwt = true
 
-[functions.fetch-external-leads.secrets]
-EXTERNAL_SUPABASE_SERVICE_ROLE_KEY = "your-external-service-role-key-here"
-
 [functions.parse-rental-deals]
 verify_jwt = true
-
-[functions.parse-rental-deals.secrets]
-EXTERNAL_SUPABASE_SERVICE_ROLE_KEY = "your-external-service-role-key-here"
-EXTERNAL_AI_FUNCTION_NAME = "ai-parse"
 
 [functions.incoming-webhook]
 verify_jwt = false
 
 [functions.sync-partnership-leads]
 verify_jwt = true
-
-[functions.sync-partnership-leads.secrets]
-EXTERNAL_SUPABASE_SERVICE_ROLE_KEY = "your-external-service-role-key-here"
 
 [functions.meta-webhook]
 verify_jwt = false
