@@ -19,16 +19,28 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let active = true;
+
+    // Supabase password-recovery emails sign the user in with a recovery
+    // session. Detect it from the URL fragment and/or the auth event, so a
+    // fresh page load on a valid recovery link is handled correctly.
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     if (hashParams.get("type") === "recovery") {
       setIsRecovery(true);
     }
 
-    supabase.auth.onAuthStateChange((event) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
-        setIsRecovery(true);
+        if (active) setIsRecovery(true);
       }
     });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleReset = async (e: React.FormEvent) => {
@@ -51,7 +63,7 @@ const ResetPassword = () => {
     try {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
-      setMessage("Password updated successfully. Redirecting...");
+      setMessage("Password updated successfully. Redirecting to sign in...");
       setTimeout(() => navigate("/auth"), 2000);
     } catch (err: any) {
       setError(err.message);

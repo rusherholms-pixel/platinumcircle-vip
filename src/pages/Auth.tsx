@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/contexts/AuthContext";
-import { useEffect } from "react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import SEO from "@/components/SEO";
 
@@ -18,37 +15,10 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const navigate = useNavigate();
-  const { user } = useAuth();
 
-  useEffect(() => {
-    if (user) {
-      redirectByRole(user.id);
-    }
-  }, [user]);
-
-  const redirectByRole = async (userId: string) => {
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
-
-    if (!roles || roles.length === 0) {
-      navigate("/member/dashboard");
-      return;
-    }
-
-    const roleSet = new Set(roles.map((r) => r.role));
-
-    if (roleSet.has("admin")) {
-      navigate("/admin");
-    } else if (roleSet.has("provider")) {
-      navigate("/provider/dashboard");
-    } else {
-      navigate("/member/dashboard");
-    }
-  };
-
+  // AuthRedirect (the wrapper on /auth) resolves the role-based home from the
+  // session once `user` is set, so no manual redirect is needed here — having
+  // one here caused a double-navigation race after login.
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -56,11 +26,9 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      if (data.user) {
-        await redirectByRole(data.user.id);
-      }
+      // AuthRedirect observes `user` and navigates to the role's home.
     } catch (err: any) {
       setError(err.message);
     } finally {
