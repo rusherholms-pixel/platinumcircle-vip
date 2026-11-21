@@ -129,7 +129,7 @@ const ProviderApply = () => {
         title: "Application submitted",
         description: "Our team will review your application. You'll be able to access your dashboard once approved.",
       });
-      navigate("/provider/apply/status");
+      navigate("/provider/dashboard");
     } catch (err) {
       toast({ title: "Application failed", description: err instanceof Error ? err.message : "Please try again.", variant: "destructive" });
     } finally {
