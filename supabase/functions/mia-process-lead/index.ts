@@ -25,25 +25,38 @@ Deno.serve(async (req) => {
       if (ad) adContext = `Ad: ${ad.name}. Creative: ${ad.creative_summary ?? "n/a"}`;
     }
 
-    // Lovable AI structured scoring
-    const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    // OpenRouter AI structured scoring
+    const { openaiChat } = await import("../_shared/openrouter.ts");
+    const triageTool = {
+      type: "function",
+      function: {
+        name: "triage_lead",
+        description: "Score the lead and craft the first reply",
+        parameters: {
+          type: "object",
+          properties: {
+            quality_score: { type: "string", enum: ["hot", "warm", "cold"] },
+            summary: { type: "string", description: "1-2 sentence summary of who this lead is and what they want" },
+            first_reply: { type: "string", description: "Mia's first reply, 2-3 sentences, no exclamation marks" },
+            recommended_action: { type: "string" },
+          },
+          required: ["quality_score", "summary", "first_reply", "recommended_action"],
+          additionalProperties: false,
+        },
+      },
+    };
 
-    const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${LOVABLE_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          {
-            role: "system",
-            content: `You are Mia, the Platinum Circle concierge. Score and triage incoming leads from Meta Ads.
+    const ai = await openaiChat({
+      messages: [
+        {
+          role: "system",
+          content: `You are Mia, the Platinum Circle concierge. Score and triage incoming leads from Meta Ads.
 Brand: VIP luxury concierge — nightlife, bachelor parties, F1 weekend, elite homes, security, drivers.
 Rules: 2-3 sentence first reply max. NEVER use exclamation marks. NEVER invent prices. Direct, warm, discreet.`,
-          },
-          {
-            role: "user",
-            content: `New lead from Meta Ads.
+        },
+        {
+          role: "user",
+          content: `New lead from Meta Ads.
 Name: ${lead.lead_name}
 Email: ${lead.email ?? "n/a"}
 Phone: ${lead.phone ?? "n/a"}
@@ -53,37 +66,19 @@ ${adContext}
 
 Score quality (hot = ready to book / clear intent / premium fit; warm = curious / partial info; cold = vague / unqualified).
 Write a personalized 2-3 sentence first reply addressed to them.`,
-          },
-        ],
-        tools: [{
-          type: "function",
-          function: {
-            name: "triage_lead",
-            description: "Score the lead and craft the first reply",
-            parameters: {
-              type: "object",
-              properties: {
-                quality_score: { type: "string", enum: ["hot", "warm", "cold"] },
-                summary: { type: "string", description: "1-2 sentence summary of who this lead is and what they want" },
-                first_reply: { type: "string", description: "Mia's first reply, 2-3 sentences, no exclamation marks" },
-                recommended_action: { type: "string" },
-              },
-              required: ["quality_score", "summary", "first_reply", "recommended_action"],
-              additionalProperties: false,
-            },
-          },
-        }],
-        tool_choice: { type: "function", function: { name: "triage_lead" } },
-      }),
+        },
+      ],
+      tools: [triageTool],
+      tool_choice: { type: "function", function: { name: "triage_lead" } },
+      temperature: 0.4,
     });
 
-    if (!aiRes.ok) {
-      const txt = await aiRes.text();
-      console.error("AI gateway error", aiRes.status, txt);
-      throw new Error(`AI gateway ${aiRes.status}`);
+    if (!ai.ok) {
+      console.error("AI gateway error", ai.status, ai.error);
+      throw new Error(`AI gateway ${ai.status ?? "error"}`);
     }
-    const aiJson = await aiRes.json();
-    const toolCall = aiJson.choices?.[0]?.message?.tool_calls?.[0];
+
+    const toolCall = ai.data?.choices?.[0]?.message?.tool_calls?.[0];
     const triage = toolCall ? JSON.parse(toolCall.function.arguments) : { quality_score: "warm", summary: "", first_reply: "", recommended_action: "" };
 
     // Update lead

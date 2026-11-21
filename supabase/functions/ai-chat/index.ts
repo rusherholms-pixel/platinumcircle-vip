@@ -219,52 +219,38 @@ serve(async (req) => {
       }
     }
 
-    // Use Lovable AI with full Mia persona
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    // Use OpenRouter AI with full Mia persona (free tier)
+    const { openaiChat, firstTextContent } = await import("../_shared/openrouter.ts");
+    const messages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...(history ?? []).map((h: any) => ({
+        role: h.role === "mia" ? "assistant" : h.role || "user",
+        content: h.content,
+      })),
+      { role: "user", content: message },
+    ];
 
-    if (LOVABLE_API_KEY) {
-      const messages = [
-        { role: "system", content: SYSTEM_PROMPT },
-        ...(history ?? []),
-        { role: "user", content: message },
-      ];
+    const ai = await openaiChat({ messages, temperature: 0.7 });
+    if (ai.ok) {
+      const rawReply = firstTextContent(ai.data) || "Thank you for reaching out. A member of our concierge team will follow up shortly.";
 
-      const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages,
-        }),
-      });
-
-      if (aiResponse.ok) {
-        const aiData = await aiResponse.json();
-        const rawReply = aiData.choices?.[0]?.message?.content ?? "Thank you for reaching out. A member of our concierge team will follow up shortly.";
-
-        // Process lead data if present
-        const leadData = extractLeadData(rawReply);
-        if (leadData) {
-          await processLeadData(leadData, history);
-        }
-
-        return new Response(
-          JSON.stringify({ reply: stripLeadData(rawReply) }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+      // Process lead data if present
+      const leadData = extractLeadData(rawReply);
+      if (leadData) {
+        await processLeadData(leadData, history);
       }
-    }
 
-    // Final fallback
-    return new Response(
-      JSON.stringify({
-        reply: "Thank you for your interest in Platinum Circle. Our concierge team will be in touch with you shortly.",
-      }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+      return new Response(
+        JSON.stringify({ reply: stripLeadData(rawReply) }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    } else {
+      console.error("OpenRouter ai-chat error:", ai.status, ai.error);
+      return new Response(
+        JSON.stringify({ reply: "Thank you for your interest in Platinum Circle. Our concierge team will be in touch with you shortly." }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
   } catch (error) {
     console.error("ai-chat error:", error);
     return new Response(

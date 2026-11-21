@@ -139,24 +139,14 @@ Deno.serve(async (req) => {
       })),
     ];
 
-    // Call Lovable AI
-    const LOVABLE_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_KEY) throw new Error("LOVABLE_API_KEY missing");
-
-    const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${LOVABLE_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages,
-      }),
-    });
-    if (!aiRes.ok) {
-      console.error("AI gateway:", aiRes.status, await aiRes.text());
-      throw new Error(`AI gateway ${aiRes.status}`);
+    // Call OpenRouter AI (free tier)
+    const { openaiChat, firstTextContent } = await import("../_shared/openrouter.ts");
+    const ai = await openaiChat({ messages, temperature: 0.7 });
+    if (!ai.ok) {
+      console.error("AI gateway:", ai.status, ai.error);
+      throw new Error(`AI gateway ${ai.status ?? "error"}`);
     }
-    const aiJson = await aiRes.json();
-    let reply: string = aiJson.choices?.[0]?.message?.content ?? "";
+    let reply: string = firstTextContent(ai.data);
 
     // Detect handoff signal
     const handoff = /<<HANDOFF>>/.test(reply);
