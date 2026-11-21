@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import logoEmblem from "@/assets/logo-emblem.svg";
 
-const publicLinks = [
+type NavLink = { label: string; href: string; isRoute?: boolean };
+
+const publicLinks: NavLink[] = [
   { label: "Homes", href: "#services" },
   { label: "Drivers", href: "#services" },
   { label: "Experiences", href: "/experiences/bundles", isRoute: true },
@@ -14,7 +16,7 @@ const publicLinks = [
   { label: "Member Login", href: "/auth", isRoute: true },
 ];
 
-const memberLinks = [
+const memberLinks: NavLink[] = [
   { label: "Dashboard", href: "/member/dashboard" },
   { label: "Housing", href: "/member/housing" },
   { label: "Drivers", href: "/member/drivers" },
@@ -40,7 +42,7 @@ const Navbar = () => {
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) =>
-            (link as any).isRoute || user ? (
+            link.isRoute || user ? (
               <Link
                 key={link.label}
                 to={link.href}
@@ -98,7 +100,7 @@ const Navbar = () => {
           >
             <div className="px-6 py-6 flex flex-col gap-4">
               {navLinks.map((link) =>
-                (link as any).isRoute || user ? (
+                link.isRoute || user ? (
                   <Link
                     key={link.label}
                     to={link.href}
