@@ -223,7 +223,7 @@ serve(async (req) => {
     const { openaiChat, firstTextContent } = await import("../_shared/openrouter.ts");
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
-      ...(history ?? []).map((h: any) => ({
+      ...(history ?? []).map((h: { role?: string; content: string }) => ({
         role: h.role === "mia" ? "assistant" : h.role || "user",
         content: h.content,
       })),

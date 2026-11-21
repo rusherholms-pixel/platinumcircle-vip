@@ -19,7 +19,7 @@ export async function openaiChat(params: {
   response_format?: unknown;
   temperature?: number;
   max_tokens?: number;
-}): Promise<{ ok: boolean; status?: number; data?: any; error?: string }> {
+}): Promise<{ ok: boolean; status?: number; data?: unknown; error?: string }> {
   const key = OPENROUTER_FALLBACK_KEY;
   if (!key) {
     return { ok: false, error: "No OPENROUTER_API_KEY configured" };
@@ -56,6 +56,12 @@ export async function openaiChat(params: {
   }
 }
 
-export function firstTextContent(data: any): string {
-  return data?.choices?.[0]?.message?.content ?? "";
+// Safely pull the first assistant text out of an (unknown-shaped) chat-completions
+// response. Returns "" when the shape is unexpected, so callers can fall back.
+export function firstTextContent(data: unknown): string {
+  if (typeof data !== "object" || data === null) return "";
+  const choices = (data as { choices?: unknown[] }).choices;
+  const msg = choices?.[0] as { message?: { content?: unknown } } | undefined;
+  const content = msg?.message?.content;
+  return typeof content === "string" ? content : "";
 }
