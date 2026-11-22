@@ -14,7 +14,6 @@ import ProviderApplyStatus from "./pages/ProviderApplyStatus";
 import ProviderLogin from "./pages/ProviderLogin";
 import Properties from "./pages/Properties";
 import PropertyNew from "./pages/PropertyNew";
-import PropertyEdit from "./pages/PropertyEdit";
 import BundlesPage from "./pages/BundlesPage";
 import BundleDetail from "./pages/BundleDetail";
 import CityExperiences from "./pages/CityExperiences";
@@ -55,6 +54,7 @@ import MemberMessages from "./pages/member/MemberMessages";
 import ProviderLayout from "./components/provider/ProviderLayout";
 import ProviderOverview from "./pages/provider/ProviderOverview";
 import ProviderListings from "./pages/provider/ProviderListings";
+import ProviderListingForm from "./pages/provider/ProviderListingForm";
 import ProviderBookings from "./pages/provider/ProviderBookings";
 import ProviderEarnings from "./pages/provider/ProviderEarnings";
 import ProviderCalendar from "./pages/provider/ProviderCalendar";
@@ -127,8 +127,9 @@ const App = () => (
             <Route path="/provider" element={<ProviderLayout />}>
               <Route path="dashboard" element={<ProviderOverview />} />
               <Route path="listings" element={<ProviderListings />} />
-              <Route path="listings/new" element={<PropertyNew />} />
-              <Route path="listings/edit/:id" element={<PropertyEdit />} />
+              <Route path="listings/new/:category" element={<ProviderListingForm />} />
+              <Route path="listings/new" element={<ProviderListingForm />} />
+              <Route path="listings/edit/:id" element={<ProviderListingForm />} />
               <Route path="bookings" element={<ProviderBookings />} />
               <Route path="earnings" element={<ProviderEarnings />} />
               <Route path="calendar" element={<ProviderCalendar />} />

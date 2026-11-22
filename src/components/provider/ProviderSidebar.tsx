@@ -114,7 +114,7 @@ export function ProviderSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink
-                    to="/properties"
+                    to="/member/dashboard"
                     className="hover:bg-muted/50 text-muted-foreground"
                   >
                     <Eye className="mr-2 h-4 w-4" />

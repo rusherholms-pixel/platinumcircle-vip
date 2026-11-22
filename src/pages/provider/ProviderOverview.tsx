@@ -1,56 +1,61 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
-import { Home, DollarSign, Star, ClipboardList, UserCircle, TrendingUp } from "lucide-react";
+import { Home, DollarSign, ClipboardList, UserCircle, TrendingUp, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { SERVICE_CATEGORIES, getApprovedProviderCategories } from "@/lib/providerServices";
 
-interface Property {
+interface Listing {
   id: string;
   title: string;
-  price_per_night: number;
-  rating: number | null;
-  review_count: number | null;
-  is_featured: boolean | null;
+  category: string;
+  status: string;
+  currency: string | null;
+  primary_rate: number | null;
 }
 
 const ProviderOverview = () => {
   const { user } = useAuth();
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data } = await supabase
-        .from("properties")
-        .select("id, title, price_per_night, rating, review_count, is_featured")
-        .eq("host_id", user.id);
-      setProperties(data ?? []);
+      const [listingRes, cats] = await Promise.all([
+        supabase
+          .from("listings")
+          .select("id, title, category, status, currency, primary_rate")
+          .eq("created_by", user.id),
+        getApprovedProviderCategories(user.id),
+      ]);
+      setListings(listingRes.data ?? []);
+      setCategories(cats ?? SERVICE_CATEGORIES.map((c) => c.key));
       setLoading(false);
     })();
   }, [user]);
 
-  const totalListings = properties.length;
-  const avgRate = totalListings
-    ? Math.round(properties.reduce((s, p) => s + p.price_per_night, 0) / totalListings)
+  const activeListings = listings.filter((l) => l.status === "active").length;
+  const rates = listings.filter((l) => l.primary_rate);
+  const avgRate = rates.length
+    ? Math.round(rates.reduce((s, l) => s + (l.primary_rate || 0), 0) / rates.length)
     : 0;
-  const avgRating = totalListings
-    ? (properties.reduce((s, p) => s + (p.rating || 0), 0) / totalListings).toFixed(1)
-    : "—";
+  const currencies = new Set(listings.map((l) => l.currency).filter(Boolean));
 
   // Profile completion mock (can be replaced with real logic)
   const profileCompletion = 65;
 
   const stats = [
-    { label: "Active Listings", value: totalListings, icon: Home, color: "text-primary" },
+    { label: "Active Listings", value: activeListings, icon: Home, color: "text-primary" },
     { label: "Pending Requests", value: 0, icon: ClipboardList, color: "text-primary", badge: null },
-    { label: "Avg. Nightly Rate", value: totalListings ? `$${avgRate.toLocaleString()}` : "—", icon: DollarSign, color: "text-primary" },
-    { label: "Avg. Rating", value: avgRating, icon: Star, color: "text-primary" },
+    { label: "Avg. Rate", value: activeListings ? `${[...currencies][0] || "USD"} ${avgRate.toLocaleString()}` : "—", icon: DollarSign, color: "text-primary" },
+    { label: "Services Offered", value: categories.length, icon: Sparkles, color: "text-primary" },
     { label: "This Month", value: "$0", icon: TrendingUp, color: "text-primary" },
   ];
 
@@ -117,6 +122,39 @@ const ProviderOverview = () => {
           </Link>
         </motion.div>
       </div>
+
+      {/* Services offered */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }} className="p-5 bg-card border border-border rounded-lg">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Sparkles size={16} className="text-primary" />
+            <span className="text-xs tracking-widest uppercase text-muted-foreground">Services You Offer</span>
+          </div>
+          <Link to="/provider/listings">
+            <Button variant="link" className="p-0 h-auto text-xs text-primary">Manage →</Button>
+          </Link>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {categories.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No services assigned yet.</p>
+          ) : (
+            categories.map((key) => {
+              const cat = SERVICE_CATEGORIES.find((c) => c.key === key);
+              const count = listings.filter((l) => l.category === key).length;
+              return (
+                <Link
+                  key={key}
+                  to={`/provider/listings`}
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-border bg-secondary/40 text-sm hover:border-primary/40 transition-colors"
+                >
+                  <span className="capitalize">{cat?.short ?? key.replace(/_/g, " ")}</span>
+                  <Badge variant="outline" className="border-border text-[10px]">{count}</Badge>
+                </Link>
+              );
+            })
+          )}
+        </div>
+      </motion.div>
 
       {/* Quick Actions */}
       <motion.div

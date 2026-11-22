@@ -1,0 +1,11 @@
+M  src/App.tsx
+M  src/components/member/MemberSidebar.tsx
+M  src/components/provider/ProviderSidebar.tsx
+A  src/lib/listingFields.ts
+M  src/lib/providerServices.ts
+A  src/pages/provider/ProviderListingForm.tsx
+M  src/pages/provider/ProviderListings.tsx
+M  src/pages/provider/ProviderOverview.tsx
+A  supabase/migrations/2026_provider_listings_rls.sql
+?? _bld_rc.txt
+?? _gs.txt

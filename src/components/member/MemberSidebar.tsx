@@ -5,6 +5,8 @@ import {
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
@@ -33,6 +35,20 @@ export function MemberSidebar() {
   const collapsed = state === "collapsed";
   const { signOut } = useAuth();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [isProvider, setIsProvider] = useState(false);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    (async () => {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .in("role", ["provider", "admin"]);
+      if (data && data.length > 0) setIsProvider(true);
+    })();
+  }, [user?.id]);
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border">
@@ -87,6 +103,23 @@ export function MemberSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {isProvider && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <NavLink to="/provider/dashboard" className="hover:bg-muted/50 text-primary">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      {!collapsed && <span>View as Provider</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border p-3">

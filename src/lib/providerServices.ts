@@ -3,6 +3,8 @@
 // used by the public provider application form, the vetting gate, and the
 // provider dashboard.
 
+import { supabase } from "@/integrations/supabase/client";
+
 export interface ServiceCategory {
   key: string;
   label: string;
@@ -71,4 +73,29 @@ export type ProviderApplicationStatus =
 // Icon name -> lucide component map helper (imported in components).
 export function categoryLabel(key: string): string {
   return SERVICE_CATEGORIES.find((c) => c.key === key)?.label ?? key;
+}
+
+export function categoryShort(key: string): string {
+  return SERVICE_CATEGORIES.find((c) => c.key === key)?.short ?? key;
+}
+
+/**
+ * Read the signed-in provider's approved application service_categories.
+ * Returns the chosen category keys (e.g. ['homes','drivers']) or null if the
+ * user isn't an approved provider. Relies on applications RLS (a user can read
+ * their own rows).
+ */
+export async function getApprovedProviderCategories(userId: string): Promise<string[] | null> {
+  const { data } = await supabase
+    .from("applications")
+    .select("service_categories, status")
+    .eq("user_id", userId)
+    .eq("applicant_type", "provider")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+  if (data && data.status === "approved" && Array.isArray(data.service_categories)) {
+    return data.service_categories as string[];
+  }
+  return null;
 }

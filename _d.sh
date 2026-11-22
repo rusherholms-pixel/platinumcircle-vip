@@ -1,0 +1,1 @@
+cd "C:\Users\Holms Saint-Louis\pc_transfer" && git add -A && echo "===STAGED===" && git status --short && echo "===COMMIT===" && git -c user.email="rusherholms@gmail.com" -c user.name="Holms" commit -m "feat(provider): role switcher + multi-category service listings" && echo "===PUSH===" && git push origin main && echo "===HEAD===" && git rev-parse --short HEAD
