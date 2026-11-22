@@ -303,7 +303,7 @@ const ProviderApply = () => {
 
             <p className="text-xs text-muted-foreground text-center">
               Already applied?{" "}
-              <Link to="/auth" className="text-primary hover:underline">Sign in</Link>
+              <Link to="/provider/login" className="text-primary hover:underline">Sign in</Link>
             </p>
           </form>
         </motion.div>

@@ -13,6 +13,7 @@ const publicLinks: NavLink[] = [
   { label: "Experiences", href: "/experiences/bundles", isRoute: true },
   { label: "Security", href: "#services" },
   { label: "Join as Provider", href: "/provider/apply", isRoute: true },
+  { label: "Provider Login", href: "/provider/login", isRoute: true },
   { label: "Member Login", href: "/auth", isRoute: true },
 ];
 

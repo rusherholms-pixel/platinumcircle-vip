@@ -11,6 +11,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Apply from "./pages/Apply";
 import ProviderApply from "./pages/ProviderApply";
 import ProviderApplyStatus from "./pages/ProviderApplyStatus";
+import ProviderLogin from "./pages/ProviderLogin";
 import Properties from "./pages/Properties";
 import PropertyNew from "./pages/PropertyNew";
 import PropertyEdit from "./pages/PropertyEdit";
@@ -79,6 +80,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/provider/apply" element={<ProviderApply />} />
             <Route path="/provider/apply/status" element={<ProviderApplyStatus />} />
+            <Route path="/provider/login" element={<ProviderLogin />} />
             <Route path="/experiences/bundles" element={<BundlesPage />} />
             <Route path="/experiences/bundles/:slug" element={<BundleDetail />} />
             <Route path="/experiences/:city" element={<CityExperiences />} />
